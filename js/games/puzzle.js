@@ -158,8 +158,14 @@ function renderPuzzle() {
                 border-radius: 10px;
             ">
                 ${puzzleGrid
-                  .map(
-                    (tile, index) => `
+                  .map((tile, index) => {
+                    // Oblicz pozycję kolumny i wiersza dla kafelka (0-8)
+                    const col = tile % 3;
+                    const row = Math.floor(tile / 3);
+                    const bgPosX = col * -150; // -150px dla każdej kolumny (450px / 3 = 150px)
+                    const bgPosY = row * -150; // -150px dla każdego wiersza
+
+                    return `
                     <div class="puzzle-tile ${tile === 8 ? "empty" : ""}" 
                          data-index="${index}"
                          data-tile="${tile}"
@@ -170,18 +176,16 @@ function renderPuzzle() {
                                  ? "transparent"
                                  : `url('${selectedImage}')`
                              };
-                             background-size: 300%;
-                             background-position: ${(tile % 3) * -100}% ${
-                      Math.floor(tile / 3) * -100
-                    }%;
+                             background-size: 450px 450px;
+                             background-position: ${bgPosX}px ${bgPosY}px;
                              border: 2px solid var(--dark-gray);
                              border-radius: 5px;
                              cursor: ${tile === 8 ? "default" : "pointer"};
                              transition: transform 0.1s;
                          ">
                     </div>
-                `
-                  )
+                `;
+                  })
                   .join("")}
             </div>
             <p style="text-align: center; margin-top: 20px; font-size: 10px; color: var(--gray);">

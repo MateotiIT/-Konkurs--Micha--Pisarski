@@ -49,6 +49,21 @@ body {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
+/* EKRAN PROFILU */
+#profile-screen {
+  text-align: center;
+  animation: fadeIn 0.5s ease-in;
+}
+
+.profile-content {
+  background: var(--white);
+  padding: 50px 40px;
+  border-radius: 20px;
+  border: 8px solid var(--dark-gray);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  max-width: 600px;
+}
+
 .logo {
   font-size: 36px;
   line-height: 1.5;
@@ -108,8 +123,8 @@ body {
 
 .tab {
   font-family: "Press Start 2P", cursive;
-  font-size: 12px;
-  padding: 12px 20px;
+  font-size: 10px;
+  padding: 12px 0px;
   background: var(--light-gray);
   color: var(--dark-gray);
   border: 4px solid var(--dark-gray);
@@ -218,6 +233,50 @@ body {
   transform: scale(1.05);
 }
 
+/* ZABLOKOWANE KARTY GIER */
+.game-card.locked {
+  opacity: 0.6;
+  filter: grayscale(1);
+  cursor: not-allowed;
+}
+
+.game-card.locked:hover {
+  transform: translateY(0);
+}
+
+.locked-info {
+  display: none;
+  font-size: 10px;
+  color: var(--red);
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+.game-card.locked:hover .locked-info {
+  display: block;
+  animation: pulse 1s infinite;
+}
+
+.game-card.locked .btn-play {
+  background: var(--gray);
+  cursor: not-allowed;
+}
+
+.game-card.locked .btn-play:hover {
+  background: var(--gray);
+  transform: scale(1);
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
 /* OSIĄGNIĘCIA */
 #achievements-list {
   display: grid;
@@ -232,6 +291,7 @@ body {
   background: var(--light-gray);
   border: 3px solid var(--dark-gray);
   border-radius: 10px;
+  overflow: hidden;
 }
 
 .achievement-item.unlocked {
@@ -249,17 +309,26 @@ body {
 
 .achievement-info {
   flex: 1;
+  min-width: 0;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 .achievement-name {
   font-size: 12px;
   color: var(--dark-gray);
   margin-bottom: 5px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
 }
 
 .achievement-desc {
   font-size: 8px;
   color: var(--gray);
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  line-height: 1.4;
 }
 
 .achievement-status {
@@ -404,10 +473,14 @@ body {
   padding: 20px;
   border: 3px solid var(--dark-gray);
   border-radius: 10px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 .code-description p {
   margin-bottom: 10px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 .code-buttons {

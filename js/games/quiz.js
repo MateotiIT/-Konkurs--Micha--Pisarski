@@ -2,62 +2,78 @@
 
 // Zmienna do zatrzymywania gry
 let quizActive = false;
+let selectedCategory = null;
 
-// Pula pytań (przykładowe - dodasz więcej później)
-const quizQuestions = [
-  {
-    question: "W którym roku Michał Pisarski założył kanał YouTube?",
-    answers: ["2008", "2010", "2012", "2015"],
-    correct: 1, // Index odpowiedzi (0-3)
-  },
-  {
-    question: "Która konsola Nintendo była ulubioną Michała?",
-    answers: ["NES", "SNES", "N64", "GameCube"],
-    correct: 1,
-  },
-  {
-    question: "Ile gier Mario Bros wydano na NES?",
-    answers: ["2", "3", "5", "7"],
-    correct: 1,
-  },
-  {
-    question: "Która gra jest najczęściej omawiana na kanale?",
-    answers: ["Zelda", "Mario", "Metroid", "Pokémon"],
-    correct: 1,
-  },
-  {
-    question:
-      "W jakim roku wydano konsolę Nintendo Entertainment System w Japonii?",
-    answers: ["1981", "1983", "1985", "1987"],
-    correct: 1,
-  },
-  {
-    question: "Jak nazywa się główny bohater serii The Legend of Zelda?",
-    answers: ["Zelda", "Link", "Ganon", "Navi"],
-    correct: 1,
-  },
-  {
-    question: "Ile poziomów ma Super Mario Bros na NES?",
-    answers: ["8 światów", "16 światów", "32 poziomy", "64 poziomy"],
-    correct: 0,
-  },
-  {
-    question: "Która firma stworzyła konsolę Game Boy?",
-    answers: ["Sony", "Sega", "Nintendo", "Atari"],
-    correct: 2,
-  },
-  {
-    question: "Jak nazywa się wróg Mario który wygląda jak grzyb?",
-    answers: ["Koopa", "Goomba", "Boo", "Shy Guy"],
-    correct: 1,
-  },
-  {
-    question: "W którym roku wydano grę Tetris?",
-    answers: ["1984", "1985", "1986", "1987"],
-    correct: 0,
-  },
-  // Dodaj tutaj 90-140 więcej pytań później
+// Kategorie pytań
+const quizCategories = [
+  { id: "pisario", name: "Pisario3000", icon: "🎮", color: "var(--red)" },
+  { id: "nintendo", name: "Nintendo", icon: "🕹️", color: "var(--blue)" },
+  { id: "retro", name: "Retro Gierki <3", icon: "👾", color: "var(--purple)" },
 ];
+
+// Pula pytań podzielona na kategorie
+const quizQuestions = {
+  pisario: [
+    {
+      question: "W którym roku Michał Pisarski założył kanał YouTube?",
+      answers: ["2008", "2010", "2012", "2015"],
+      correct: 1,
+    },
+    {
+      question: "Która konsola Nintendo była ulubioną Michała?",
+      answers: ["NES", "SNES", "N64", "GameCube"],
+      correct: 1,
+    },
+    {
+      question: "Która gra jest najczęściej omawiana na kanale?",
+      answers: ["Zelda", "Mario", "Metroid", "Pokémon"],
+      correct: 1,
+    },
+    // Dodaj więcej pytań o Pisario
+  ],
+  nintendo: [
+    {
+      question:
+        "W jakim roku wydano konsolę Nintendo Entertainment System w Japonii?",
+      answers: ["1981", "1983", "1985", "1987"],
+      correct: 1,
+    },
+    {
+      question: "Jak nazywa się główny bohater serii The Legend of Zelda?",
+      answers: ["Zelda", "Link", "Ganon", "Navi"],
+      correct: 1,
+    },
+    {
+      question: "Ile poziomów ma Super Mario Bros na NES?",
+      answers: ["8 światów", "16 światów", "32 poziomy", "64 poziomy"],
+      correct: 0,
+    },
+    {
+      question: "Która firma stworzyła konsolę Game Boy?",
+      answers: ["Sony", "Sega", "Nintendo", "Atari"],
+      correct: 2,
+    },
+    {
+      question: "Jak nazywa się wróg Mario który wygląda jak grzyb?",
+      answers: ["Koopa", "Goomba", "Boo", "Shy Guy"],
+      correct: 1,
+    },
+    // Dodaj więcej pytań o Nintendo
+  ],
+  retro: [
+    {
+      question: "W którym roku wydano grę Tetris?",
+      answers: ["1984", "1985", "1986", "1987"],
+      correct: 0,
+    },
+    {
+      question: "Ile gier Mario Bros wydano na NES?",
+      answers: ["2", "3", "5", "7"],
+      correct: 1,
+    },
+    // Dodaj więcej pytań o retro gry
+  ],
+};
 
 // Zmienne stanu gry
 let currentQuestions = [];
@@ -66,13 +82,94 @@ let quizScore = 0;
 
 // Funkcja startowania quizu
 function startQuiz() {
-  quizActive = true;
+  quizActive = false; // Zablokuj grę do wyboru kategorii
+  selectedCategory = null;
 
   // Ustaw tytuł gry
   document.getElementById("game-title").textContent = "PISARIO QUIZ";
+  document.getElementById("game-score").textContent = "WYBIERZ KATEGORIĘ";
 
-  // Losuj 10 pytań z puli
-  currentQuestions = shuffleArray(quizQuestions).slice(0, 10);
+  // Pokaż ekran wyboru kategorii
+  showCategorySelection();
+}
+
+// Funkcja wyświetlania wyboru kategorii
+function showCategorySelection() {
+  const gameContent = document.getElementById("game-content");
+
+  gameContent.innerHTML = `
+    <div style="text-align: center; width: 100%; max-width: 700px;">
+      <h2 style="font-size: 18px; color: var(--dark-gray); margin-bottom: 30px;">
+        Wybierz kategorię pytań:
+      </h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+        ${quizCategories
+          .map(
+            (cat) => `
+          <div class="category-choice" data-category="${cat.id}" style="
+            cursor: pointer;
+            border: 4px solid var(--dark-gray);
+            border-radius: 15px;
+            padding: 30px 20px;
+            transition: transform 0.2s, border-color 0.2s, background 0.2s;
+            background: var(--light-gray);
+          ">
+            <div style="font-size: 48px; margin-bottom: 15px;">${cat.icon}</div>
+            <h3 style="font-size: 14px; color: var(--dark-gray); margin-bottom: 10px;">
+              ${cat.name}
+            </h3>
+            <p style="font-size: 8px; color: var(--gray);">
+              10 pytań
+            </p>
+          </div>
+        `
+          )
+          .join("")}
+      </div>
+    </div>
+  `;
+
+  // Dodaj event listenery do wyboru kategorii
+  const choices = gameContent.querySelectorAll(".category-choice");
+  choices.forEach((choice) => {
+    const categoryId = choice.getAttribute("data-category");
+    const category = quizCategories.find((c) => c.id === categoryId);
+
+    choice.addEventListener("click", function () {
+      selectedCategory = categoryId;
+      startQuizGame();
+      playBeep(660, 0.1);
+    });
+
+    // Hover effect
+    choice.addEventListener("mouseenter", function () {
+      this.style.transform = "scale(1.05) translateY(-5px)";
+      this.style.borderColor = category.color;
+      this.style.background = "var(--white)";
+    });
+
+    choice.addEventListener("mouseleave", function () {
+      this.style.transform = "scale(1) translateY(0)";
+      this.style.borderColor = "var(--dark-gray)";
+      this.style.background = "var(--light-gray)";
+    });
+  });
+}
+
+// Funkcja startowania właściwej gry po wyborze kategorii
+function startQuizGame() {
+  quizActive = true;
+
+  // Losuj 10 pytań z wybranej kategorii
+  const categoryQuestions = quizQuestions[selectedCategory] || [];
+
+  if (categoryQuestions.length < 10) {
+    // Jeśli jest mniej niż 10 pytań, użyj wszystkich
+    currentQuestions = shuffleArray(categoryQuestions);
+  } else {
+    currentQuestions = shuffleArray(categoryQuestions).slice(0, 10);
+  }
+
   currentQuestionIndex = 0;
   quizScore = 0;
 
@@ -88,8 +185,8 @@ function showQuestion() {
   const gameContent = document.getElementById("game-content");
 
   if (currentQuestionIndex >= currentQuestions.length) {
-    // Koniec quizu - wygrana!
-    endQuiz(true);
+    // Koniec quizu - pokaż wynik!
+    endQuiz();
     return;
   }
 
@@ -143,75 +240,112 @@ function checkAnswer(selectedIndex) {
 
   if (selectedIndex === q.correct) {
     // Poprawna odpowiedź!
-    quizScore += 100;
-    updateQuizScore();
+    quizScore++;
     playBeep(660, 0.15);
-
-    // Następne pytanie po krótkiej chwili
-    setTimeout(() => {
-      currentQuestionIndex++;
-      showQuestion();
-    }, 500);
   } else {
-    // Błędna odpowiedź - koniec gry
-    playDeathSound();
-    endQuiz(false);
+    // Błędna odpowiedź
+    playBeep(220, 0.15);
   }
+
+  // Aktualizuj wynik
+  updateQuizScore();
+
+  // Następne pytanie po krótkiej chwili
+  setTimeout(() => {
+    currentQuestionIndex++;
+    showQuestion();
+  }, 500);
 }
 
 // Funkcja aktualizacji wyniku
 function updateQuizScore() {
-  document.getElementById("game-score").textContent = "WYNIK: " + quizScore;
+  document.getElementById("game-score").textContent = quizScore + " / 10";
 }
 
 // Funkcja końca quizu
-function endQuiz(won) {
+function endQuiz() {
   quizActive = false;
   const gameContent = document.getElementById("game-content");
 
-  if (won) {
-    // Wygrana!
-    gameContent.innerHTML = `
-            <div style="text-align: center;">
-                <h2 style="font-size: 24px; color: var(--green); margin-bottom: 20px;">
-                    🎉 WYGRANA! 🎉
-                </h2>
-                <p style="font-size: 14px; color: var(--dark-gray); margin-bottom: 15px;">
-                    Ukończyłeś quiz 10/10!
-                </p>
-                <p style="font-size: 12px; color: var(--blue);">
-                    WYNIK: ${quizScore}
-                </p>
-            </div>
-        `;
+  // Oblicz procent
+  const percentage = (quizScore / 10) * 100;
 
-    // Zapisz wynik
-    saveScore("quiz_highscore", quizScore);
+  let resultData = {};
 
-    // Dodaj do ukończonych gier
-    addCompletedGame("quiz");
+  if (percentage < 30) {
+    // 0-30% - Przegrana
+    resultData = {
+      emoji: "💀",
+      title: "NIE POSZŁO...",
+      message: "Może spróbuj jeszcze raz? 🤔",
+      color: "var(--red)",
+      funnyText: "Nawet Goomba wiedziałby więcej!",
+    };
+  } else if (percentage < 60) {
+    // 30-60% - Średni wynik
+    resultData = {
+      emoji: "😅",
+      title: "NIEŹLE!",
+      message: "Ale jest jeszcze nad czym pracować!",
+      color: "var(--yellow)",
+      funnyText: "Luigi byłby dumny (ale tylko trochę)",
+    };
+  } else if (percentage < 100) {
+    // 60-90% - Super wynik
+    resultData = {
+      emoji: "⭐",
+      title: "SUPER!",
+      message: "Świetna robota!",
+      color: "var(--green)",
+      funnyText: "Mario klepie Cię po plecach! 🍄",
+    };
+  } else {
+    // 100% - Mistrz
+    resultData = {
+      emoji: "👑",
+      title: "MISTRZ WIEDZY!",
+      message: "PERFEKCYJNY WYNIK!",
+      color: "var(--blue)",
+      funnyText: "Nawet Bowser Cię szanuje! 🔥",
+    };
+  }
 
-    // Odblokuj osiągnięcie
+  gameContent.innerHTML = `
+    <div style="text-align: center;">
+      <h2 style="font-size: 32px; margin-bottom: 20px;">
+        ${resultData.emoji}
+      </h2>
+      <h2 style="font-size: 20px; color: ${resultData.color}; margin-bottom: 15px;">
+        ${resultData.title}
+      </h2>
+      <p style="font-size: 14px; color: var(--dark-gray); margin-bottom: 10px;">
+        ${resultData.message}
+      </p>
+      <div style="font-size: 48px; font-weight: bold; color: ${resultData.color}; margin: 30px 0 15px 0;">
+        ${quizScore}/10
+      </div>
+      <p style="font-size: 12px; color: var(--gray); margin-bottom: 20px;">
+        (${percentage}%)
+      </p>
+      <p style="font-size: 10px; color: var(--purple); margin-bottom: 30px; font-style: italic;">
+        ${resultData.funnyText}
+      </p>
+      <button class="btn-play" onclick="startQuiz()">ZAGRAJ PONOWNIE</button>
+    </div>
+  `;
+
+  // Zapisz wynik
+  saveScore("quiz_highscore", quizScore);
+
+  // Dodaj do ukończonych gier
+  addCompletedGame("quiz");
+
+  // Odblokuj osiągnięcie dla perfekcjonistów
+  if (percentage === 100) {
     unlockAchievement("mistrz_wiedzy");
-
-    // Odtwórz dźwięk wygranej
     playWinSound();
   } else {
-    // Przegrana
-    gameContent.innerHTML = `
-            <div style="text-align: center;">
-                <h2 style="font-size: 24px; color: var(--red); margin-bottom: 20px;">
-                    💀 PRZEGRANA 💀
-                </h2>
-                <p style="font-size: 14px; color: var(--dark-gray); margin-bottom: 15px;">
-                    Błędna odpowiedź!
-                </p>
-                <p style="font-size: 12px; color: var(--blue); margin-bottom: 20px;">
-                    WYNIK: ${quizScore}
-                </p>
-                <button class="btn-play" onclick="startQuiz()">SPRÓBUJ PONOWNIE</button>
-            </div>
-        `;
+    playBeep(440, 0.3);
   }
 }
 
