@@ -3,7 +3,7 @@
 var marioActive = false;
 var marioCanvas;
 var marioCtx;
-var marioAnimationId;
+var marioInterval;
 
 // Wymiary
 var MARIO_VIEWPORT_WIDTH = 800;
@@ -257,8 +257,10 @@ function startMarioGame() {
   document.addEventListener("keydown", handleMarioKeyDown);
   document.addEventListener("keyup", handleMarioKeyUp);
 
-  // Start pętli
-  marioAnimationId = requestAnimationFrame(marioGameLoop);
+  // Start pętli z ustaloną częstotliwością 60 FPS
+  marioInterval = setInterval(() => {
+    marioGameLoop();
+  }, 1000 / 60);
 }
 
 // Reset gry
@@ -650,8 +652,6 @@ function marioGameLoop() {
 
   updateMario();
   renderMario();
-
-  marioAnimationId = requestAnimationFrame(marioGameLoop);
 }
 
 // Aktualizacja logiki
@@ -1439,7 +1439,7 @@ function renderMario() {
 // Funkcja pokazująca śmieszne zakończenie z księżniczką
 function showPrincessEnding() {
   marioActive = false;
-  cancelAnimationFrame(marioAnimationId);
+  clearInterval(marioInterval);
 
   document.removeEventListener("keydown", handleMarioKeyDown);
   document.removeEventListener("keyup", handleMarioKeyUp);
@@ -1569,7 +1569,7 @@ function showPrincessEnding() {
 
 function endMario(won) {
   marioActive = false;
-  cancelAnimationFrame(marioAnimationId);
+  clearInterval(marioInterval);
 
   document.removeEventListener("keydown", handleMarioKeyDown);
   document.removeEventListener("keyup", handleMarioKeyUp);
@@ -1636,7 +1636,7 @@ function endMario(won) {
 // Stop gry
 function stopMario() {
   marioActive = false;
-  if (marioAnimationId) cancelAnimationFrame(marioAnimationId);
+  if (marioInterval) clearInterval(marioInterval);
   document.removeEventListener("keydown", handleMarioKeyDown);
   document.removeEventListener("keyup", handleMarioKeyUp);
 
