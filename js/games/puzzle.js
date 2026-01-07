@@ -8,22 +8,138 @@ let selectedImage = "./assets/fanart/placeholder1.jpg"; // Wybrany obrazek
 
 // Dostępne obrazki do wyboru
 const puzzleImages = [
-  { path: "./assets/fanart/placeholder1.jpg", name: "Obrazek 1" },
-  { path: "./assets/fanart/placeholder2.jpg", name: "Obrazek 2" },
-  { path: "./assets/fanart/placeholder3.jpg", name: "Obrazek 3" },
+  { path: "./assets/fanart/fanart12.png", name: "Obrazek 1" },
+  { path: "./assets/fanart/fanart13.png", name: "Obrazek 2" },
+  { path: "./assets/fanart/fanart14.png", name: "Obrazek 3" },
 ];
 
 // Funkcja startowania puzzle
 function startPuzzle() {
-  puzzleActive = false; // Zablokuj grę do wyboru obrazka
-  puzzleMoves = 0;
+  // Zawsze pokazuj historię na początku
+  showPuzzleStory();
+}
 
-  // Ustaw tytuł gry
-  document.getElementById("game-title").textContent = "PISAREK PUZZLE";
-  document.getElementById("game-score").textContent = "WYBIERZ OBRAZEK";
+// Funkcja wyświetlania historii przed puzzle
+function showPuzzleStory() {
+  const gameContent = document.getElementById("game-content");
+  gameContent.innerHTML = `
+    <div style="
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 30px;
+      text-align: center;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border: 4px solid var(--yellow);
+      border-radius: 15px;
+    ">
+      <h2 style="
+        font-size: 24px;
+        color: var(--yellow);
+        margin-bottom: 30px;
+        text-shadow: 2px 2px 0 #000;
+      ">🧩 POSKŁADAJ OBRAZEK! 🧩</h2>
+      
+      <div style="
+        background: rgba(0,0,0,0.4);
+        padding: 25px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        border: 2px solid var(--yellow);
+      ">
+        <p style="
+          font-size: 11px;
+          line-height: 1.8;
+          color: var(--white);
+          margin-bottom: 15px;
+        ">
+          🎨 Źli ludzie pomieszali wszystkie<br/>śmieszne obrazki Pisario!
+        </p>
+        
+        <p style="
+          font-size: 11px;
+          line-height: 1.8;
+          color: var(--white);
+          margin-bottom: 15px;
+        ">
+          🖼️ Fanartowe rysunki zostały pocięte<br/>na kawałki i trzeba je poskładać!
+        </p>
+        
+        <p style="
+          font-size: 11px;
+          line-height: 1.8;
+          color: var(--yellow);
+          margin-bottom: 15px;
+          font-weight: bold;
+        ">
+          🔍 Tylko Ty potrafisz<br/>je ułożyć!
+        </p>
+        
+        <p style="
+          font-size: 11px;
+          line-height: 1.8;
+          color: var(--white);
+        ">
+          ⚡ Poskładaj śmieszne animacje<br/>i ciesz się widokiem<br/>ukończonego dzieła!
+        </p>
+      </div>
+      
+      <div style="
+        background: rgba(255, 193, 7, 0.2);
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+        border: 2px solid var(--yellow);
+      ">
+        <p style="
+          font-size: 9px;
+          color: var(--yellow);
+          margin-bottom: 8px;
+        ">
+          🎯 WSKAZÓWKA 🎯
+        </p>
+        <p style="
+          font-size: 9px;
+          color: var(--white);
+          line-height: 1.6;
+        ">
+          Klikaj kafelki obok pustego pola,<br/>
+          aby je przesuwać. Im mniej ruchów,<br/>
+          tym lepiej!
+        </p>
+      </div>
+      
+      <button id="puzzle-story-start-btn" style="
+        font-family: 'Press Start 2P', cursive;
+        font-size: 14px;
+        padding: 15px 40px;
+        background: var(--yellow);
+        color: var(--dark-gray);
+        border: 4px solid var(--dark-gray);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 6px 0 #b8860b;
+      "
+      onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 0 #b8860b'"
+      onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 0 #b8860b'"
+      onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 2px 0 #b8860b'"
+      onmouseup="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 0 #b8860b'"
+      >
+        ZACZNIJ UKŁADAĆ!
+      </button>
+    </div>
+  `;
 
-  // Pokaż ekran wyboru obrazka
-  showImageSelection();
+  document
+    .getElementById("puzzle-story-start-btn")
+    .addEventListener("click", () => {
+      // Przejdź do wyboru obrazka
+      puzzleActive = false;
+      puzzleMoves = 0;
+      document.getElementById("game-title").textContent = "PISAREK PUZZLE";
+      document.getElementById("game-score").textContent = "WYBIERZ OBRAZEK";
+      showImageSelection();
+    });
 }
 
 // Funkcja wyświetlania wyboru obrazka
@@ -276,12 +392,12 @@ function endPuzzle(won) {
 
     // Dodaj do ukończonych gier
     addCompletedGame("puzzle");
+    // Nagród 10 monet
+    addCoins(10);
+    showToast("+10 🪙 za ukończenie Puzzle!");
 
-    // Odblokuj osiągnięcie UKŁADACZ
-    unlockAchievement("ukladacz");
-
-    // Sprawdź osiągnięcie MISTRZ UKŁADANIA (<30 ruchów)
-    if (puzzleMoves < 30) {
+    // Sprawdź osiągnięcie MISTRZ UKŁADANIA (<60 ruchów)
+    if (puzzleMoves < 60) {
       unlockAchievement("mistrz_ukladania");
     }
 

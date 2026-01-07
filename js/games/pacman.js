@@ -38,6 +38,134 @@ let ghostMoveInterval;
 
 // Funkcja startowania Pacman
 function startPacman() {
+  // Zawsze pokazuj ekran retro na początku
+  showPacmanRetroScreen();
+}
+
+// Funkcja wyświetlania ekranu retro przed Pacman
+function showPacmanRetroScreen() {
+  const gameContent = document.getElementById("game-content");
+  gameContent.innerHTML = `
+    <div style="
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 30px;
+      text-align: center;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border: 4px solid var(--blue);
+      border-radius: 15px;
+    ">
+      <h2 style="
+        font-size: 24px;
+        color: var(--blue);
+        margin-bottom: 30px;
+        text-shadow: 2px 2px 0 #000;
+      ">🟡 STREFA SUPER RETRO 🟡</h2>
+      
+      <div style="
+        background: rgba(0,0,0,0.4);
+        padding: 25px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        border: 2px solid var(--yellow);
+      ">
+        <p style="
+          font-size: 13px;
+          line-height: 1.8;
+          color: var(--yellow);
+          margin-bottom: 20px;
+          font-weight: bold;
+        ">
+          🎮 TRAFIŁEŚ DO KLASYKI! 🎮
+        </p>
+        
+        <p style="
+          font-size: 11px;
+          line-height: 1.8;
+          color: var(--white);
+          margin-bottom: 15px;
+        ">
+          Rok 1980. Złota era arkadówek.<br/>
+          To legendarny PACMAN!
+        </p>
+        
+        <p style="
+          font-size: 11px;
+          line-height: 1.8;
+          color: var(--white);
+          margin-bottom: 15px;
+        ">
+          😎 Usiądź wygodnie,<br/>
+          <span style="color: var(--yellow); font-weight: bold;">ZAGRAJ I SIĘ WYLUZUJ!</span>
+        </p>
+        
+        <p style="
+          font-size: 11px;
+          line-height: 1.8;
+          color: var(--white);
+        ">
+          🟡 Zbieraj kropki, unikaj duchów<br/>
+          i ciesz się czystym retro klimatem!
+        </p>
+      </div>
+      
+      <div style="
+        background: rgba(0, 149, 218, 0.2);
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+        border: 2px solid var(--blue);
+      ">
+        <p style="
+          font-size: 9px;
+          color: var(--blue);
+          margin-bottom: 8px;
+        ">
+          🕹️ STEROWANIE 🕹️
+        </p>
+        <p style="
+          font-size: 9px;
+          color: var(--white);
+          line-height: 1.6;
+        ">
+          Strzałki: ← → ↑ ↓<br/>
+          Zbierz wszystkie kropki!<br/>
+          Unikaj kolorowych duchów!
+        </p>
+      </div>
+      
+      <button id="pacman-retro-start-btn" style="
+        font-family: 'Press Start 2P', cursive;
+        font-size: 14px;
+        padding: 15px 40px;
+        background: var(--blue);
+        color: var(--white);
+        border: 4px solid var(--dark-gray);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 6px 0 #004a7f;
+      "
+      onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 0 #004a7f'"
+      onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 0 #004a7f'"
+      onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 2px 0 #004a7f'"
+      onmouseup="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 0 #004a7f'"
+      >
+        WAKKA WAKKA!
+      </button>
+    </div>
+  `;
+
+  document
+    .getElementById("pacman-retro-start-btn")
+    .addEventListener("click", () => {
+      // Rozpocznij właściwą grę
+      startPacmanGame();
+    });
+}
+
+// Funkcja rozpoczynająca właściwą grę (wydzielona z startPacman)
+function startPacmanGame() {
   pacmanActive = true;
   pacmanDeaths = 0;
   pacmanScore = 0;
@@ -45,7 +173,7 @@ function startPacman() {
 
   // Ustaw tytuł gry
   document.getElementById("game-title").textContent = "PISACMAN";
-  document.getElementById("game-score").textContent = "WYNIK: 0";
+  document.getElementById("game-score").textContent = "PUNKTY: 0";
 
   // Stwórz canvas
   const gameContent = document.getElementById("game-content");
@@ -196,6 +324,14 @@ function moveGhosts() {
     if (pacmanGrid[newY] && pacmanGrid[newY][newX] !== 1) {
       ghost.x = newX;
       ghost.y = newY;
+
+      // Sprawdź kolizję z graczem po ruchu ducha
+      if (ghost.x === player.x && ghost.y === player.y) {
+        pacmanDeaths++;
+        playDeathSound();
+        endPacman(false);
+        return;
+      }
     }
   });
 }
@@ -207,7 +343,8 @@ function checkCollisions() {
     pacmanGrid[player.y][player.x] = 0;
     dotsCollected++;
     pacmanScore += 10;
-    document.getElementById("game-score").textContent = "WYNIK: " + pacmanScore;
+    document.getElementById("game-score").textContent =
+      "PUNKTY: " + pacmanScore;
     playBeep(440, 0.05);
 
     // Sprawdź czy zebrane wszystkie kropki
@@ -329,8 +466,9 @@ function endPacman(won) {
     // Dodaj do ukończonych gier
     addCompletedGame("pacman");
 
-    // Odblokuj osiągnięcie
-    unlockAchievement("pisacman_master");
+    // Nagród 10 monet
+    addCoins(10);
+    showToast("+10 🪙 za ukończenie Pacman!");
 
     // Sprawdź osiągnięcie PERFEKCJONISTA (bez śmierci)
     if (pacmanDeaths === 0) {

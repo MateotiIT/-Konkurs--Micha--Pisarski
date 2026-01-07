@@ -23,6 +23,9 @@ function initStorage() {
         kompletny_zbior: false,
         kong_master: false,
         kong_perfection: false,
+        mario_master: false,
+        coin_collector: false,
+        invaders_master: false,
         pierwszy_krok: false,
         weteran_arcade: false,
       },
@@ -41,6 +44,9 @@ function initStorage() {
         fanart12: false,
         fanart13: false,
         fanart14: false,
+        fanart17: false,
+        fanart18: false,
+        fanart19: false,
         fanart15: false,
         fanart16: false,
       },
@@ -50,6 +56,7 @@ function initStorage() {
         pacman_best: 0,
         pong_score: 0,
         kong_score: 0,
+        invaders_score: 0,
       },
       gamesCompleted: [],
       stats: {
@@ -57,6 +64,12 @@ function initStorage() {
         totalPlaytime: 0,
       },
       easterEggs: [],
+      coins: 20,
+      shop: {
+        purchased: [],
+      },
+      activeBackground: "default",
+      activeMenuStyle: "default",
     };
 
     // Zapisz domyślne dane
@@ -116,6 +129,16 @@ function addCompletedGame(gameName) {
     if (data.gamesCompleted.length === 5) {
       unlockAchievement("weteran_arcade");
     }
+
+    // Odblokuj Invaders po ukończeniu 5 gier
+    if (data.gamesCompleted.length >= 5) {
+      unlockInvadersGame();
+    }
+
+    // Aktualizuj UI z pucharami
+    if (typeof updateCompletedGamesUI === "function") {
+      updateCompletedGamesUI();
+    }
   }
 }
 
@@ -149,4 +172,92 @@ function addEasterEgg(eggName, description) {
     // Pokaż powiadomienie
     showToast("🥚 Easter Egg znaleziony: " + eggName);
   }
+}
+
+// ============== SYSTEM MONET ==============
+
+// Funkcja dodawania monet
+function addCoins(amount) {
+  const data = loadData();
+  if (!data.coins) data.coins = 0;
+  data.coins += amount;
+  saveData("coins", data.coins);
+
+  // Aktualizuj wyświetlanie profilu
+  if (typeof updateProfileDisplay === "function") {
+    const nick = data.profile?.nick || "GRACZ";
+    const avatar = data.profile?.avatar || "mario";
+    updateProfileDisplay(nick, avatar);
+  }
+
+  return data.coins;
+}
+
+// Funkcja wydawania monet
+function spendCoins(amount) {
+  const data = loadData();
+  if (!data.coins) data.coins = 0;
+
+  if (data.coins >= amount) {
+    data.coins -= amount;
+    saveData("coins", data.coins);
+
+    // Aktualizuj wyświetlanie profilu
+    if (typeof updateProfileDisplay === "function") {
+      const nick = data.profile?.nick || "GRACZ";
+      const avatar = data.profile?.avatar || "mario";
+      updateProfileDisplay(nick, avatar);
+    }
+
+    return true;
+  }
+  return false;
+}
+
+// Funkcja pobierania salda monet
+function getCoins() {
+  const data = loadData();
+  return data.coins || 0;
+}
+
+// ============== SYSTEM SKLEPU ==============
+
+// Funkcja sprawdzania czy przedmiot został kupiony
+function hasPurchased(itemId) {
+  const data = loadData();
+  if (!data.shop) data.shop = { purchased: [] };
+  return data.shop.purchased.includes(itemId);
+}
+
+// Funkcja dodawania zakupu
+function addPurchase(itemId) {
+  const data = loadData();
+  if (!data.shop) data.shop = { purchased: [] };
+
+  if (!data.shop.purchased.includes(itemId)) {
+    data.shop.purchased.push(itemId);
+    saveData("shop", data.shop);
+  }
+}
+
+// Funkcja ustawiania aktywnego tła
+function setActiveBackground(bgId) {
+  saveData("activeBackground", bgId);
+}
+
+// Funkcja pobierania aktywnego tła
+function getActiveBackground() {
+  const data = loadData();
+  return data.activeBackground || "default";
+}
+
+// Funkcja ustawiania aktywnego stylu menu
+function setActiveMenuStyle(styleId) {
+  saveData("activeMenuStyle", styleId);
+}
+
+// Funkcja pobierania aktywnego stylu menu
+function getActiveMenuStyle() {
+  const data = loadData();
+  return data.activeMenuStyle || "default";
 }

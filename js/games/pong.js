@@ -43,6 +43,134 @@ let pongKeys = {
 
 // Funkcja startowania Ponga
 function startPong() {
+  // Zawsze pokazuj ekran retro na początku
+  showPongRetroScreen();
+}
+
+// Funkcja wyświetlania ekranu retro przed Pong
+function showPongRetroScreen() {
+  const gameContent = document.getElementById("game-content");
+  gameContent.innerHTML = `
+    <div style="
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 30px;
+      text-align: center;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border: 4px solid var(--green);
+      border-radius: 15px;
+    ">
+      <h2 style="
+        font-size: 24px;
+        color: var(--green);
+        margin-bottom: 30px;
+        text-shadow: 2px 2px 0 #000;
+      ">🏓 STREFA SUPER RETRO 🏓</h2>
+      
+      <div style="
+        background: rgba(0,0,0,0.4);
+        padding: 25px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        border: 2px solid var(--green);
+      ">
+        <p style="
+          font-size: 13px;
+          line-height: 1.8;
+          color: var(--green);
+          margin-bottom: 20px;
+          font-weight: bold;
+        ">
+          🎮 TRAFIŁEŚ DO KLASYKI! 🎮
+        </p>
+        
+        <p style="
+          font-size: 11px;
+          line-height: 1.8;
+          color: var(--white);
+          margin-bottom: 15px;
+        ">
+          Rok 1972. Początek gier wideo.<br/>
+          To pierwszy PONG!
+        </p>
+        
+        <p style="
+          font-size: 11px;
+          line-height: 1.8;
+          color: var(--white);
+          margin-bottom: 15px;
+        ">
+          😎 Usiądź wygodnie,<br/>
+          <span style="color: var(--green); font-weight: bold;">ZAGRAJ I SIĘ WYLUZUJ!</span>
+        </p>
+        
+        <p style="
+          font-size: 11px;
+          line-height: 1.8;
+          color: var(--white);
+        ">
+          🏓 Odbijaj piłkę, pokonaj przeciwnika<br/>
+          i poczuj czystą esencję retro gamingu!
+        </p>
+      </div>
+      
+      <div style="
+        background: rgba(0, 166, 81, 0.2);
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+        border: 2px solid var(--green);
+      ">
+        <p style="
+          font-size: 9px;
+          color: var(--green);
+          margin-bottom: 8px;
+        ">
+          🕹️ STEROWANIE 🕹️
+        </p>
+        <p style="
+          font-size: 9px;
+          color: var(--white);
+          line-height: 1.6;
+        ">
+          W/S lub Strzałki ↑↓<br/>
+          Pierwsza rakietka do 5 punktów wygrywa!<br/>
+          Odbijaj piłkę i zdobywaj punkty!
+        </p>
+      </div>
+      
+      <button id="pong-retro-start-btn" style="
+        font-family: 'Press Start 2P', cursive;
+        font-size: 14px;
+        padding: 15px 40px;
+        background: var(--green);
+        color: var(--white);
+        border: 4px solid var(--dark-gray);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 6px 0 #00752e;
+      "
+      onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 0 #00752e'"
+      onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 0 #00752e'"
+      onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 2px 0 #00752e'"
+      onmouseup="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 0 #00752e'"
+      >
+        PING PONG!
+      </button>
+    </div>
+  `;
+
+  document
+    .getElementById("pong-retro-start-btn")
+    .addEventListener("click", () => {
+      // Rozpocznij właściwą grę
+      startPongGame();
+    });
+}
+
+// Funkcja rozpoczynająca właściwą grę (wydzielona z startPong)
+function startPongGame() {
   pongActive = true;
 
   // Ustaw tytuł gry
@@ -262,7 +390,7 @@ function renderPong() {
 // Funkcja aktualizacji wyniku
 function updatePongScore() {
   document.getElementById("game-score").textContent =
-    "GRACZ: " + pongPlayer.score + " | AI: " + pongAI.score;
+    "PUNKTY: " + pongPlayer.score + " | AI: " + pongAI.score;
 }
 
 // Funkcja sprawdzania wygranej
@@ -305,9 +433,6 @@ function endPong(playerWon) {
       </div>
     `;
 
-    // Osiągnięcie
-    unlockAchievement("pong_master");
-
     // Osiągnięcie za perfekcyjną grę (5-0)
     if (pongAI.score === 0) {
       unlockAchievement("pong_perfekcja");
@@ -318,6 +443,10 @@ function endPong(playerWon) {
 
     // Dodaj do ukończonych gier
     addCompletedGame("pong");
+
+    // Nagród 10 monet
+    addCoins(10);
+    showToast("+10 🪙 za wygraną w Pong!");
 
     playWinSound();
   } else {

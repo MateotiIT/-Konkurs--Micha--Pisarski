@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PISARSKI RETRO CONSOLE</title>
+    <title>PISARSKI RETRO KONSOLA</title>
 
     <!-- Pixel Font Google -->
     <link
@@ -18,8 +18,8 @@
     <!-- EKRAN STARTOWY -->
     <div id="start-screen">
       <div class="start-content">
-        <h1 class="logo">PISARSKI<br />RETRO<br />CONSOLE</h1>
-        <p class="subtitle">Retro Edition</p>
+        <h1 class="logo">PISARSKI<br />RETRO<br />KONSOLA</h1>
+        <p class="subtitle">Retro Edycja</p>
         <button id="start-button" class="btn-start">START</button>
       </div>
     </div>
@@ -238,9 +238,9 @@
       <nav class="tabs">
         <button class="tab active" data-tab="games">GRY</button>
         <button class="tab" data-tab="achievements">OSIĄGNIĘCIA</button>
-        <button class="tab" data-tab="eastereggs">EASTER EGGI</button>
+        <button class="tab" data-tab="shop">SKLEP</button>
         <button class="tab" data-tab="about">O PROJEKCIE</button>
-        <button class="tab" data-tab="code">KOD</button>
+        <button class="tab" data-tab="code">KODY</button>
         <div
           id="user-profile-display"
           style="
@@ -261,6 +261,20 @@
           <span id="user-nick" style="font-size: 10px; color: var(--dark-gray)"
             >GRACZ</span
           >
+          <span
+            id="user-coins"
+            style="
+              font-size: 10px;
+              color: var(--dark-gray);
+              margin-left: 10px;
+              font-weight: bold;
+              background: var(--yellow);
+              padding: 3px 8px;
+              border-radius: 8px;
+              border: 2px solid var(--dark-gray);
+            "
+            >🪙 0</span
+          >
         </div>
       </nav>
 
@@ -269,17 +283,17 @@
         <h2>WYBIERZ GRĘ</h2>
         <div class="games-grid">
           <!-- Quiz -->
-          <div class="game-card">
-            <div class="game-icon" style="background-color: var(--red)">Q</div>
+          <div class="game-card" data-game="quiz">
+            <div class="game-icon" style="background-color: var(--red)">🧠</div>
             <h3>PISARIO QUIZ</h3>
             <p>Milionerzy Nintendo</p>
             <button class="btn-play" data-game="quiz">ZAGRAJ</button>
           </div>
 
           <!-- Puzzle -->
-          <div class="game-card">
+          <div class="game-card" data-game="puzzle">
             <div class="game-icon" style="background-color: var(--yellow)">
-              P
+              🧩
             </div>
             <h3>PISAREK PUZZLE</h3>
             <p>Sliding Puzzle</p>
@@ -287,9 +301,9 @@
           </div>
 
           <!-- Memory -->
-          <div class="game-card">
+          <div class="game-card" data-game="memory">
             <div class="game-icon" style="background-color: var(--purple)">
-              M
+              🃏
             </div>
             <h3>PISARIO MEMORY</h3>
             <p>Znajdź pary</p>
@@ -304,6 +318,32 @@
             <button class="btn-play" data-game="kong">ZAGRAJ</button>
           </div>
 
+          <!-- Invaders -->
+          <div
+            class="game-card locked"
+            data-locked="true"
+            data-game="invaders"
+            id="invaders-card"
+          >
+            <div class="game-icon" style="background-color: var(--purple)">
+              🚀
+            </div>
+            <h3 id="invaders-title">??????</h3>
+            <p id="invaders-desc">Tajemnicza gra...</p>
+            <div class="locked-info">🔒 Ukończ 5 gier</div>
+            <button class="btn-play" data-game="invaders" disabled>
+              ZABLOKOWANE
+            </button>
+          </div>
+
+          <!-- Mario -->
+          <div class="game-card" data-game="mario">
+            <div class="game-icon" style="background-color: var(--red)">🍄</div>
+            <h3>SUPER PISARIO BROS</h3>
+            <p>Platformer NES 1985</p>
+            <button class="btn-play" data-game="mario">ZAGRAJ</button>
+          </div>
+
           <!-- Pacman -->
           <div class="game-card locked" data-locked="true" data-game="pacman">
             <div class="game-icon" style="background-color: var(--blue)">
@@ -311,7 +351,7 @@
             </div>
             <h3>PISACMAN</h3>
             <p>Labirynt i duchy</p>
-            <div class="locked-info">🔒 Odblokuj kodem</div>
+            <div class="locked-info">🔒 Odblokuj w sklepie lub kodem</div>
             <button class="btn-play" data-game="pacman" disabled>
               ZABLOKOWANE
             </button>
@@ -320,11 +360,11 @@
           <!-- Tetris -->
           <div class="game-card locked" data-locked="true" data-game="tetris">
             <div class="game-icon" style="background-color: var(--purple)">
-              T
+              🧱
             </div>
             <h3>PISARIS</h3>
             <p>Tetris</p>
-            <div class="locked-info">🔒 Odblokuj kodem</div>
+            <div class="locked-info">🔒 Odblokuj w sklepie lub kodem</div>
             <button class="btn-play" data-game="tetris" disabled>
               ZABLOKOWANE
             </button>
@@ -337,7 +377,7 @@
             </div>
             <h3>PISARIO PONG</h3>
             <p>Klasyczny Pong</p>
-            <div class="locked-info">🔒 Odblokuj kodem</div>
+            <div class="locked-info">🔒 Odblokuj w sklepie lub kodem</div>
             <button class="btn-play" data-game="pong" disabled>
               ZABLOKOWANE
             </button>
@@ -358,14 +398,84 @@
         </div>
       </section>
 
-      <!-- ZAKŁADKA: EASTER EGGI -->
-      <section id="eastereggs-tab" class="tab-content">
-        <h2>EASTER EGGI</h2>
-        <div id="eastereggs-list">
-          <p class="empty-message">
-            Nie znalazłeś jeszcze żadnych easter eggów...
+      <!-- ZAKŁADKA: SKLEP -->
+      <section id="shop-tab" class="tab-content">
+        <h2>SKLEP</h2>
+
+        <!-- Welcome message (pokazywany przy pierwszym wejściu) -->
+        <div
+          id="shop-welcome"
+          style="
+            display: none;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--light-gray);
+            border: 4px solid var(--dark-gray);
+            border-radius: 10px;
+          "
+        >
+          <h3 style="font-size: 12px; margin-bottom: 10px">WITAJ W SKLEPIE!</h3>
+          <p style="font-size: 8px; line-height: 1.6; color: var(--dark-gray)">
+            Zdobywaj monety 🪙 grając w gry:<br />
+            • +10 monet za każdą wygraną<br />
+            • +5 monet za każde osiągnięcie<br /><br />
+            Za monety możesz kupić avatary, kody do gier, nowe tła i style menu!
           </p>
-          <!-- Renderowane przez JS -->
+          <button
+            id="shop-welcome-close"
+            class="btn-secondary"
+            style="margin-top: 10px; font-size: 8px; padding: 8px 15px"
+          >
+            ROZUMIEM
+          </button>
+        </div>
+
+        <div id="shop-container">
+          <!-- AVATARY -->
+          <div class="shop-category">
+            <h3
+              style="font-size: 12px; margin-bottom: 15px; color: var(--purple)"
+            >
+              👤 AVATARY (20🪙)
+            </h3>
+            <div id="shop-avatars" class="shop-items-grid">
+              <!-- Renderowane przez shop.js -->
+            </div>
+          </div>
+
+          <!-- KODY DO GIER -->
+          <div class="shop-category" style="margin-top: 30px">
+            <h3 style="font-size: 12px; margin-bottom: 15px; color: var(--red)">
+              🎮 GRY (30🪙)
+            </h3>
+            <div id="shop-codes" class="shop-items-grid">
+              <!-- Renderowane przez shop.js -->
+            </div>
+          </div>
+
+          <!-- TŁA -->
+          <div class="shop-category" style="margin-top: 30px">
+            <h3
+              style="font-size: 12px; margin-bottom: 15px; color: var(--blue)"
+            >
+              🎨 TŁA (50🪙)
+            </h3>
+            <div id="shop-backgrounds" class="shop-items-grid">
+              <!-- Renderowane przez shop.js -->
+            </div>
+          </div>
+
+          <!-- STYLE MENU -->
+          <div class="shop-category" style="margin-top: 30px">
+            <h3
+              style="font-size: 12px; margin-bottom: 15px; color: var(--green)"
+            >
+              ✨ STYLE MENU (150🪙)
+            </h3>
+            <div id="shop-styles" class="shop-items-grid">
+              <!-- Renderowane przez shop.js -->
+            </div>
+          </div>
         </div>
       </section>
 
@@ -380,7 +490,6 @@
           <p><strong>Data:</strong> Styczeń 2026</p>
         </div>
 
-        <h3 style="margin-top: 30px">JAK TO DZIAŁA?</h3>
         <div class="code-buttons">
           <button id="reset-progress-btn" class="btn-danger">
             Reset Progresu
@@ -417,6 +526,233 @@
           >
             ZATWIERDŹ
           </button>
+        </div>
+
+        <!-- SEKCJA ZAGADEK -->
+        <div
+          style="
+            margin-top: 50px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+          "
+        >
+          <h3
+            style="
+              font-size: 14px;
+              color: var(--yellow);
+              margin-bottom: 25px;
+              text-align: center;
+            "
+          >
+            🧩 ZAGADKI PISARSKIEGO 🧩
+          </h3>
+          <p
+            style="
+              font-size: 8px;
+              color: var(--gray);
+              text-align: center;
+              margin-bottom: 30px;
+              line-height: 1.6;
+            "
+          >
+            Rozwiąż zagadki, by odkryć kody!<br />Odpowiedzi wpisz WIELKIMI
+            LITERAMI w pole powyżej.
+          </p>
+
+          <div
+            class="riddles-container"
+            style="display: flex; flex-direction: column; gap: 25px"
+          >
+            <!-- Zagadka 1: TETRIS -->
+            <div
+              style="
+                background: rgba(138, 43, 226, 0.15);
+                padding: 20px;
+                border-radius: 10px;
+                border: 2px solid var(--purple);
+              "
+            >
+              <p
+                style="
+                  font-size: 10px;
+                  color: var(--purple);
+                  font-weight: bold;
+                  margin-bottom: 10px;
+                "
+              >
+                🟦 ZAGADKA #1
+              </p>
+              <p style="font-size: 9px; color: var(--gray); line-height: 1.8">
+                Spadają z góry, jeden po drugim,<br />
+                Obracasz je klawiaturowym ruchem.<br />
+                Układasz rzędy, znikają w mgnieniu,<br />
+                Aleksiej je stworzył w ZSRR w czerwieniu.
+              </p>
+            </div>
+
+            <!-- Zagadka 2: PONG -->
+            <div
+              style="
+                background: rgba(0, 166, 81, 0.15);
+                padding: 20px;
+                border-radius: 10px;
+                border: 2px solid var(--green);
+              "
+            >
+              <p
+                style="
+                  font-size: 10px;
+                  color: var(--green);
+                  font-weight: bold;
+                  margin-bottom: 10px;
+                "
+              >
+                🏓 ZAGADKA #2
+              </p>
+              <p style="font-size: 9px; color: var(--gray); line-height: 1.8">
+                Pierwsza gra wideo, pingpongowy stół,<br />
+                Atari 1972, pikseli król.<br />
+                Paletki odbijają, piłeczka w lot,<br />
+                Prosta nazwa gry - jaki to kod?
+              </p>
+            </div>
+
+            <!-- Zagadka 3: PACMAN -->
+            <div
+              style="
+                background: rgba(255, 193, 7, 0.15);
+                padding: 20px;
+                border-radius: 10px;
+                border: 2px solid var(--yellow);
+              "
+            >
+              <p
+                style="
+                  font-size: 10px;
+                  color: var(--yellow);
+                  font-weight: bold;
+                  margin-bottom: 10px;
+                "
+              >
+                🟡 ZAGADKA #3
+              </p>
+              <p style="font-size: 9px; color: var(--gray); line-height: 1.8">
+                Żółta kula po labiryncie gania,<br />
+                Duchy ucieka, pigułki łania.<br />
+                Namco w 1980 stworzył tę grę,<br />
+                Waka-waka brzmi - jak nazwa jest?
+              </p>
+            </div>
+
+            <!-- Zagadka 4: DOLARY -->
+            <div
+              style="
+                background: rgba(0, 123, 255, 0.15);
+                padding: 20px;
+                border-radius: 10px;
+                border: 2px solid var(--blue);
+              "
+            >
+              <p
+                style="
+                  font-size: 10px;
+                  color: var(--blue);
+                  font-weight: bold;
+                  margin-bottom: 10px;
+                "
+              >
+                💰 ZAGADKA #4
+              </p>
+              <p style="font-size: 9px; color: var(--gray); line-height: 1.8">
+                Zielone, papierowe, z USA pochodzą,<br />
+                W Mario zbierasz coins, ale to je znoszą.<br />
+                Mają znak $, Franklin na nich widnieje,<br />
+                Amerykańska waluta - jak się nazywa w całej?
+              </p>
+            </div>
+
+            <!-- Zagadka 5: KONAMICODE -->
+            <div
+              style="
+                background: rgba(230, 0, 18, 0.15);
+                padding: 20px;
+                border-radius: 10px;
+                border: 2px solid var(--red);
+              "
+            >
+              <p
+                style="
+                  font-size: 10px;
+                  color: var(--red);
+                  font-weight: bold;
+                  margin-bottom: 10px;
+                "
+              >
+                🎮 ZAGADKA #5 - MASTER CODE
+              </p>
+              <p style="font-size: 9px; color: var(--gray); line-height: 1.8">
+                Japońska firma gier, legenda lat 80,<br />
+                Metal Gear stworzyli, Castlevania też.<br />
+                Ich słynny kod: ↑↑↓↓←→←→BA,<br />
+                30 żyć w Contra dał - KONAMI plus CODE!
+              </p>
+            </div>
+
+            <!-- Zagadka 6: PISARION3000 -->
+            <div
+              style="
+                background: rgba(255, 87, 34, 0.15);
+                padding: 20px;
+                border-radius: 10px;
+                border: 2px solid #ff5722;
+              "
+            >
+              <p
+                style="
+                  font-size: 10px;
+                  color: #ff5722;
+                  font-weight: bold;
+                  margin-bottom: 10px;
+                "
+              >
+                🔧 ZAGADKA #6
+              </p>
+              <p style="font-size: 9px; color: var(--gray); line-height: 1.8">
+                Nazwisko twórcy kanału, gdzie Nintendo gra,<br />
+                Dodaj "ON" na końcu, a potem "3000" da.<br />
+                Youtuber z Polski, fanartów bohater,<br />
+                Język polski w grach - to jego charakter!
+              </p>
+            </div>
+
+            <!-- Zagadka 7: DINO -->
+            <div
+              style="
+                background: rgba(76, 175, 80, 0.15);
+                padding: 20px;
+                border-radius: 10px;
+                border: 2px solid #4caf50;
+              "
+            >
+              <p
+                style="
+                  font-size: 10px;
+                  color: #4caf50;
+                  font-weight: bold;
+                  margin-bottom: 10px;
+                "
+              >
+                🦖 ZAGADKA #7
+              </p>
+              <p style="font-size: 9px; color: var(--gray); line-height: 1.8">
+                Gdy internet padnie, w Chrome się pojawia,<br />
+                Skacze przez kaktusy, piksele zabawia.<br />
+                Jurajski gad szary, bez łączności gra,<br />
+                Krótka nazwa jego - jakaż ona ma?
+              </p>
+            </div>
+          </div>
         </div>
       </section>
     </div>
@@ -690,6 +1026,158 @@
             >
               🏆
             </div>
+            <!-- Płatne avatary (ukryte domyślnie, pokazują się po zakupie) -->
+            <div
+              class="edit-avatar-choice"
+              data-avatar="dino"
+              style="
+                cursor: pointer;
+                padding: 12px;
+                border: 4px solid var(--dark-gray);
+                border-radius: 10px;
+                background: var(--light-gray);
+                font-size: 28px;
+                text-align: center;
+                transition: all 0.2s;
+                display: none;
+              "
+            >
+              🦖
+            </div>
+            <div
+              class="edit-avatar-choice"
+              data-avatar="lightning"
+              style="
+                cursor: pointer;
+                padding: 12px;
+                border: 4px solid var(--dark-gray);
+                border-radius: 10px;
+                background: var(--light-gray);
+                font-size: 28px;
+                text-align: center;
+                transition: all 0.2s;
+                display: none;
+              "
+            >
+              ⚡
+            </div>
+            <div
+              class="edit-avatar-choice"
+              data-avatar="target"
+              style="
+                cursor: pointer;
+                padding: 12px;
+                border: 4px solid var(--dark-gray);
+                border-radius: 10px;
+                background: var(--light-gray);
+                font-size: 28px;
+                text-align: center;
+                transition: all 0.2s;
+                display: none;
+              "
+            >
+              🎯
+            </div>
+            <div
+              class="edit-avatar-choice"
+              data-avatar="rocket"
+              style="
+                cursor: pointer;
+                padding: 12px;
+                border: 4px solid var(--dark-gray);
+                border-radius: 10px;
+                background: var(--light-gray);
+                font-size: 28px;
+                text-align: center;
+                transition: all 0.2s;
+                display: none;
+              "
+            >
+              🚀
+            </div>
+          </div>
+        </div>
+
+        <!-- Wybór tła (tylko kupione) -->
+        <div
+          id="background-selection-container"
+          style="margin-bottom: 30px; display: none"
+        >
+          <label
+            style="
+              display: block;
+              font-size: 10px;
+              color: var(--gray);
+              margin-bottom: 15px;
+            "
+            >WYBIERZ TŁO:</label
+          >
+          <div
+            id="background-choices"
+            style="display: flex; gap: 10px; flex-wrap: wrap"
+          >
+            <!-- Domyślne -->
+            <div
+              class="bg-choice"
+              data-bg="default"
+              style="
+                cursor: pointer;
+                padding: 10px 15px;
+                border: 4px solid var(--dark-gray);
+                border-radius: 10px;
+                background: linear-gradient(
+                  135deg,
+                  var(--red) 0%,
+                  var(--yellow) 50%,
+                  var(--blue) 100%
+                );
+                font-size: 8px;
+                text-align: center;
+                transition: all 0.2s;
+                color: white;
+                text-shadow: 1px 1px 2px black;
+              "
+            >
+              DOMYŚLNE
+            </div>
+          </div>
+        </div>
+
+        <!-- Wybór stylu menu (tylko kupione) -->
+        <div
+          id="menustyle-selection-container"
+          style="margin-bottom: 30px; display: none"
+        >
+          <label
+            style="
+              display: block;
+              font-size: 10px;
+              color: var(--gray);
+              margin-bottom: 15px;
+            "
+            >WYBIERZ STYL MENU:</label
+          >
+          <div
+            id="menustyle-choices"
+            style="display: flex; gap: 10px; flex-wrap: wrap"
+          >
+            <!-- Domyślny -->
+            <div
+              class="style-choice"
+              data-style="default"
+              style="
+                cursor: pointer;
+                padding: 10px 15px;
+                border: 4px solid var(--dark-gray);
+                border-radius: 10px;
+                background: var(--light-gray);
+                font-size: 8px;
+                text-align: center;
+                transition: all 0.2s;
+              "
+            >
+              DOMYŚLNY
+            </div>
           </div>
         </div>
 
@@ -702,10 +1190,126 @@
     <!-- TOAST POWIADOMIENIA -->
     <div id="toast" style="display: none"></div>
 
+    <!-- MODAL POWITALNY -->
+    <div
+      id="welcome-modal"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 10000;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <div
+        style="
+          max-width: 600px;
+          background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+          border: 6px solid var(--red);
+          border-radius: 20px;
+          padding: 40px;
+          text-align: center;
+          box-shadow: 0 0 50px rgba(230, 0, 18, 0.5);
+        "
+      >
+        <h2
+          style="
+            font-size: 28px;
+            color: var(--yellow);
+            margin-bottom: 30px;
+            text-shadow: 3px 3px 0 #000;
+          "
+        >
+          🎮 WITAJ W RETRO KONSOLI! 🎮
+        </h2>
+
+        <div
+          style="
+            background: rgba(0, 0, 0, 0.4);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border: 2px solid var(--blue);
+          "
+        >
+          <p
+            style="
+              font-size: 12px;
+              line-height: 2;
+              color: var(--white);
+              margin-bottom: 20px;
+            "
+          >
+            Czeka Cię tutaj wiele gier<br />i zadań do wykonania! 🕹️
+          </p>
+
+          <p
+            style="
+              font-size: 12px;
+              line-height: 2;
+              color: var(--yellow);
+              margin-bottom: 20px;
+              font-weight: bold;
+            "
+          >
+            ⚡ TWOJA MISJA ⚡
+          </p>
+
+          <p style="font-size: 11px; line-height: 2; color: var(--white)">
+            😈 Źli ludzie chcą zabrać<br />
+            <span style="color: var(--red); font-weight: bold"
+              >NINTENDO SWITCH 2</span
+            ><br />
+            i nigdy nie wgrać języka polskiego!
+          </p>
+        </div>
+
+        <div
+          style="
+            background: rgba(230, 0, 18, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border: 2px solid var(--red);
+          "
+        >
+          <p style="font-size: 11px; line-height: 1.8; color: var(--white)">
+            🦸 Odzyskaj Switch 2,<br />
+            ukończ wszystkie gry<br />
+            i pokaż światu, że<br />
+            <span style="color: var(--yellow); font-weight: bold"
+              >PISARIO TO BOHATER!</span
+            >
+            🏆
+          </p>
+        </div>
+
+        <button
+          id="close-welcome-btn"
+          class="btn-start"
+          style="
+            width: 100%;
+            padding: 15px;
+            font-size: 14px;
+            background: var(--green);
+            border-color: var(--green);
+          "
+        >
+          ZACZYNAMY! 🚀
+        </button>
+      </div>
+    </div>
+
     <!-- SKRYPTY -->
     <script src="js/utils.js"></script>
     <script src="js/storage.js"></script>
     <script src="js/achievements.js"></script>
+    <script src="js/shop.js"></script>
     <script src="js/games/quiz.js"></script>
     <script src="js/games/puzzle.js"></script>
     <script src="js/games/memory.js"></script>
@@ -713,6 +1317,9 @@
     <script src="js/games/tetris.js"></script>
     <script src="js/games/pong.js"></script>
     <script src="js/games/kong.js"></script>
+    <script src="js/games/mario.js"></script>
+    <script src="js/games/invaders.js"></script>
+    <script src="js/games/dino.js"></script>
     <script src="js/app.js"></script>
   </body>
 </html>

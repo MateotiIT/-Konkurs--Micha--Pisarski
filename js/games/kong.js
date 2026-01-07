@@ -312,7 +312,7 @@ function startKong() {
 
   // Ustaw tytuł
   document.getElementById("game-title").textContent = "PISARIO KONG - POZIOM 1";
-  document.getElementById("game-score").textContent = "ŻYCIA: ❤️❤️❤️";
+  document.getElementById("game-score").textContent = "❤️❤️❤️ | POZIOM: 1";
 
   // Stwórz canvas
   const gameContent = document.getElementById("game-content");
@@ -677,23 +677,47 @@ function renderKong() {
     }
   }
 
-  // Rysuj bossa (pracownik Nintendo)
-  kongCtx.fillStyle = "#8B4C98";
-  kongCtx.fillRect(kongBoss.x, kongBoss.y, kongBoss.width, kongBoss.height);
-  kongCtx.fillStyle = "#fff";
-  kongCtx.font = "10px 'Press Start 2P'";
-  kongCtx.textAlign = "center";
-  kongCtx.fillText("EVIL", kongBoss.x + kongBoss.width / 2, kongBoss.y - 5);
+  // Rysuj bossa (goryl)
+  // Ciało - brązowe
+  kongCtx.fillStyle = "#6B4423";
+  kongCtx.fillRect(kongBoss.x + 10, kongBoss.y + 15, 30, 35);
+
+  // Ramiona - mocniejsze
+  kongCtx.fillStyle = "#5A3618";
+  kongCtx.fillRect(kongBoss.x, kongBoss.y + 20, 12, 20); // Lewe ramię
+  kongCtx.fillRect(kongBoss.x + 38, kongBoss.y + 20, 12, 20); // Prawe ramię
+
+  // Głowa - duża, brązowa
+  kongCtx.fillStyle = "#6B4423";
+  kongCtx.fillRect(kongBoss.x + 8, kongBoss.y, 34, 20);
+
+  // Oczy - białe z czarnymi źrenicami
+  kongCtx.fillStyle = "#FFF";
+  kongCtx.fillRect(kongBoss.x + 14, kongBoss.y + 6, 6, 6);
+  kongCtx.fillRect(kongBoss.x + 30, kongBoss.y + 6, 6, 6);
+  kongCtx.fillStyle = "#000";
+  kongCtx.fillRect(kongBoss.x + 16, kongBoss.y + 8, 3, 3);
+  kongCtx.fillRect(kongBoss.x + 32, kongBoss.y + 8, 3, 3);
+
+  // Nozdrza
+  kongCtx.fillStyle = "#000";
+  kongCtx.fillRect(kongBoss.x + 20, kongBoss.y + 14, 3, 3);
+  kongCtx.fillRect(kongBoss.x + 27, kongBoss.y + 14, 3, 3);
+
+  // Nogi
+  kongCtx.fillStyle = "#5A3618";
+  kongCtx.fillRect(kongBoss.x + 12, kongBoss.y + 50, 12, 10);
+  kongCtx.fillRect(kongBoss.x + 26, kongBoss.y + 50, 12, 10);
 
   // Rysuj Switch 2 (cel)
-  kongCtx.fillStyle = "#00a651";
+  kongCtx.fillStyle = "#e60012";
   kongCtx.fillRect(
     kongSwitch.x,
     kongSwitch.y,
     kongSwitch.width,
     kongSwitch.height
   );
-  kongCtx.strokeStyle = "#00ff00";
+  kongCtx.strokeStyle = "#0095da";
   kongCtx.lineWidth = 2;
   kongCtx.strokeRect(
     kongSwitch.x,
@@ -719,28 +743,57 @@ function renderKong() {
     kongCtx.strokeRect(barrel.x, barrel.y, barrel.width, barrel.height);
   }
 
-  // Rysuj gracza (Pisario) - niebieski z animacją
-  kongCtx.fillStyle = "#0095da";
-  kongCtx.fillRect(
-    kongPlayer.x,
-    kongPlayer.y,
-    kongPlayer.width,
-    kongPlayer.height
-  );
+  // Rysuj gracza (Mario/Pisario) - identyczny jak w grze Mario
+
+  // Ciało - niebieski kombinezon
+  kongCtx.fillStyle = "#0095DA";
+  kongCtx.fillRect(kongPlayer.x + 3, kongPlayer.y + 9, 10, 10);
+
+  // Głowa - beżowa
+  kongCtx.fillStyle = "#FFD9B3";
+  kongCtx.fillRect(kongPlayer.x + 4, kongPlayer.y + 4, 8, 7);
+
+  // Czapka - niebieska
+  kongCtx.fillStyle = "#0095DA";
+  kongCtx.fillRect(kongPlayer.x + 3, kongPlayer.y + 1, 10, 4);
+
+  // Logo P na czapce
+  kongCtx.fillStyle = "#FFF";
+  kongCtx.font = "bold 6px Arial";
+  kongCtx.fillText("P", kongPlayer.x + 6, kongPlayer.y + 4);
+
+  // Wąsy
+  kongCtx.fillStyle = "#000";
+  kongCtx.fillRect(kongPlayer.x + 5, kongPlayer.y + 8, 6, 1);
 
   // Oczy
-  kongCtx.fillStyle = "#fff";
-  kongCtx.fillRect(kongPlayer.x + 3, kongPlayer.y + 4, 4, 4);
-  kongCtx.fillRect(kongPlayer.x + 9, kongPlayer.y + 4, 4, 4);
+  kongCtx.fillStyle = "#000";
+  kongCtx.fillRect(kongPlayer.x + 5, kongPlayer.y + 6, 1, 1);
+  kongCtx.fillRect(kongPlayer.x + 10, kongPlayer.y + 6, 1, 1);
 
-  // Nogi (animacja 2-frame)
-  kongCtx.fillStyle = "#0095da";
+  // Ręce
+  kongCtx.fillStyle = "#FFD9B3";
+  kongCtx.fillRect(kongPlayer.x + 1, kongPlayer.y + 10, 2, 4);
+  kongCtx.fillRect(kongPlayer.x + 13, kongPlayer.y + 10, 2, 4);
+
+  // Nogi - niebieskie spodnie (animacja)
+  kongCtx.fillStyle = "#0095DA";
   if (kongPlayer.animFrame === 0) {
-    kongCtx.fillRect(kongPlayer.x + 2, kongPlayer.y + kongPlayer.height, 5, 4);
-    kongCtx.fillRect(kongPlayer.x + 9, kongPlayer.y + kongPlayer.height, 5, 4);
+    kongCtx.fillRect(kongPlayer.x + 4, kongPlayer.y + 19, 4, 5);
+    kongCtx.fillRect(kongPlayer.x + 8, kongPlayer.y + 19, 4, 5);
   } else {
-    kongCtx.fillRect(kongPlayer.x + 4, kongPlayer.y + kongPlayer.height, 5, 4);
-    kongCtx.fillRect(kongPlayer.x + 7, kongPlayer.y + kongPlayer.height, 5, 4);
+    kongCtx.fillRect(kongPlayer.x + 5, kongPlayer.y + 19, 3, 5);
+    kongCtx.fillRect(kongPlayer.x + 8, kongPlayer.y + 19, 3, 5);
+  }
+
+  // Buty - brązowe
+  kongCtx.fillStyle = "#8B4513";
+  if (kongPlayer.animFrame === 0) {
+    kongCtx.fillRect(kongPlayer.x + 3, kongPlayer.y + 23, 5, 1);
+    kongCtx.fillRect(kongPlayer.x + 8, kongPlayer.y + 23, 5, 1);
+  } else {
+    kongCtx.fillRect(kongPlayer.x + 4, kongPlayer.y + 23, 4, 1);
+    kongCtx.fillRect(kongPlayer.x + 8, kongPlayer.y + 23, 4, 1);
   }
 }
 
@@ -810,7 +863,8 @@ function updateKongScore() {
   for (let i = 0; i < kongPlayer.lives; i++) {
     hearts += "❤️";
   }
-  document.getElementById("game-score").textContent = "ŻYCIA: " + hearts;
+  document.getElementById("game-score").textContent =
+    hearts + " | POZIOM: " + currentLevel;
 }
 
 // Koniec gry
@@ -846,9 +900,6 @@ function endKong(won) {
       </div>
     `;
 
-    // Osiągnięcie
-    unlockAchievement("kong_master");
-
     // Perfekcja (bez śmierci)
     if (kongPlayer.deaths === 0) {
       unlockAchievement("kong_perfection");
@@ -858,12 +909,16 @@ function endKong(won) {
     saveScore("kong_wins", (loadData().scores?.kong_wins || 0) + 1);
     addCompletedGame("kong");
 
+    // Nagród 10 monet
+    addCoins(10);
+    showToast("+10 🪙 za ukończenie Kong!");
+
     playWinSound();
   } else {
     gameContent.innerHTML = `
       <div style="text-align: center;">
         <h2 style="font-size: 24px; color: var(--red); margin-bottom: 20px;">
-          💀 GAME OVER 💀
+          💀 KONIEC GRY 💀
         </h2>
         <p style="font-size: 14px; color: var(--dark-gray); margin-bottom: 15px;">
           Skończyły się życia!

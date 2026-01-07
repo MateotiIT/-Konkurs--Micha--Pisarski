@@ -10,213 +10,148 @@ const achievementsList = [
     fanart: "fanart1",
   },
   {
-    id: "ukladacz",
-    name: "UKŁADACZ",
-    description: "Ukończ Sliding Puzzle",
-    icon: "🧩",
-    fanart: "fanart2",
-  },
-  {
     id: "mistrz_ukladania",
     name: "MISTRZ UKŁADANIA",
-    description: "Ukończ Puzzle w mniej niż 30 ruchów",
+    description: "Ukończ Puzzle w mniej niż 60 ruchów",
     icon: "⚡",
-    fanart: "fanart3",
+    fanart: "fanart2",
   },
   {
     id: "mistrz_pamieci",
     name: "MISTRZ PAMIĘCI",
     description: "Ukończ Memory w maks 20 ruchów",
     icon: "🧠",
-    fanart: "fanart4",
-  },
-  {
-    id: "pisacman_master",
-    name: "PISACMAN MASTER",
-    description: "Ukończ Pacman (zbierz wszystkie kropki)",
-    icon: "🟡",
-    fanart: "fanart5",
+    fanart: "fanart3",
   },
   {
     id: "perfekcjonista",
     name: "PERFEKCJONISTA",
     description: "Ukończ Pacman bez śmierci",
     icon: "👻",
-    fanart: "fanart6",
-  },
-  {
-    id: "pisaris_master",
-    name: "PISARIS MASTER",
-    description: "Zestrzel 10 linii w Tetris",
-    icon: "🟦",
-    fanart: "fanart7",
-  },
-  {
-    id: "legenda_pisaris",
-    name: "LEGENDA PISARIS",
-    description: "Zestrzel 50 linii w Tetris",
-    icon: "👑",
-    fanart: "fanart8",
-  },
-  {
-    id: "pong_master",
-    name: "PONG MASTER",
-    description: "Wygraj grę Pong",
-    icon: "🏓",
-    fanart: "fanart9",
+    fanart: "fanart4",
   },
   {
     id: "pong_perfekcja",
     name: "PONG PERFEKCJA",
     description: "Wygraj Pong 5-0",
     icon: "⚡",
-    fanart: "fanart10",
+    fanart: "fanart5",
   },
   {
     id: "kolekcjoner",
     name: "KOLEKCJONER",
     description: "Odblokuj 5 fanartów",
     icon: "🖼️",
-    fanart: "fanart11",
-  },
-  {
-    id: "kompletny_zbior",
-    name: "KOMPLETNY ZBIÓR",
-    description: "Odblokuj wszystkie 16 fanartów",
-    icon: "💎",
-    fanart: "fanart12",
-  },
-  {
-    id: "kong_master",
-    name: "KONG MASTER",
-    description: "Zdobądź Nintendo Switch 2",
-    icon: "🦍",
-    fanart: "fanart13",
+    fanart: "fanart6",
   },
   {
     id: "kong_perfection",
     name: "KONG PERFEKCJA",
     description: "Ukończ Kong bez śmierci",
     icon: "👑",
-    fanart: "fanart14",
+    fanart: "fanart7",
+  },
+  {
+    id: "coin_collector",
+    name: "KOLEKCJONER MONET",
+    description: "Zbierz 20+ monet w Mario",
+    icon: "🪙",
+    fanart: "fanart8",
+  },
+  {
+    id: "invaders_master",
+    name: "INVADERS MASTER",
+    description: "Pokonaj wszystkie fale najeźdźców",
+    icon: "🚀",
+    fanart: "fanart9",
   },
   {
     id: "pierwszy_krok",
     name: "PIERWSZY KROK",
     description: "Zagraj w dowolną grę",
     icon: "🎮",
-    fanart: "fanart15",
+    fanart: "fanart10",
   },
   {
     id: "weteran_arcade",
     name: "WETERAN ARCADE",
-    description: "Ukończ wszystkie 7 gier",
+    description: "Zagraj we wszystkie 9 gier",
     icon: "🏆",
-    fanart: "fanart16",
+    fanart: "fanart11",
   },
 ];
 
 // Mapowanie osiągnięć do fanartów
 const achievementFanartMap = {
   mistrz_wiedzy: "fanart1",
-  ukladacz: "fanart2",
-  mistrz_ukladania: "fanart3",
-  mistrz_pamieci: "fanart4",
-  pisacman_master: "fanart5",
-  perfekcjonista: "fanart6",
-  pisaris_master: "fanart7",
-  legenda_pisaris: "fanart8",
-  pong_master: "fanart9",
-  pong_perfekcja: "fanart10",
-  kolekcjoner: "fanart11",
-  kompletny_zbior: "fanart12",
-  kong_master: "fanart13",
-  kong_perfection: "fanart14",
-  pierwszy_krok: "fanart15",
-  weteran_arcade: "fanart16",
+  mistrz_ukladania: "fanart2",
+  mistrz_pamieci: "fanart3",
+  perfekcjonista: "fanart4",
+  pong_perfekcja: "fanart5",
+  kolekcjoner: "fanart6",
+  kong_perfection: "fanart7",
+  coin_collector: "fanart8",
+  invaders_master: "fanart9",
+  pierwszy_krok: "fanart10",
+  weteran_arcade: "fanart11",
 };
 
 // Lista fanartów
 const fanartsList = [
   {
     id: "fanart1",
-    path: "./assets/fanart/placeholder1.jpg",
+    path: "./assets/fanart/fanart1.png",
     alt: "Fanart #1 - Mistrz Wiedzy",
   },
   {
     id: "fanart2",
-    path: "./assets/fanart/placeholder2.jpg",
-    alt: "Fanart #2 - Układacz",
+    path: "./assets/fanart/fanart2.png",
+    alt: "Fanart #2 - Mistrz Układania",
   },
   {
     id: "fanart3",
-    path: "./assets/fanart/placeholder3.jpg",
-    alt: "Fanart #3 - Mistrz Układania",
+    path: "./assets/fanart/fanart3.png",
+    alt: "Fanart #3 - Mistrz Pamięci",
   },
   {
     id: "fanart4",
-    path: "./assets/fanart/placeholder4.jpg",
-    alt: "Fanart #4 - Mistrz Pamięci",
+    path: "./assets/fanart/fanart4.png",
+    alt: "Fanart #4 - Perfekcjonista",
   },
   {
     id: "fanart5",
-    path: "./assets/fanart/placeholder5.jpg",
-    alt: "Fanart #5 - Pisacman Master",
+    path: "./assets/fanart/fanart5.png",
+    alt: "Fanart #5 - Pong Perfekcja",
   },
   {
     id: "fanart6",
-    path: "./assets/fanart/placeholder6.jpg",
-    alt: "Fanart #6 - Perfekcjonista",
+    path: "./assets/fanart/fanart6.png",
+    alt: "Fanart #6 - Kolekcjoner",
   },
   {
     id: "fanart7",
-    path: "./assets/fanart/placeholder7.jpg",
-    alt: "Fanart #7 - Pisaris Master",
+    path: "./assets/fanart/fanart7.png",
+    alt: "Fanart #7 - Kong Perfekcja",
   },
   {
     id: "fanart8",
-    path: "./assets/fanart/placeholder8.jpg",
-    alt: "Fanart #8 - Legenda Pisaris",
+    path: "./assets/fanart/fanart8.png",
+    alt: "Fanart #8 - Pierwszy Krok",
   },
   {
     id: "fanart9",
-    path: "./assets/fanart/placeholder9.jpg",
-    alt: "Fanart #9 - Pong Master",
+    path: "./assets/fanart/fanart9.png",
+    alt: "Fanart #9 - Weteran Arcade",
   },
   {
     id: "fanart10",
-    path: "./assets/fanart/placeholder10.jpg",
-    alt: "Fanart #10 - Pong Perfekcja",
+    path: "./assets/fanart/fanart10.png",
+    alt: "Fanart #10 - Kolekcjoner Monet",
   },
   {
     id: "fanart11",
-    path: "./assets/fanart/placeholder11.jpg",
-    alt: "Fanart #11 - Kolekcjoner",
-  },
-  {
-    id: "fanart12",
-    path: "./assets/fanart/placeholder12.jpg",
-    alt: "Fanart #12 - Kompletny Zbiór",
-  },
-  {
-    id: "fanart13",
-    path: "./assets/fanart/placeholder13.jpg",
-    alt: "Fanart #13 - Kong Master",
-  },
-  {
-    id: "fanart14",
-    path: "./assets/fanart/placeholder14.jpg",
-    alt: "Fanart #14 - Kong Perfekcja",
-  },
-  {
-    id: "fanart15",
-    path: "./assets/fanart/placeholder15.jpg",
-    alt: "Fanart #15 - Pierwszy Krok",
-  },
-  {
-    id: "fanart16",
-    path: "./assets/fanart/placeholder16.jpg",
-    alt: "Fanart #16 - Weteran Arcade",
+    path: "./assets/fanart/fanart11.png",
+    alt: "Fanart #11 - Invaders Master",
   },
 ];
 
@@ -242,8 +177,11 @@ function unlockAchievement(achievementId) {
   const achievement = achievementsList.find((a) => a.id === achievementId);
   const achievementName = achievement ? achievement.name : achievementId;
 
+  // Nagroda +5 monet za każde osiągnięcie
+  addCoins(5);
+
   // Pokaż powiadomienie
-  showToast("🏆 ODBLOKOWANO: " + achievementName);
+  showToast("🏆 ODBLOKOWANO: " + achievementName + " (+5 🪙)");
 
   // Odtwórz dźwięk
   playAchievementSound();

@@ -65,6 +65,134 @@ const PIECE_TYPES = ["I", "O", "T", "L", "J", "S", "Z"];
 
 // Funkcja startowania Tetris
 function startTetris() {
+  // Zawsze pokazuj ekran retro na początku
+  showTetrisRetroScreen();
+}
+
+// Funkcja wyświetlania ekranu retro przed Tetris
+function showTetrisRetroScreen() {
+  const gameContent = document.getElementById("game-content");
+  gameContent.innerHTML = `
+    <div style="
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 30px;
+      text-align: center;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border: 4px solid var(--purple);
+      border-radius: 15px;
+    ">
+      <h2 style="
+        font-size: 24px;
+        color: var(--purple);
+        margin-bottom: 30px;
+        text-shadow: 2px 2px 0 #000;
+      ">🧱 STREFA SUPER RETRO 🧱</h2>
+      
+      <div style="
+        background: rgba(0,0,0,0.4);
+        padding: 25px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        border: 2px solid var(--purple);
+      ">
+        <p style="
+          font-size: 13px;
+          line-height: 1.8;
+          color: var(--purple);
+          margin-bottom: 20px;
+          font-weight: bold;
+        ">
+          🎮 TRAFIŁEŚ DO KLASYKI! 🎮
+        </p>
+        
+        <p style="
+          font-size: 11px;
+          line-height: 1.8;
+          color: var(--white);
+          margin-bottom: 15px;
+        ">
+          Rok 1984. Legendarne klocki.<br/>
+          To kultowy TETRIS!
+        </p>
+        
+        <p style="
+          font-size: 11px;
+          line-height: 1.8;
+          color: var(--white);
+          margin-bottom: 15px;
+        ">
+          😎 Usiądź wygodnie,<br/>
+          <span style="color: var(--purple); font-weight: bold;">ZAGRAJ I SIĘ WYLUZUJ!</span>
+        </p>
+        
+        <p style="
+          font-size: 11px;
+          line-height: 1.8;
+          color: var(--white);
+        ">
+          🧱 Układaj klocki, usuwaj linie<br/>
+          i relaksuj się przy retro rytmie!
+        </p>
+      </div>
+      
+      <div style="
+        background: rgba(147, 51, 234, 0.2);
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+        border: 2px solid var(--purple);
+      ">
+        <p style="
+          font-size: 9px;
+          color: var(--purple);
+          margin-bottom: 8px;
+        ">
+          🕹️ STEROWANIE 🕹️
+        </p>
+        <p style="
+          font-size: 9px;
+          color: var(--white);
+          line-height: 1.6;
+        ">
+          ← → Ruch | ↑ Obróć | ↓ Szybszy spadek<br/>
+          Wypełniaj rzędy, żeby je usunąć!<br/>
+          Im więcej linii, tym lepiej!
+        </p>
+      </div>
+      
+      <button id="tetris-retro-start-btn" style="
+        font-family: 'Press Start 2P', cursive;
+        font-size: 14px;
+        padding: 15px 40px;
+        background: var(--purple);
+        color: var(--white);
+        border: 4px solid var(--dark-gray);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 6px 0 #5b21b6;
+      "
+      onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 0 #5b21b6'"
+      onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 0 #5b21b6'"
+      onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 2px 0 #5b21b6'"
+      onmouseup="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 0 #5b21b6'"
+      >
+        ZACZYNAMY!
+      </button>
+    </div>
+  `;
+
+  document
+    .getElementById("tetris-retro-start-btn")
+    .addEventListener("click", () => {
+      // Rozpocznij właściwą grę
+      startTetrisGame();
+    });
+}
+
+// Funkcja rozpoczynająca właściwą grę (wydzielona z startTetris)
+function startTetrisGame() {
   tetrisActive = true;
   tetrisScore = 0;
   tetrisLines = 0;
@@ -227,27 +355,6 @@ function clearLines() {
     tetrisScore += linesCleared * 100;
     updateTetrisScore();
     playBeep(880, 0.15);
-
-    // Sprawdź osiągnięcia
-    checkTetrisAchievements();
-  }
-}
-
-// Funkcja sprawdzania osiągnięć
-function checkTetrisAchievements() {
-  const data = loadData();
-
-  // Zapisz najlepszy wynik linii
-  saveScore("tetris_lines", tetrisLines);
-
-  // PISARIS MASTER (10 linii)
-  if (tetrisLines >= 10 && !data.achievements.pisaris_master) {
-    unlockAchievement("pisaris_master");
-  }
-
-  // LEGENDA PISARIS (50 linii)
-  if (tetrisLines >= 50 && !data.achievements.legenda_pisaris) {
-    unlockAchievement("legenda_pisaris");
   }
 }
 
@@ -329,7 +436,7 @@ function drawTetris() {
 function updateTetrisScore() {
   document.getElementById(
     "game-score"
-  ).textContent = `LINIE: ${tetrisLines} | WYNIK: ${tetrisScore}`;
+  ).textContent = `LINIE: ${tetrisLines} | PUNKTY: ${tetrisScore}`;
 }
 
 // Funkcja końca Tetris
@@ -338,12 +445,15 @@ function endTetris() {
   clearInterval(tetrisInterval);
   document.removeEventListener("keydown", handleTetrisKeydown);
 
+  // Dodaj grę do ukończonych
+  addCompletedGame("tetris");
+
   const gameContent = document.getElementById("game-content");
 
   gameContent.innerHTML = `
         <div style="text-align: center;">
             <h2 style="font-size: 24px; color: var(--red); margin-bottom: 20px;">
-                GAME OVER
+                KONIEC GRY
             </h2>
             <p style="font-size: 14px; color: var(--dark-gray); margin-bottom: 10px;">
                 LINIE: ${tetrisLines}

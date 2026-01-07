@@ -11,6 +11,11 @@ const avatarEmojis = {
   coin: "🪙",
   controller: "🎮",
   trophy: "🏆",
+  // Płatne avatary (odblokowane w sklepie)
+  dino: "🦖",
+  lightning: "⚡",
+  target: "🎯",
+  rocket: "🚀",
 };
 
 // Kody do odblokowywania gier
@@ -19,6 +24,7 @@ const gameCodes = {
   TETRIS: "tetris",
   PONG: "pong",
   KONG: "kong",
+  INVADERS: "invaders",
 };
 
 // Inicjalizacja po załadowaniu strony
@@ -26,12 +32,31 @@ document.addEventListener("DOMContentLoaded", function () {
   // Inicjalizuj localStorage
   initStorage();
 
+  // Inicjalizuj sklep
+  initShop();
+
   // Załaduj osiągnięcia i fanarty
   renderAchievements();
   renderFanarts();
 
   // Sprawdź odblokowane gry i zaktualizuj UI
   updateUnlockedGames();
+
+  // Sprawdź czy Invaders powinien być odblokowany
+  checkInvadersUnlock();
+
+  // Dodaj puchary do ukończonych gier
+  updateCompletedGamesUI();
+
+  // Zastosuj zapisane tło i styl menu
+  const savedBg = getActiveBackground();
+  if (savedBg && savedBg !== "default") {
+    applyBackground(savedBg);
+  }
+  const savedStyle = getActiveMenuStyle();
+  if (savedStyle && savedStyle !== "default") {
+    applyMenuStyle(savedStyle);
+  }
 
   // Sprawdź czy użytkownik ma już profil
   const userData = loadData();
@@ -131,7 +156,9 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("profile-screen").style.display = "none";
     document.getElementById("main-menu").style.display = "block";
 
-    showToast("Witaj, " + nick + "!");
+    // Pokaż modal powitalny przy pierwszym uruchomieniu
+    showWelcomeModal();
+
     playBeep(880, 0.2);
   });
 
@@ -182,7 +209,13 @@ document.addEventListener("DOMContentLoaded", function () {
       showToast("Progres został zresetowany!");
       renderAchievements();
       renderFanarts();
+      renderShop(); // Odśwież sklep
       playBeep(220, 0.3);
+
+      // Odśwież stronę po krótkiej chwili
+      setTimeout(function () {
+        location.reload();
+      }, 1000);
     }
   });
 
@@ -325,6 +358,7 @@ document.addEventListener("DOMContentLoaded", function () {
 function updateProfileDisplay(nick, avatar) {
   const userNickDisplay = document.getElementById("user-nick");
   const userAvatarDisplay = document.getElementById("user-avatar");
+  const userCoinsDisplay = document.getElementById("user-coins");
 
   if (userNickDisplay) {
     userNickDisplay.textContent = nick;
@@ -332,6 +366,12 @@ function updateProfileDisplay(nick, avatar) {
 
   if (userAvatarDisplay) {
     userAvatarDisplay.textContent = avatarEmojis[avatar] || "🍄";
+  }
+
+  // Aktualizuj wyświetlanie monet
+  if (userCoinsDisplay) {
+    const coins = getCoins();
+    userCoinsDisplay.textContent = `🪙 ${coins}`;
   }
 }
 
@@ -350,10 +390,22 @@ function openEditProfileModal() {
   // Ustaw selectedAvatar
   selectedAvatar = currentAvatar;
 
-  // Zaznacz obecny avatar
+  // Pobierz dostępne avatary (domyślne + kupione)
+  const availableAvatars = getAvailableAvatars();
+
+  // Zaznacz obecny avatar i ukryj niedostępne
   const editAvatarChoices = document.querySelectorAll(".edit-avatar-choice");
   editAvatarChoices.forEach((choice) => {
     const avatarId = choice.getAttribute("data-avatar");
+
+    // Sprawdź czy avatar jest dostępny
+    if (!availableAvatars.includes(avatarId)) {
+      choice.style.display = "none"; // Ukryj niedostępne
+      return;
+    }
+
+    choice.style.display = "block"; // Pokaż dostępne
+
     if (avatarId === currentAvatar) {
       choice.style.borderColor = "var(--yellow)";
       choice.style.background = "var(--white)";
@@ -364,6 +416,261 @@ function openEditProfileModal() {
       choice.style.transform = "scale(1)";
     }
   });
+
+  // Renderuj kupione tła i style
+  renderPurchasedBackgrounds();
+  renderPurchasedMenuStyles();
+
+  // Pokaż modal
+  const modal = document.getElementById("edit-profile-modal");
+  if (modal) {
+    modal.style.display = "flex";
+  }
+}
+
+// Funkcja renderowania kupionych tła
+function renderPurchasedBackgrounds() {
+  const container = document.getElementById("background-choices");
+  const containerDiv = document.getElementById(
+    "background-selection-container"
+  );
+  if (!container || !containerDiv) return;
+
+  const currentBg = getActiveBackground();
+
+  // Pobierz kupione tła
+  const purchasedBgs = [];
+  if (hasPurchased("bg_night"))
+    purchasedBgs.push({ id: "bg-night", name: "NOCNE", emoji: "🌙" });
+  if (hasPurchased("bg_retro"))
+    purchasedBgs.push({ id: "bg-retro", name: "RETRO", emoji: "📺" });
+  if (hasPurchased("bg_neon"))
+    purchasedBgs.push({ id: "bg-neon", name: "NEON", emoji: "💫" });
+  if (hasPurchased("bg_switch"))
+    purchasedBgs.push({ id: "bg-switch", name: "SWITCH", emoji: "🎮" });
+
+  // Jeśli są kupione tła, pokaż sekcję
+  if (purchasedBgs.length > 0) {
+    containerDiv.style.display = "block";
+
+    // Dodaj kupione tła do wyboru
+    purchasedBgs.forEach((bg) => {
+      const bgChoice = document.createElement("div");
+      bgChoice.className = "bg-choice";
+      bgChoice.setAttribute("data-bg", bg.id);
+      bgChoice.style.cssText = `
+        cursor: pointer;
+        padding: 10px 15px;
+        border: 4px solid var(--dark-gray);
+        border-radius: 10px;
+        background: var(--light-gray);
+        font-size: 8px;
+        text-align: center;
+        transition: all 0.2s;
+      `;
+      bgChoice.textContent = `${bg.emoji} ${bg.name}`;
+
+      // Zaznacz aktywne
+      if (currentBg === bg.id) {
+        bgChoice.style.borderColor = "var(--yellow)";
+        bgChoice.style.background = "var(--white)";
+      }
+
+      bgChoice.addEventListener("click", () => {
+        // Odznacz wszystkie
+        document.querySelectorAll(".bg-choice").forEach((c) => {
+          c.style.borderColor = "var(--dark-gray)";
+          c.style.background =
+            c.getAttribute("data-bg") === "default"
+              ? "linear-gradient(135deg, var(--red) 0%, var(--yellow) 50%, var(--blue) 100%)"
+              : "var(--light-gray)";
+        });
+
+        // Zaznacz wybrany
+        bgChoice.style.borderColor = "var(--yellow)";
+        bgChoice.style.background = "var(--white)";
+
+        // Zastosuj tło
+        applyBackground(bg.id);
+        setActiveBackground(bg.id);
+        playBeep(660, 0.1);
+      });
+
+      container.appendChild(bgChoice);
+    });
+  }
+
+  // Event listener dla domyślnego tła
+  const defaultBg = container.querySelector('[data-bg="default"]');
+  if (defaultBg) {
+    if (currentBg === "default") {
+      defaultBg.style.borderColor = "var(--yellow)";
+    }
+
+    defaultBg.addEventListener("click", () => {
+      document.querySelectorAll(".bg-choice").forEach((c) => {
+        c.style.borderColor = "var(--dark-gray)";
+        c.style.background =
+          c.getAttribute("data-bg") === "default"
+            ? "linear-gradient(135deg, var(--red) 0%, var(--yellow) 50%, var(--blue) 100%)"
+            : "var(--light-gray)";
+      });
+
+      defaultBg.style.borderColor = "var(--yellow)";
+      applyBackground("default");
+      setActiveBackground("default");
+      playBeep(660, 0.1);
+    });
+  }
+}
+
+// Funkcja renderowania kupionych stylów menu
+function renderPurchasedMenuStyles() {
+  const container = document.getElementById("menustyle-choices");
+  const containerDiv = document.getElementById("menustyle-selection-container");
+  if (!container || !containerDiv) return;
+
+  const currentStyle = getActiveMenuStyle();
+
+  // Pobierz kupione style
+  const purchasedStyles = [];
+  if (hasPurchased("style_nes"))
+    purchasedStyles.push({ id: "menu-nes", name: "NES", emoji: "🎮" });
+  if (hasPurchased("style_gameboy"))
+    purchasedStyles.push({ id: "menu-gameboy", name: "GAME BOY", emoji: "🟢" });
+  if (hasPurchased("style_switch"))
+    purchasedStyles.push({ id: "menu-switch", name: "SWITCH", emoji: "🔴" });
+
+  // Jeśli są kupione style, pokaż sekcję
+  if (purchasedStyles.length > 0) {
+    containerDiv.style.display = "block";
+
+    // Dodaj kupione style do wyboru
+    purchasedStyles.forEach((style) => {
+      const styleChoice = document.createElement("div");
+      styleChoice.className = "style-choice";
+      styleChoice.setAttribute("data-style", style.id);
+      styleChoice.style.cssText = `
+        cursor: pointer;
+        padding: 10px 15px;
+        border: 4px solid var(--dark-gray);
+        border-radius: 10px;
+        background: var(--light-gray);
+        font-size: 8px;
+        text-align: center;
+        transition: all 0.2s;
+      `;
+      styleChoice.textContent = `${style.emoji} ${style.name}`;
+
+      // Zaznacz aktywny
+      if (currentStyle === style.id) {
+        styleChoice.style.borderColor = "var(--yellow)";
+        styleChoice.style.background = "var(--white)";
+      }
+
+      styleChoice.addEventListener("click", () => {
+        // Odznacz wszystkie
+        document.querySelectorAll(".style-choice").forEach((c) => {
+          c.style.borderColor = "var(--dark-gray)";
+          c.style.background = "var(--light-gray)";
+        });
+
+        // Zaznacz wybrany
+        styleChoice.style.borderColor = "var(--yellow)";
+        styleChoice.style.background = "var(--white)";
+
+        // Zastosuj styl
+        applyMenuStyle(style.id);
+        setActiveMenuStyle(style.id);
+        playBeep(660, 0.1);
+      });
+
+      container.appendChild(styleChoice);
+    });
+  }
+
+  // Event listener dla domyślnego stylu
+  const defaultStyle = container.querySelector('[data-style="default"]');
+  if (defaultStyle) {
+    if (currentStyle === "default") {
+      defaultStyle.style.borderColor = "var(--yellow)";
+    }
+
+    defaultStyle.addEventListener("click", () => {
+      document.querySelectorAll(".style-choice").forEach((c) => {
+        c.style.borderColor = "var(--dark-gray)";
+        c.style.background = "var(--light-gray)";
+      });
+
+      defaultStyle.style.borderColor = "var(--yellow)";
+      applyMenuStyle("default");
+      setActiveMenuStyle("default");
+      playBeep(660, 0.1);
+    });
+  }
+}
+
+// Funkcja otwierania modalu edycji profilu
+function openEditProfileModal() {
+  const userData = loadData();
+  const currentNick = userData.profile?.nick || "";
+  const currentAvatar = userData.profile?.avatar || "mario";
+
+  // Ustaw obecne wartości w inputach
+  const editNickInput = document.getElementById("edit-profile-nick");
+  if (editNickInput) {
+    editNickInput.value = currentNick;
+  }
+
+  // Ustaw selectedAvatar
+  selectedAvatar = currentAvatar;
+
+  // Pobierz dostępne avatary (domyślne + kupione)
+  const availableAvatars = getAvailableAvatars();
+
+  // Zaznacz obecny avatar i ukryj niedostępne
+  const editAvatarChoices = document.querySelectorAll(".edit-avatar-choice");
+  editAvatarChoices.forEach((choice) => {
+    const avatarId = choice.getAttribute("data-avatar");
+
+    // Sprawdź czy avatar jest dostępny
+    if (!availableAvatars.includes(avatarId)) {
+      choice.style.display = "none"; // Ukryj niedostępne
+      return;
+    }
+
+    choice.style.display = "block"; // Pokaż dostępne
+
+    if (avatarId === currentAvatar) {
+      choice.style.borderColor = "var(--yellow)";
+      choice.style.background = "var(--white)";
+      choice.style.transform = "scale(1.1)";
+    } else {
+      choice.style.borderColor = "var(--dark-gray)";
+      choice.style.background = "var(--light-gray)";
+      choice.style.transform = "scale(1)";
+    }
+  });
+
+  // Wyczyść i renderuj kupione tła/style
+  const bgContainer = document.getElementById("background-choices");
+  const styleContainer = document.getElementById("menustyle-choices");
+  if (bgContainer) {
+    // Zachowaj tylko domyślny element
+    const defaultBg = bgContainer.querySelector('[data-bg="default"]');
+    bgContainer.innerHTML = "";
+    if (defaultBg) bgContainer.appendChild(defaultBg);
+  }
+  if (styleContainer) {
+    // Zachowaj tylko domyślny element
+    const defaultStyle = styleContainer.querySelector('[data-style="default"]');
+    styleContainer.innerHTML = "";
+    if (defaultStyle) styleContainer.appendChild(defaultStyle);
+  }
+
+  // Renderuj kupione tła i style
+  renderPurchasedBackgrounds();
+  renderPurchasedMenuStyles();
 
   // Pokaż modal
   const modal = document.getElementById("edit-profile-modal");
@@ -456,6 +763,12 @@ function startGame(gameName) {
         startKong();
       }
       break;
+    case "mario":
+      startMario();
+      break;
+    case "invaders":
+      startInvaders();
+      break;
     default:
       gameContent.innerHTML =
         '<p style="text-align: center;">Gra w przygotowaniu...</p>';
@@ -488,6 +801,9 @@ function stopAllGames() {
   if (typeof stopTetris === "function") stopTetris();
   if (typeof stopPong === "function") stopPong();
   if (typeof stopKong === "function") stopKong();
+  if (typeof stopMario === "function") stopMario();
+  if (typeof stopInvaders === "function") stopInvaders();
+  if (typeof stopDino === "function") stopDino();
 }
 
 // Funkcja obsługi wpisania kodu
@@ -501,38 +817,84 @@ function handleCodeSubmit() {
     return;
   }
 
-  // Sprawdź kody odblokowujące gry
-  let gameUnlocked = false;
+  // Sprawdź nowe kody
+  let codeActivated = false;
 
-  if (code === "PACMAN" && !isGameUnlocked("pacman")) {
-    unlockGame("pacman");
-    showToast("Odblokowano PISACMAN! 🟡");
-    playBeep(880, 0.3);
-    gameUnlocked = true;
-  } else if (code === "TETRIS" && !isGameUnlocked("tetris")) {
+  if (code === "TETRIS" && !isGameUnlocked("tetris")) {
     unlockGame("tetris");
-    showToast("Odblokowano PISARIS! 🟦");
+    showToast("🟦 Odblokowano PISARIS (Tetris)!");
     playBeep(880, 0.3);
-    gameUnlocked = true;
+    codeActivated = true;
   } else if (code === "PONG" && !isGameUnlocked("pong")) {
     unlockGame("pong");
-    showToast("Odblokowano PISARIO PONG! 🏓");
+    showToast("🏓 Odblokowano PISARIO PONG!");
     playBeep(880, 0.3);
-    gameUnlocked = true;
-  } else if (code === "KONG" && !isGameUnlocked("kong")) {
-    unlockGame("kong");
-    showToast("Odblokowano PISARIO KONG! 🦍");
+    codeActivated = true;
+  } else if (code === "PACMAN" && !isGameUnlocked("pacman")) {
+    unlockGame("pacman");
+    showToast("🟡 Odblokowano PISACMAN!");
     playBeep(880, 0.3);
-    gameUnlocked = true;
+    codeActivated = true;
+  } else if (code === "DOLARY") {
+    addCoins(500);
+    showToast("💰 +500 MONET!");
+    playBeep(1200, 0.5);
+    codeActivated = true;
+  } else if (code === "KONAMICODE") {
+    // Odblokuj wszystkie gry
+    const allGames = ["pacman", "tetris", "pong", "kong", "invaders"];
+    allGames.forEach((game) => {
+      if (!isGameUnlocked(game)) {
+        unlockGame(game);
+      }
+    });
+
+    // Odblokuj wszystkie osiągnięcia
+    const allAchievements = achievementsList.map((a) => a.id);
+    allAchievements.forEach((achId) => {
+      unlockAchievement(achId);
+    });
+
+    // Dodaj 2000 monet
+    addCoins(2000);
+
+    showToast("🎮 KOD KONAMI! Wszystko odblokowane + 2000 monet!");
+    playAchievementSound();
+    codeActivated = true;
+
+    // Odśwież widok osiągnięć
+    if (typeof renderAchievements === "function") {
+      renderAchievements();
+    }
+  } else if (code === "PISARION3000") {
+    showToast("🎨 Odkryto tajemniczą grafikę!");
+    playAchievementSound();
+    codeActivated = true;
+
+    // Otwórz lightbox z fanart15.png
+    setTimeout(() => {
+      openLightbox("./assets/fanart/fanart15.png");
+    }, 500);
+  } else if (code === "DINO") {
+    showToast("🦖 Uruchamianie POLSKI YOSHI RUNNER!");
+    playBeep(880, 0.3);
+    codeActivated = true;
+
+    // Uruchom grę DINO
+    setTimeout(() => {
+      if (typeof startDino === "function") {
+        startDino();
+      }
+    }, 500);
   } else {
-    showToast("Nieprawidłowy kod!");
+    showToast("❌ Nieprawidłowy kod!");
     playBeep(220, 0.2);
   }
 
   codeInput.value = "";
 
-  // Zaktualizuj UI jeśli gra została odblokowana
-  if (gameUnlocked) {
+  // Zaktualizuj UI jeśli coś zostało odblokowane
+  if (codeActivated) {
     updateUnlockedGames();
   }
 }
@@ -619,4 +981,110 @@ function incrementGamesPlayed() {
   if (data.stats.totalGamesPlayed === 1) {
     unlockAchievement("pierwszy_krok");
   }
+}
+
+// Funkcja wyświetlania modalu powitalnego
+function showWelcomeModal() {
+  const modal = document.getElementById("welcome-modal");
+  const closeBtn = document.getElementById("close-welcome-btn");
+
+  if (modal && closeBtn) {
+    modal.style.display = "flex";
+    playBeep(660, 0.3);
+
+    // Event listener dla przycisku zamknięcia (tylko raz)
+    const handleClose = function () {
+      modal.style.display = "none";
+      playBeep(880, 0.2);
+
+      const userData = loadData();
+      showToast("Witaj, " + userData.profile.nick + "!");
+
+      // Usuń listener po użyciu
+      closeBtn.removeEventListener("click", handleClose);
+    };
+
+    closeBtn.addEventListener("click", handleClose);
+  }
+}
+
+// Funkcja sprawdzająca czy Invaders powinien być odblokowany
+function checkInvadersUnlock() {
+  const data = loadData();
+  const completedGames = data.gamesCompleted || [];
+
+  if (completedGames.length >= 5) {
+    unlockInvadersGame();
+  }
+}
+
+// Funkcja odblokowująca grę Invaders
+function unlockInvadersGame() {
+  const invadersCard = document.getElementById("invaders-card");
+  const invadersTitle = document.getElementById("invaders-title");
+  const invadersDesc = document.getElementById("invaders-desc");
+
+  if (!invadersCard || !invadersTitle || !invadersDesc) return;
+
+  // Sprawdź czy już odblokowane
+  if (invadersTitle.textContent !== "??????") return;
+
+  // Odblokuj grę w systemie
+  unlockGame("invaders");
+
+  // Zmień tytuł i opis
+  invadersTitle.textContent = "PISARIO INVADERS";
+  invadersDesc.textContent = "Space Invaders z bossem";
+
+  // Odblokuj kartę
+  invadersCard.classList.remove("locked");
+  invadersCard.removeAttribute("data-locked");
+
+  // Ukryj info o zablokowaniu
+  const lockedInfo = invadersCard.querySelector(".locked-info");
+  if (lockedInfo) {
+    lockedInfo.style.display = "none";
+  }
+
+  // Zmień przycisk
+  const button = invadersCard.querySelector(".btn-play");
+  if (button) {
+    button.textContent = "ZAGRAJ";
+    button.removeAttribute("disabled");
+  }
+
+  // Pokaż toast
+  showToast("🚀 Odblokowano PISARIO INVADERS!");
+  playAchievementSound();
+}
+
+// Funkcja dodawania pucharów do ukończonych gier
+function updateCompletedGamesUI() {
+  const userData = loadData();
+  const completedGames = userData.gamesCompleted || [];
+
+  completedGames.forEach(function (gameName) {
+    const gameCard = document.querySelector(
+      '.game-card[data-game="' + gameName + '"]'
+    );
+
+    if (gameCard && !gameCard.querySelector(".trophy-badge")) {
+      // Dodaj puchar w prawym górnym rogu
+      const trophy = document.createElement("div");
+      trophy.className = "trophy-badge";
+      trophy.innerHTML = "🏆";
+      trophy.style.cssText = `
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 32px;
+        animation: bounce 1s infinite;
+        filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+      `;
+
+      // Upewnij się, że karta ma position: relative
+      gameCard.style.position = "relative";
+      gameCard.appendChild(trophy);
+    }
+  });
 }
