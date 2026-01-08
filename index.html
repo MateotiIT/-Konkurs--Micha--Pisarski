@@ -402,6 +402,33 @@
       <section id="shop-tab" class="tab-content">
         <h2>SKLEP</h2>
 
+        <!-- Informacja o zdobywaniu monet -->
+        <div
+          style="
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255, 237, 0, 0.1);
+            border: 3px solid var(--yellow);
+            border-radius: 10px;
+            text-align: center;
+          "
+        >
+          <p
+            style="
+              font-size: 9px;
+              line-height: 1.8;
+              color: var(--dark-gray);
+              margin-bottom: 8px;
+            "
+          >
+            💰 <strong>JAK ZDOBYĆ MONETY?</strong> 💰
+          </p>
+          <p style="font-size: 8px; line-height: 1.6; color: var(--dark-gray)">
+            🎮 +10 monet za wygraną grę<br />
+            🏆 +5 monet za odblokowanie osiągnięcia
+          </p>
+        </div>
+
         <!-- Welcome message (pokazywany przy pierwszym wejściu) -->
         <div
           id="shop-welcome"
@@ -482,6 +509,25 @@
       <!-- ZAKŁADKA: O PROJEKCIE -->
       <section id="about-tab" class="tab-content">
         <h2>O PROJEKCIE</h2>
+
+        <!-- Film powitanlny -->
+        <div style="margin: 20px auto; max-width: 800px; text-align: center">
+          <video
+            autoplay
+            loop
+            muted
+            playsinline
+            style="
+              width: 100%;
+              max-width: 800px;
+              border-radius: 10px;
+              border: 4px solid var(--dark-gray);
+            "
+          >
+            <source src="./assets/fanart/witaj.mp4" type="video/mp4" />
+          </video>
+        </div>
+
         <div class="code-description">
           <p>Strona stworzona na konkurs fanartowy Michała Pisarskiego.</p>
           <p>Retro Nintendo vibe z mini-grami inspirowany klasykami!</p>
@@ -719,10 +765,7 @@
                 🔧 ZAGADKA #6
               </p>
               <p style="font-size: 9px; color: var(--gray); line-height: 1.8">
-                Nazwisko twórcy kanału, gdzie Nintendo gra,<br />
-                Dodaj "ON" na końcu, a potem "3000" da.<br />
-                Youtuber z Polski, fanartów bohater,<br />
-                Język polski w grach - to jego charakter!
+                Najpoteżniejszy YouTuber 3000!
               </p>
             </div>
 
@@ -747,9 +790,68 @@
               </p>
               <p style="font-size: 9px; color: var(--gray); line-height: 1.8">
                 Gdy internet padnie, w Chrome się pojawia,<br />
-                Skacze przez kaktusy, piksele zabawia.<br />
-                Jurajski gad szary, bez łączności gra,<br />
+                Skacze przez kaktusy, piksele zabawia.<n
+                  Jurajski
+                  gad
+                  szary,
+                  bez
+                  łączności
+                  gra,<br
+                />
                 Krótka nazwa jego - jakaż ona ma?
+              </p>
+            </div>
+
+            <!-- Zagadka 8: LOADING -->
+            <div
+              style="
+                background: rgba(156, 39, 176, 0.15);
+                padding: 20px;
+                border-radius: 10px;
+                border: 2px solid #9c27b0;
+              "
+            >
+              <p
+                style="
+                  font-size: 10px;
+                  color: #9c27b0;
+                  font-weight: bold;
+                  margin-bottom: 10px;
+                "
+              >
+                📹 ZAGADKA #8
+              </p>
+              <p style="font-size: 9px; color: var(--gray); line-height: 1.8">
+                KOD: LOADING - niewykorzystany ekran loadingowy, początkowo miał
+                być użyty do wczytywania gier gdy będzie jakieś dłuższe
+                ładowanie.
+              </p>
+            </div>
+
+            <!-- Zagadka 9: ZELDA -->
+            <div
+              style="
+                background: rgba(255, 193, 7, 0.15);
+                padding: 20px;
+                border-radius: 10px;
+                border: 2px solid #ffc107;
+              "
+            >
+              <p
+                style="
+                  font-size: 10px;
+                  color: #ffc107;
+                  font-weight: bold;
+                  margin-bottom: 10px;
+                "
+              >
+                🐉 ZAGADKA #9
+              </p>
+              <p style="font-size: 9px; color: var(--gray); line-height: 1.8">
+                Legendarna przygoda, złoty trójkąt mocy,<br />
+                Młody wojownik zielony walczy w ciemność nocy.<br />
+                Link ratuje księżniczkę, dungeonów ma mnóstwo,<br />
+                NES 1986 - klasyka z Nintendo!
               </p>
             </div>
           </div>
@@ -786,6 +888,14 @@
       <div class="lightbox-content">
         <button id="lightbox-close" class="lightbox-close">✕</button>
         <img id="lightbox-img" src="" alt="Fanart" />
+        <video
+          id="lightbox-video"
+          controls
+          loop
+          style="display: none; max-width: 90%; max-height: 90vh"
+        >
+          <source src="" type="video/mp4" />
+        </video>
       </div>
     </div>
 
@@ -1320,6 +1430,7 @@
     <script src="js/games/mario.js"></script>
     <script src="js/games/invaders.js"></script>
     <script src="js/games/dino.js"></script>
+    <script src="js/games/aquamentus.js"></script>
     <script src="js/app.js"></script>
   </body>
 </html>

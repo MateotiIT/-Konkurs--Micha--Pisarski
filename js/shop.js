@@ -61,14 +61,6 @@ const shopItems = [
     price: 30,
     gameCode: "pong",
   },
-  {
-    id: "code_invaders",
-    type: "code",
-    name: "Odblokuj INVADERS",
-    emoji: "👾",
-    price: 30,
-    gameCode: "invaders",
-  },
 
   // TŁA - 50 monet każde
   {

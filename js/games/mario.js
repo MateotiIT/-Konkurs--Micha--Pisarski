@@ -433,8 +433,6 @@ function createMarioLevel1() {
   marioCoins.push({ x: 1750, y: 400, width: 20, height: 20, collected: false });
   marioCoins.push({ x: 1950, y: 400, width: 20, height: 20, collected: false });
 
-  // Power-upy (usunięte)
-
   // Wrogowie (Goombas)
   marioEnemies.push({
     x: 550,

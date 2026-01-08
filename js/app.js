@@ -804,6 +804,7 @@ function stopAllGames() {
   if (typeof stopMario === "function") stopMario();
   if (typeof stopInvaders === "function") stopInvaders();
   if (typeof stopDino === "function") stopDino();
+  if (typeof stopAquamentus === "function") stopAquamentus();
 }
 
 // Funkcja obsługi wpisania kodu
@@ -886,6 +887,26 @@ function handleCodeSubmit() {
         startDino();
       }
     }, 500);
+  } else if (code === "LOADING") {
+    showToast("📹 Odkryto niewykorzystany ekran logowania!");
+    playAchievementSound();
+    codeActivated = true;
+
+    // Otwórz lightbox z loading.mp4
+    setTimeout(() => {
+      openLightbox("./assets/fanart/loading.mp4", "video");
+    }, 500);
+  } else if (code === "ZELDA") {
+    showToast("🐉 Uruchamianie ZELDA BOSS FIGHT!");
+    playBeep(880, 0.3);
+    codeActivated = true;
+
+    // Uruchom grę Aquamentus
+    setTimeout(() => {
+      if (typeof startAquamentus === "function") {
+        startAquamentus();
+      }
+    }, 500);
   } else {
     showToast("❌ Nieprawidłowy kod!");
     playBeep(220, 0.2);
@@ -901,15 +922,39 @@ function handleCodeSubmit() {
 
 // Funkcja zamykania lightboxa
 function closeLightbox() {
-  document.getElementById("lightbox").style.display = "none";
+  const lightbox = document.getElementById("lightbox");
+  const lightboxVideo = document.getElementById("lightbox-video");
+
+  // Zatrzymaj i zresetuj wideo jeśli jest odtwarzane
+  if (lightboxVideo && lightboxVideo.style.display !== "none") {
+    lightboxVideo.pause();
+    lightboxVideo.currentTime = 0;
+  }
+
+  lightbox.style.display = "none";
 }
 
 // Funkcja otwierania lightboxa
-function openLightbox(imageSrc) {
+function openLightbox(src, type = "image") {
   const lightbox = document.getElementById("lightbox");
   const lightboxImg = document.getElementById("lightbox-img");
+  const lightboxVideo = document.getElementById("lightbox-video");
 
-  lightboxImg.src = imageSrc;
+  if (type === "video") {
+    lightboxImg.style.display = "none";
+    lightboxVideo.style.display = "block";
+    lightboxVideo.querySelector("source").src = src;
+    lightboxVideo.load();
+    // Automatyczne odtwarzanie po załadowaniu
+    lightboxVideo
+      .play()
+      .catch((err) => console.log("Autoplay prevented:", err));
+  } else {
+    lightboxVideo.style.display = "none";
+    lightboxImg.style.display = "block";
+    lightboxImg.src = src;
+  }
+
   lightbox.style.display = "flex";
   playBeep(660, 0.1);
 }
