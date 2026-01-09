@@ -5,17 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PISARSKI RETRO KONSOLA</title>
 
-    
     <link
       href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
       rel="stylesheet"
     />
 
-    
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    
     <div id="start-screen">
       <div class="start-content">
         <h1 class="logo">PISARSKI<br />RETRO<br />KONSOLA</h1>
@@ -24,7 +21,6 @@
       </div>
     </div>
 
-    
     <div id="profile-screen" style="display: none">
       <div class="profile-content">
         <h2
@@ -33,7 +29,6 @@
           STWÓRZ PROFIL
         </h2>
 
-        
         <div style="margin-bottom: 40px">
           <label
             style="
@@ -65,7 +60,6 @@
           />
         </div>
 
-        
         <div style="margin-bottom: 40px">
           <label
             style="
@@ -86,7 +80,6 @@
               margin: 0 auto;
             "
           >
-            
             <div
               class="avatar-choice"
               data-avatar="mario"
@@ -232,9 +225,7 @@
       </div>
     </div>
 
-    
     <div id="main-menu" style="display: none">
-      
       <nav class="tabs">
         <button class="tab active" data-tab="games">GRY</button>
         <button class="tab" data-tab="achievements">OSIĄGNIĘCIA</button>
@@ -278,29 +269,25 @@
         </div>
       </nav>
 
-      
       <section id="games-tab" class="tab-content active">
         <h2>WYBIERZ GRĘ</h2>
         <div class="games-grid">
-          
           <div class="game-card" data-game="quiz">
             <div class="game-icon" style="background-color: var(--red)">🧠</div>
             <h3>PISARIO QUIZ</h3>
-            <p>Milionerzy Nintendo</p>
+            <p>Sprawdź swoją wiedzę!</p>
             <button class="btn-play" data-game="quiz">ZAGRAJ</button>
           </div>
 
-          
           <div class="game-card" data-game="puzzle">
             <div class="game-icon" style="background-color: var(--yellow)">
               🧩
             </div>
-            <h3>PISAREK PUZZLE</h3>
-            <p>Sliding Puzzle</p>
+            <h3>PISARIO PUZZLE</h3>
+            <p>Przesuwaj elemnty!</p>
             <button class="btn-play" data-game="puzzle">ZAGRAJ</button>
           </div>
 
-          
           <div class="game-card" data-game="memory">
             <div class="game-icon" style="background-color: var(--purple)">
               🃏
@@ -310,15 +297,13 @@
             <button class="btn-play" data-game="memory">ZAGRAJ</button>
           </div>
 
-          
           <div class="game-card" data-game="kong">
             <div class="game-icon" style="background-color: var(--red)">🦍</div>
             <h3>PISARIO KONG</h3>
-            <p>Donkey Kong 1981</p>
+            <p>Odbierz małpie bananka albo switcha</p>
             <button class="btn-play" data-game="kong">ZAGRAJ</button>
           </div>
 
-          
           <div
             class="game-card locked"
             data-locked="true"
@@ -336,15 +321,13 @@
             </button>
           </div>
 
-          
           <div class="game-card" data-game="mario">
             <div class="game-icon" style="background-color: var(--red)">🍄</div>
             <h3>SUPER PISARIO BROS</h3>
-            <p>Platformer NES 1985</p>
+            <p>Hydraulik w akcji!</p>
             <button class="btn-play" data-game="mario">ZAGRAJ</button>
           </div>
 
-          
           <div class="game-card locked" data-locked="true" data-game="pacman">
             <div class="game-icon" style="background-color: var(--blue)">
               🟡
@@ -357,20 +340,18 @@
             </button>
           </div>
 
-          
           <div class="game-card locked" data-locked="true" data-game="tetris">
             <div class="game-icon" style="background-color: var(--purple)">
               🧱
             </div>
             <h3>PISARIS</h3>
-            <p>Tetris</p>
+            <p>Klasyczne klocki</p>
             <div class="locked-info">🔒 Odblokuj w sklepie lub kodem</div>
             <button class="btn-play" data-game="tetris" disabled>
               ZABLOKOWANE
             </button>
           </div>
 
-          
           <div class="game-card locked" data-locked="true" data-game="pong">
             <div class="game-icon" style="background-color: var(--green)">
               🏓
@@ -385,24 +366,17 @@
         </div>
       </section>
 
-      
       <section id="achievements-tab" class="tab-content">
         <h2>OSIĄGNIĘCIA</h2>
-        <div id="achievements-list">
-          
-        </div>
+        <div id="achievements-list"></div>
 
         <h2 style="margin-top: 40px">GALERIA KONSOL</h2>
-        <div id="consoles-gallery">
-          
-        </div>
+        <div id="consoles-gallery"></div>
       </section>
 
-      
       <section id="shop-tab" class="tab-content">
         <h2>SKLEP</h2>
 
-        
         <div
           style="
             margin-bottom: 20px;
@@ -429,7 +403,6 @@
           </p>
         </div>
 
-        
         <div
           id="shop-welcome"
           style="
@@ -458,55 +431,42 @@
         </div>
 
         <div id="shop-container">
-          
           <div class="shop-category">
             <h3
               style="font-size: 12px; margin-bottom: 15px; color: var(--purple)"
             >
               👤 AVATARY (20🪙)
             </h3>
-            <div id="shop-avatars" class="shop-items-grid">
-              
-            </div>
+            <div id="shop-avatars" class="shop-items-grid"></div>
           </div>
 
-          
           <div class="shop-category" style="margin-top: 30px">
             <h3 style="font-size: 12px; margin-bottom: 15px; color: var(--red)">
               🎮 GRY (30🪙)
             </h3>
-            <div id="shop-codes" class="shop-items-grid">
-              
-            </div>
+            <div id="shop-codes" class="shop-items-grid"></div>
           </div>
 
-          
           <div class="shop-category" style="margin-top: 30px">
             <h3
               style="font-size: 12px; margin-bottom: 15px; color: var(--blue)"
             >
               🎨 TŁA (50🪙)
             </h3>
-            <div id="shop-backgrounds" class="shop-items-grid">
-              
-            </div>
+            <div id="shop-backgrounds" class="shop-items-grid"></div>
           </div>
 
-          
           <div class="shop-category" style="margin-top: 30px">
             <h3
               style="font-size: 12px; margin-bottom: 15px; color: var(--green)"
             >
               ✨ STYLE MENU (150🪙)
             </h3>
-            <div id="shop-styles" class="shop-items-grid">
-              
-            </div>
+            <div id="shop-styles" class="shop-items-grid"></div>
           </div>
         </div>
       </section>
 
-      
       <section id="about-tab" class="tab-content">
         <h2>O PROJEKCIE</h2>
 
@@ -525,7 +485,6 @@
         </div>
       </section>
 
-      
       <section id="code-tab" class="tab-content">
         <h2>WPISZ KOD</h2>
         <div style="margin-top: 20px">
@@ -556,7 +515,6 @@
           </button>
         </div>
 
-        
         <div
           style="
             margin-top: 50px;
@@ -592,7 +550,6 @@
             class="riddles-container"
             style="display: flex; flex-direction: column; gap: 25px"
           >
-            
             <div
               style="
                 background: rgba(138, 43, 226, 0.15);
@@ -617,7 +574,6 @@
               </p>
             </div>
 
-            
             <div
               style="
                 background: rgba(0, 166, 81, 0.15);
@@ -641,7 +597,6 @@
               </p>
             </div>
 
-            
             <div
               style="
                 background: rgba(255, 193, 7, 0.15);
@@ -665,7 +620,6 @@
               </p>
             </div>
 
-            
             <div
               style="
                 background: rgba(0, 123, 255, 0.15);
@@ -689,7 +643,6 @@
               </p>
             </div>
 
-            
             <div
               style="
                 background: rgba(230, 0, 18, 0.15);
@@ -713,7 +666,6 @@
               </p>
             </div>
 
-            
             <div
               style="
                 background: rgba(76, 175, 80, 0.15);
@@ -737,7 +689,6 @@
               </p>
             </div>
 
-            
             <div
               style="
                 background: rgba(255, 193, 7, 0.15);
@@ -765,21 +716,15 @@
       </section>
     </div>
 
-    
     <div id="game-container" style="display: none">
       <div class="game-console">
-        
         <div class="game-hud">
           <span id="game-title">GRA</span>
           <span id="game-score">WYNIK: 0</span>
         </div>
 
-        
-        <div id="game-content">
-          
-        </div>
+        <div id="game-content"></div>
 
-        
         <div class="game-controls">
           <button id="pause-btn" class="btn-control" style="display: none">
             PAUZA
@@ -789,7 +734,6 @@
       </div>
     </div>
 
-    
     <div id="lightbox" style="display: none">
       <div class="lightbox-content">
         <button id="lightbox-close" class="lightbox-close">✕</button>
@@ -805,7 +749,6 @@
       </div>
     </div>
 
-    
     <div
       id="edit-profile-modal"
       style="
@@ -863,7 +806,6 @@
           EDYTUJ PROFIL
         </h2>
 
-        
         <div style="margin-bottom: 30px">
           <label
             style="
@@ -894,7 +836,6 @@
           />
         </div>
 
-        
         <div style="margin-bottom: 30px">
           <label
             style="
@@ -913,7 +854,6 @@
               gap: 10px;
             "
           >
-            
             <div
               class="edit-avatar-choice"
               data-avatar="mario"
@@ -1042,7 +982,7 @@
             >
               🏆
             </div>
-            
+
             <div
               class="edit-avatar-choice"
               data-avatar="dino"
@@ -1114,7 +1054,6 @@
           </div>
         </div>
 
-        
         <div
           id="background-selection-container"
           style="margin-bottom: 30px; display: none"
@@ -1132,7 +1071,6 @@
             id="background-choices"
             style="display: flex; gap: 10px; flex-wrap: wrap"
           >
-            
             <div
               class="bg-choice"
               data-bg="default"
@@ -1159,7 +1097,6 @@
           </div>
         </div>
 
-        
         <div
           id="menustyle-selection-container"
           style="margin-bottom: 30px; display: none"
@@ -1177,7 +1114,6 @@
             id="menustyle-choices"
             style="display: flex; gap: 10px; flex-wrap: wrap"
           >
-            
             <div
               class="style-choice"
               data-style="default"
@@ -1203,10 +1139,8 @@
       </div>
     </div>
 
-    
     <div id="toast" style="display: none"></div>
 
-    
     <div
       id="welcome-modal"
       style="
@@ -1321,7 +1255,6 @@
       </div>
     </div>
 
-    
     <script src="js/utils.js"></script>
     <script src="js/storage.js"></script>
     <script src="js/achievements.js"></script>
