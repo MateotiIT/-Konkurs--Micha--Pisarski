@@ -1,12 +1,12 @@
-// storage.js - Zarządzanie localStorage
 
-// Inicjalizacja localStorage z domyślnymi wartościami
+
+
 function initStorage() {
-  // Sprawdź czy już jest coś w localStorage
+  
   const existing = localStorage.getItem("pisarskiArcade");
 
   if (!existing) {
-    // Utwórz nowe dane
+    
     const defaultData = {
       achievements: {
         mistrz_wiedzy: false,
@@ -29,26 +29,18 @@ function initStorage() {
         pierwszy_krok: false,
         weteran_arcade: false,
       },
-      fanarts: {
-        fanart1: false,
-        fanart2: false,
-        fanart3: false,
-        fanart4: false,
-        fanart5: false,
-        fanart6: false,
-        fanart7: false,
-        fanart8: false,
-        fanart9: false,
-        fanart10: false,
-        fanart11: false,
-        fanart12: false,
-        fanart13: false,
-        fanart14: false,
-        fanart17: false,
-        fanart18: false,
-        fanart19: false,
-        fanart15: false,
-        fanart16: false,
+      consoles: {
+        console1: false,
+        console2: false,
+        console3: false,
+        console4: false,
+        console5: false,
+        console6: false,
+        console7: false,
+        console8: false,
+        console9: false,
+        console10: false,
+        console11: false,
       },
       scores: {
         quiz_highscore: 0,
@@ -72,92 +64,112 @@ function initStorage() {
       activeMenuStyle: "default",
     };
 
-    // Zapisz domyślne dane
+    
     localStorage.setItem("pisarskiArcade", JSON.stringify(defaultData));
+  } else {
+    
+    const data = JSON.parse(existing);
+    if (data.fanarts && !data.consoles) {
+      data.consoles = {
+        console1: data.fanarts.fanart1 || false,
+        console2: data.fanarts.fanart2 || false,
+        console3: data.fanarts.fanart3 || false,
+        console4: data.fanarts.fanart4 || false,
+        console5: data.fanarts.fanart5 || false,
+        console6: data.fanarts.fanart6 || false,
+        console7: data.fanarts.fanart7 || false,
+        console8: data.fanarts.fanart8 || false,
+        console9: data.fanarts.fanart9 || false,
+        console10: data.fanarts.fanart10 || false,
+        console11: data.fanarts.fanart11 || false,
+      };
+      delete data.fanarts;
+      localStorage.setItem("pisarskiArcade", JSON.stringify(data));
+    }
   }
 }
 
-// Funkcja zapisywania danych
+
 function saveData(key, value) {
   const data = loadData();
   data[key] = value;
   localStorage.setItem("pisarskiArcade", JSON.stringify(data));
 }
 
-// Funkcja ładowania wszystkich danych
+
 function loadData() {
   const data = localStorage.getItem("pisarskiArcade");
   return data ? JSON.parse(data) : null;
 }
 
-// Funkcja ładowania konkretnego klucza
+
 function loadDataKey(key) {
   const data = loadData();
   return data ? data[key] : null;
 }
 
-// Funkcja resetowania danych
+
 function resetData() {
   localStorage.removeItem("pisarskiArcade");
   initStorage();
 }
 
-// Funkcja zapisywania osiągnięcia
+
 function saveAchievement(achievementId, unlocked) {
   const data = loadData();
   data.achievements[achievementId] = unlocked;
   localStorage.setItem("pisarskiArcade", JSON.stringify(data));
 }
 
-// Funkcja zapisywania fanarta
-function saveFanart(fanartId, unlocked) {
+
+function saveConsole(consoleId, unlocked) {
   const data = loadData();
-  data.fanarts[fanartId] = unlocked;
+  data.consoles[consoleId] = unlocked;
   localStorage.setItem("pisarskiArcade", JSON.stringify(data));
 }
 
-// Funkcja dodawania ukończonej gry
+
 function addCompletedGame(gameName) {
   const data = loadData();
 
-  // Sprawdź czy gra już nie jest na liście
+  
   if (!data.gamesCompleted.includes(gameName)) {
     data.gamesCompleted.push(gameName);
     saveData("gamesCompleted", data.gamesCompleted);
 
-    // Sprawdź osiągnięcie WETERAN ARCADE
+    
     if (data.gamesCompleted.length === 5) {
       unlockAchievement("weteran_arcade");
     }
 
-    // Odblokuj Invaders po ukończeniu 5 gier
+    
     if (data.gamesCompleted.length >= 5) {
       unlockInvadersGame();
     }
 
-    // Aktualizuj UI z pucharami
+    
     if (typeof updateCompletedGamesUI === "function") {
       updateCompletedGamesUI();
     }
   }
 }
 
-// Funkcja zapisywania wyniku
+
 function saveScore(scoreKey, value) {
   const data = loadData();
 
-  // Zapisz nowy wynik tylko jeśli jest lepszy
+  
   if (value > (data.scores[scoreKey] || 0)) {
     data.scores[scoreKey] = value;
     saveData("scores", data.scores);
   }
 }
 
-// Funkcja dodawania easter egga
+
 function addEasterEgg(eggName, description) {
   const data = loadData();
 
-  // Sprawdź czy easter egg już nie istnieje
+  
   const exists = data.easterEggs.find((egg) => egg.name === eggName);
 
   if (!exists) {
@@ -169,21 +181,21 @@ function addEasterEgg(eggName, description) {
 
     saveData("easterEggs", data.easterEggs);
 
-    // Pokaż powiadomienie
+    
     showToast("🥚 Easter Egg znaleziony: " + eggName);
   }
 }
 
-// ============== SYSTEM MONET ==============
 
-// Funkcja dodawania monet
+
+
 function addCoins(amount) {
   const data = loadData();
   if (!data.coins) data.coins = 0;
   data.coins += amount;
   saveData("coins", data.coins);
 
-  // Aktualizuj wyświetlanie profilu
+  
   if (typeof updateProfileDisplay === "function") {
     const nick = data.profile?.nick || "GRACZ";
     const avatar = data.profile?.avatar || "mario";
@@ -193,7 +205,7 @@ function addCoins(amount) {
   return data.coins;
 }
 
-// Funkcja wydawania monet
+
 function spendCoins(amount) {
   const data = loadData();
   if (!data.coins) data.coins = 0;
@@ -202,7 +214,7 @@ function spendCoins(amount) {
     data.coins -= amount;
     saveData("coins", data.coins);
 
-    // Aktualizuj wyświetlanie profilu
+    
     if (typeof updateProfileDisplay === "function") {
       const nick = data.profile?.nick || "GRACZ";
       const avatar = data.profile?.avatar || "mario";
@@ -214,22 +226,22 @@ function spendCoins(amount) {
   return false;
 }
 
-// Funkcja pobierania salda monet
+
 function getCoins() {
   const data = loadData();
   return data.coins || 0;
 }
 
-// ============== SYSTEM SKLEPU ==============
 
-// Funkcja sprawdzania czy przedmiot został kupiony
+
+
 function hasPurchased(itemId) {
   const data = loadData();
   if (!data.shop) data.shop = { purchased: [] };
   return data.shop.purchased.includes(itemId);
 }
 
-// Funkcja dodawania zakupu
+
 function addPurchase(itemId) {
   const data = loadData();
   if (!data.shop) data.shop = { purchased: [] };
@@ -240,23 +252,23 @@ function addPurchase(itemId) {
   }
 }
 
-// Funkcja ustawiania aktywnego tła
+
 function setActiveBackground(bgId) {
   saveData("activeBackground", bgId);
 }
 
-// Funkcja pobierania aktywnego tła
+
 function getActiveBackground() {
   const data = loadData();
   return data.activeBackground || "default";
 }
 
-// Funkcja ustawiania aktywnego stylu menu
+
 function setActiveMenuStyle(styleId) {
   saveData("activeMenuStyle", styleId);
 }
 
-// Funkcja pobierania aktywnego stylu menu
+
 function getActiveMenuStyle() {
   const data = loadData();
   return data.activeMenuStyle || "default";

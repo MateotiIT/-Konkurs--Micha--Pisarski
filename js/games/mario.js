@@ -1,16 +1,16 @@
-// mario.js - Gra: SUPER MARIO BROS (NES 1985)
+
 
 var marioActive = false;
 var marioCanvas;
 var marioCtx;
 var marioInterval;
 
-// Wymiary
+
 var MARIO_VIEWPORT_WIDTH = 800;
 var MARIO_VIEWPORT_HEIGHT = 480;
 var MARIO_LEVEL_WIDTH = 2400;
 
-// Gracz Mario
+
 var marioPlayer = {
   x: 50,
   y: 350,
@@ -28,52 +28,52 @@ var marioPlayer = {
   invincibleTimer: 0,
 };
 
-// Kamera
+
 var marioCamera = {
   x: 0,
 };
 
-// Kontrolki
+
 var marioKeys = {
   left: false,
   right: false,
   jump: false,
 };
 
-// Fizyka
+
 var MARIO_GRAVITY = 0.5;
 var MARIO_JUMP_POWER = -12;
 var MARIO_MOVE_SPEED = 3;
 
-// Platformy
+
 var marioPlatforms = [];
 
-// Monety
+
 var marioCoins = [];
 
-// Wrogowie
+
 var marioEnemies = [];
 
-// Power-upy (kwiaty)
+
 var marioPowerUps = [];
 
-// Rury
+
 var marioPipes = [];
 
-// Lakitu - latający wróg
+
 var marioLakitu = {
   x: 400,
   y: 80,
   width: 40,
   height: 40,
   throwTimer: 0,
-  throwInterval: 150, // Co ~2.5 sekundy (150 klatek)
+  throwInterval: 150, 
 };
 
-// Firebole rzucane przez Lakitu
+
 var marioFireballs = [];
 
-// Flaga końcowa
+
 var marioFlag = {
   x: 2300,
   y: 280,
@@ -82,14 +82,14 @@ var marioFlag = {
   touched: false,
 };
 
-// Stan gry
+
 var marioGameOver = false;
 var marioWon = false;
 var marioInSecretLevel = false;
 var marioEnteringPipe = false;
 var marioPipeAnimationTimer = 0;
 
-// Księżniczka
+
 var marioPrincess = {
   x: 0,
   y: 0,
@@ -98,13 +98,13 @@ var marioPrincess = {
   active: false,
 };
 
-// Funkcja startowania gry
+
 function startMario() {
-  // Zawsze pokazuj historię na początku
+  
   showMarioStory();
 }
 
-// Funkcja wyświetlania historii przed Mario
+
 function showMarioStory() {
   const gameContent = document.getElementById("game-content");
   gameContent.innerHTML = `
@@ -218,12 +218,12 @@ function showMarioStory() {
   document
     .getElementById("mario-story-start-btn")
     .addEventListener("click", () => {
-      // Rozpocznij właściwą grę
+      
       startMarioGame();
     });
 }
 
-// Funkcja rozpoczynająca właściwą grę (wydzielona z startMario)
+
 function startMarioGame() {
   marioActive = true;
 
@@ -250,20 +250,20 @@ function startMarioGame() {
   marioCanvas = document.getElementById("mario-canvas");
   marioCtx = marioCanvas.getContext("2d");
 
-  // Reset gry
+  
   resetMarioGame();
 
-  // Event listeners
+  
   document.addEventListener("keydown", handleMarioKeyDown);
   document.addEventListener("keyup", handleMarioKeyUp);
 
-  // Start pętli z ustaloną częstotliwością 60 FPS
+  
   marioInterval = setInterval(() => {
     marioGameLoop();
   }, 1000 / 60);
 }
 
-// Reset gry
+
 function resetMarioGame() {
   marioPlayer.x = 50;
   marioPlayer.y = 350;
@@ -283,23 +283,23 @@ function resetMarioGame() {
   marioGameOver = false;
   marioWon = false;
 
-  // Reset secret level
+  
   marioInSecretLevel = false;
   marioEnteringPipe = false;
   marioPipeAnimationTimer = 0;
   marioPrincess.active = false;
 
-  // Reset Lakitu
+  
   marioLakitu.x = 400;
   marioLakitu.y = 80;
   marioLakitu.throwTimer = 0;
   marioFireballs = [];
 
-  // Stwórz poziom 1
+  
   createMarioLevel1();
 }
 
-// Tworzenie poziomu 1
+
 function createMarioLevel1() {
   marioPlatforms = [];
   marioCoins = [];
@@ -309,7 +309,7 @@ function createMarioLevel1() {
 
   var BLOCK_SIZE = 30;
 
-  // Podłoga
+  
   marioPlatforms.push({
     x: 0,
     y: 430,
@@ -318,7 +318,7 @@ function createMarioLevel1() {
     type: "ground",
   });
 
-  // Schody z bloków - 1 (w górę)
+  
   for (var i = 0; i < 5; i++) {
     for (var j = 0; j < 5 - i; j++) {
       marioPlatforms.push({
@@ -331,7 +331,7 @@ function createMarioLevel1() {
     }
   }
 
-  // Platforma wiszaca z bloków
+  
   for (var i = 0; i < 6; i++) {
     marioPlatforms.push({
       x: 600 + i * BLOCK_SIZE,
@@ -342,7 +342,7 @@ function createMarioLevel1() {
     });
   }
 
-  // Piramida
+  
   for (var i = 0; i < 4; i++) {
     for (var j = 0; j < 4 - i; j++) {
       marioPlatforms.push({
@@ -355,7 +355,7 @@ function createMarioLevel1() {
     }
   }
 
-  // Długa platforma z bloków
+  
   for (var i = 0; i < 8; i++) {
     marioPlatforms.push({
       x: 1150 + i * BLOCK_SIZE,
@@ -366,7 +366,7 @@ function createMarioLevel1() {
     });
   }
 
-  // Schody w dół
+  
   for (var i = 0; i < 6; i++) {
     for (var j = i; j < 6; j++) {
       marioPlatforms.push({
@@ -379,7 +379,7 @@ function createMarioLevel1() {
     }
   }
 
-  // Platforma niska
+  
   for (var i = 0; i < 5; i++) {
     marioPlatforms.push({
       x: 1850 + i * BLOCK_SIZE,
@@ -390,7 +390,7 @@ function createMarioLevel1() {
     });
   }
 
-  // Ostatnia platforma przed switchem
+  
   for (var i = 0; i < 4; i++) {
     marioPlatforms.push({
       x: 2100 + i * BLOCK_SIZE,
@@ -401,13 +401,13 @@ function createMarioLevel1() {
     });
   }
 
-  // Rury
+  
   marioPipes.push({ x: 250, y: 370, width: 60, height: 60 });
   marioPipes.push({ x: 850, y: 370, width: 60, height: 60 });
   marioPipes.push({ x: 1400, y: 370, width: 60, height: 60 });
   marioPipes.push({ x: 2000, y: 370, width: 60, height: 60 });
 
-  // Monety - w powietrzu
+  
   marioCoins.push({ x: 500, y: 180, width: 20, height: 20, collected: false });
   marioCoins.push({ x: 600, y: 150, width: 20, height: 20, collected: false });
   marioCoins.push({ x: 700, y: 180, width: 20, height: 20, collected: false });
@@ -421,7 +421,7 @@ function createMarioLevel1() {
   marioCoins.push({ x: 1800, y: 180, width: 20, height: 20, collected: false });
   marioCoins.push({ x: 2150, y: 150, width: 20, height: 20, collected: false });
 
-  // Monety - na ziemi
+  
   marioCoins.push({ x: 150, y: 400, width: 20, height: 20, collected: false });
   marioCoins.push({ x: 320, y: 400, width: 20, height: 20, collected: false });
   marioCoins.push({ x: 550, y: 400, width: 20, height: 20, collected: false });
@@ -433,7 +433,7 @@ function createMarioLevel1() {
   marioCoins.push({ x: 1750, y: 400, width: 20, height: 20, collected: false });
   marioCoins.push({ x: 1950, y: 400, width: 20, height: 20, collected: false });
 
-  // Wrogowie (Goombas)
+  
   marioEnemies.push({
     x: 550,
     y: 398,
@@ -478,7 +478,7 @@ function createMarioLevel1() {
   marioFlag.touched = false;
 }
 
-// Tworzenie sekretnego poziomu
+
 function createMarioSecretLevel() {
   marioPlatforms = [];
   marioCoins = [];
@@ -486,7 +486,7 @@ function createMarioSecretLevel() {
   marioPipes = [];
   marioFireballs = [];
 
-  // Podłoga
+  
   marioPlatforms.push({
     x: 0,
     y: 430,
@@ -495,9 +495,9 @@ function createMarioSecretLevel() {
     type: "ground",
   });
 
-  // Monety ułożone w napis PISARIO (niżej - więcej y)
+  
   var pisarioCoins = [
-    // P
+    
     { x: 150, y: 250 },
     { x: 150, y: 280 },
     { x: 150, y: 310 },
@@ -511,14 +511,14 @@ function createMarioSecretLevel() {
     { x: 210, y: 310 },
     { x: 180, y: 310 },
 
-    // I
+    
     { x: 280, y: 250 },
     { x: 280, y: 280 },
     { x: 280, y: 310 },
     { x: 280, y: 340 },
     { x: 280, y: 370 },
 
-    // S
+    
     { x: 320, y: 250 },
     { x: 350, y: 250 },
     { x: 380, y: 250 },
@@ -531,7 +531,7 @@ function createMarioSecretLevel() {
     { x: 350, y: 370 },
     { x: 380, y: 370 },
 
-    // A
+    
     { x: 450, y: 280 },
     { x: 450, y: 310 },
     { x: 450, y: 340 },
@@ -543,7 +543,7 @@ function createMarioSecretLevel() {
     { x: 510, y: 370 },
     { x: 480, y: 310 },
 
-    // R
+    
     { x: 550, y: 250 },
     { x: 550, y: 280 },
     { x: 550, y: 310 },
@@ -557,14 +557,14 @@ function createMarioSecretLevel() {
     { x: 640, y: 340 },
     { x: 640, y: 370 },
 
-    // I
+    
     { x: 680, y: 250 },
     { x: 680, y: 280 },
     { x: 680, y: 310 },
     { x: 680, y: 340 },
     { x: 680, y: 370 },
 
-    // O
+    
     { x: 720, y: 250 },
     { x: 750, y: 250 },
     { x: 780, y: 250 },
@@ -589,39 +589,39 @@ function createMarioSecretLevel() {
     });
   }
 
-  // Księżniczka na końcu
+  
   marioPrincess.x = 800;
   marioPrincess.y = 380;
   marioPrincess.active = true;
 
-  // Reset pozycji gracza
+  
   marioPlayer.x = 100;
   marioPlayer.y = 350;
   marioPlayer.vx = 0;
   marioPlayer.vy = 0;
   marioCamera.x = 0;
 
-  // Reset Lakitu (wyłącz w sekretnym poziomie)
-  marioLakitu.x = -500; // Poza ekranem
+  
+  marioLakitu.x = -500; 
 }
 
-// Obsługa klawiszy
+
 function handleMarioKeyDown(e) {
   if (!marioActive || marioGameOver || marioWon) return;
 
   if (e.key === "ArrowLeft") marioKeys.left = true;
   if (e.key === "ArrowRight") marioKeys.right = true;
   if (e.key === "ArrowDown") {
-    // Sprawdź czy gracz stoi na trzeciej rurze (index 2)
+    
     if (!marioInSecretLevel && marioPipes.length > 2) {
-      var pipe = marioPipes[2]; // Trzecia rura
+      var pipe = marioPipes[2]; 
       if (
         marioPlayer.onGround &&
         marioPlayer.x + marioPlayer.width > pipe.x &&
         marioPlayer.x < pipe.x + pipe.width &&
         Math.abs(marioPlayer.y + marioPlayer.height - pipe.y) < 10
       ) {
-        // Wejście do rury
+        
         marioEnteringPipe = true;
         marioPipeAnimationTimer = 0;
         playBeep(440, 0.3);
@@ -644,7 +644,7 @@ function handleMarioKeyUp(e) {
   if (e.key === " ") marioKeys.jump = false;
 }
 
-// Główna pętla
+
 function marioGameLoop() {
   if (!marioActive) return;
 
@@ -652,17 +652,17 @@ function marioGameLoop() {
   renderMario();
 }
 
-// Aktualizacja logiki
+
 function updateMario() {
   if (marioGameOver || marioWon) return;
 
-  // Animacja wchodzenia do rury
+  
   if (marioEnteringPipe) {
     marioPipeAnimationTimer++;
-    marioPlayer.y += 2; // Zje\u017cd\u017canie w d\u00f3\u0142
+    marioPlayer.y += 2; 
 
     if (marioPipeAnimationTimer > 30) {
-      // Prze\u0142\u0105cz na sekretny poziom
+      
       marioEnteringPipe = false;
       marioInSecretLevel = true;
       createMarioSecretLevel();
@@ -671,7 +671,7 @@ function updateMario() {
     return;
   }
 
-  // Ruch poziomy
+  
   if (marioKeys.left) {
     marioPlayer.vx = -MARIO_MOVE_SPEED;
     marioPlayer.facingRight = false;
@@ -682,26 +682,26 @@ function updateMario() {
     marioPlayer.vx = 0;
   }
 
-  // Grawitacja
+  
   marioPlayer.vy += MARIO_GRAVITY;
 
-  // Aktualizuj pozycję
+  
   marioPlayer.x += marioPlayer.vx;
   marioPlayer.y += marioPlayer.vy;
 
-  // Granice poziome
+  
   if (marioPlayer.x < 0) marioPlayer.x = 0;
   if (marioPlayer.x + marioPlayer.width > MARIO_LEVEL_WIDTH) {
     marioPlayer.x = MARIO_LEVEL_WIDTH - marioPlayer.width;
   }
 
-  // Sprawdź kolizje z platformami
+  
   marioPlayer.onGround = false;
   for (var i = 0; i < marioPlatforms.length; i++) {
     var platform = marioPlatforms[i];
 
     if (checkMarioCollision(marioPlayer, platform)) {
-      // Kolizja z góry (lądowanie)
+      
       if (
         marioPlayer.vy > 0 &&
         marioPlayer.y + marioPlayer.height - marioPlayer.vy <= platform.y
@@ -710,7 +710,7 @@ function updateMario() {
         marioPlayer.vy = 0;
         marioPlayer.onGround = true;
       }
-      // Kolizja z dołu (uderzenie głową)
+      
       else if (
         marioPlayer.vy < 0 &&
         marioPlayer.y - marioPlayer.vy >= platform.y + platform.height
@@ -718,19 +718,19 @@ function updateMario() {
         marioPlayer.y = platform.y + platform.height;
         marioPlayer.vy = 0;
 
-        // Rozbijanie platform
+        
         if (platform.type === "breakable" && !platform.broken) {
           platform.broken = true;
           marioPlayer.score += 50;
           updateMarioScore();
           playBeep(660, 0.15);
 
-          // Dodaj monete przy rozbiciu
+          
           marioPlayer.coins++;
           updateMarioScore();
         }
       }
-      // Kolizja z boku - zatrzymaj ruch
+      
       else if (
         marioPlayer.x < platform.x + platform.width &&
         marioPlayer.x + marioPlayer.width > platform.x
@@ -744,13 +744,13 @@ function updateMario() {
     }
   }
 
-  // Spadanie poza mapę
+  
   if (marioPlayer.y > MARIO_VIEWPORT_HEIGHT + 50) {
     marioPlayerDie();
     return;
   }
 
-  // Timer nieśmiertelności
+  
   if (marioPlayer.invincible) {
     marioPlayer.invincibleTimer--;
     if (marioPlayer.invincibleTimer <= 0) {
@@ -758,7 +758,7 @@ function updateMario() {
     }
   }
 
-  // Sprawdź kolizje z monetami
+  
   for (var i = 0; i < marioCoins.length; i++) {
     var coin = marioCoins[i];
     if (!coin.collected && checkMarioCollision(marioPlayer, coin)) {
@@ -770,11 +770,11 @@ function updateMario() {
     }
   }
 
-  // Sprawdź kolizje z rurami (jak platformy)
+  
   for (var i = 0; i < marioPipes.length; i++) {
     var pipe = marioPipes[i];
     if (checkMarioCollision(marioPlayer, pipe)) {
-      // Kolizja z góry
+      
       if (
         marioPlayer.vy > 0 &&
         marioPlayer.y + marioPlayer.height - marioPlayer.vy <= pipe.y
@@ -783,7 +783,7 @@ function updateMario() {
         marioPlayer.vy = 0;
         marioPlayer.onGround = true;
       }
-      // Kolizja z boku - zatrzymaj ruch
+      
       else if (
         marioPlayer.x < pipe.x + pipe.width &&
         marioPlayer.x + marioPlayer.width > pipe.x
@@ -797,17 +797,17 @@ function updateMario() {
     }
   }
 
-  // Aktualizuj wrogów
+  
   for (var i = 0; i < marioEnemies.length; i++) {
     var enemy = marioEnemies[i];
     enemy.x += enemy.vx;
 
-    // Odbicie od granic
+    
     if (enemy.x < 0 || enemy.x + enemy.width > MARIO_LEVEL_WIDTH) {
       enemy.vx *= -1;
     }
 
-    // Kolizja z platformami
+    
     for (var j = 0; j < marioPlatforms.length; j++) {
       var platform = marioPlatforms[j];
       if (checkMarioCollision(enemy, platform)) {
@@ -821,7 +821,7 @@ function updateMario() {
       }
     }
 
-    // Kolizja z rurami
+    
     for (var j = 0; j < marioPipes.length; j++) {
       var pipe = marioPipes[j];
       if (checkMarioCollision(enemy, pipe)) {
@@ -835,9 +835,9 @@ function updateMario() {
       }
     }
 
-    // Kolizja z graczem
+    
     if (checkMarioCollision(marioPlayer, enemy)) {
-      // Jeśli skoczył na wroga z góry - zabij wroga
+      
       if (
         marioPlayer.vy > 0 &&
         marioPlayer.y + marioPlayer.height - 10 < enemy.y
@@ -849,14 +849,14 @@ function updateMario() {
         playBeep(660, 0.1);
         i--;
       } else {
-        // Inaczej - gracz traci życie
+        
         marioPlayerDie();
         return;
       }
     }
   }
 
-  // Sprawdź kolizję z flagą
+  
   if (
     !marioInSecretLevel &&
     checkMarioCollision(marioPlayer, marioFlag) &&
@@ -868,7 +868,7 @@ function updateMario() {
     return;
   }
 
-  // Sprawdź kolizję z księżniczką (sekretny poziom)
+  
   if (
     marioInSecretLevel &&
     marioPrincess.active &&
@@ -879,11 +879,11 @@ function updateMario() {
     return;
   }
 
-  // Aktualizuj kamerę
+  
   updateMarioCamera();
 
-  // Aktualizuj Lakitu
-  // Lakitu podąża za graczem poziomo, ale zostaje w strefie widocznej
+  
+  
   var targetX = marioPlayer.x + 100;
   if (targetX < marioCamera.x + 200) targetX = marioCamera.x + 200;
   if (targetX > marioCamera.x + MARIO_VIEWPORT_WIDTH - 200) {
@@ -899,11 +899,11 @@ function updateMario() {
     }
   }
 
-  // Timer rzucania fireboli
+  
   marioLakitu.throwTimer++;
   if (marioLakitu.throwTimer >= marioLakitu.throwInterval) {
     marioLakitu.throwTimer = 0;
-    // Rzuć fireball pod kątem w kierunku gracza
+    
     var dx = marioPlayer.x - marioLakitu.x;
     var dy = marioPlayer.y - marioLakitu.y;
     var distance = Math.sqrt(dx * dx + dy * dy);
@@ -920,13 +920,13 @@ function updateMario() {
     playBeep(220, 0.1);
   }
 
-  // Aktualizuj firebole
+  
   for (var i = marioFireballs.length - 1; i >= 0; i--) {
     var fireball = marioFireballs[i];
     fireball.x += fireball.vx;
     fireball.y += fireball.vy;
 
-    // Usuń jeśli poza ekranem
+    
     if (
       fireball.y > MARIO_VIEWPORT_HEIGHT + 50 ||
       fireball.x < 0 ||
@@ -936,7 +936,7 @@ function updateMario() {
       continue;
     }
 
-    // Kolizja z graczem
+    
     if (checkMarioCollision(marioPlayer, fireball)) {
       marioFireballs.splice(i, 1);
       marioPlayerDie();
@@ -945,7 +945,7 @@ function updateMario() {
   }
 }
 
-// Aktualizacja kamery
+
 function updateMarioCamera() {
   marioCamera.x = marioPlayer.x - MARIO_VIEWPORT_WIDTH / 3;
 
@@ -955,7 +955,7 @@ function updateMarioCamera() {
   }
 }
 
-// Kolizje
+
 function checkMarioCollision(rect1, rect2) {
   return (
     rect1.x < rect2.x + rect2.width &&
@@ -965,13 +965,13 @@ function checkMarioCollision(rect1, rect2) {
   );
 }
 
-// Śmierć gracza
+
 function marioPlayerDie() {
   marioPlayer.lives--;
   updateMarioScore();
   playBeep(220, 0.5);
 
-  // Resetuj stan klawiszy przy śmierci
+  
   marioKeys.left = false;
   marioKeys.right = false;
   marioKeys.jump = false;
@@ -980,7 +980,7 @@ function marioPlayerDie() {
     marioGameOver = true;
     endMario(false);
   } else {
-    // Respawn
+    
     marioPlayer.x = 50;
     marioPlayer.y = 350;
     marioPlayer.vx = 0;
@@ -989,7 +989,7 @@ function marioPlayerDie() {
   }
 }
 
-// Aktualizacja wyniku
+
 function updateMarioScore() {
   const hearts = "❤️".repeat(marioPlayer.lives);
   document.getElementById("game-score").textContent =
@@ -1000,13 +1000,13 @@ function updateMarioScore() {
     marioPlayer.score;
 }
 
-// Renderowanie
+
 function renderMario() {
-  // Tło nieba
+  
   marioCtx.fillStyle = "#5C94FC";
   marioCtx.fillRect(0, 0, MARIO_VIEWPORT_WIDTH, MARIO_VIEWPORT_HEIGHT);
 
-  // Chmury
+  
   marioCtx.fillStyle = "#FFFFFF";
   for (var i = 0; i < 5; i++) {
     var cloudX = (i * 500 - marioCamera.x * 0.5) % (MARIO_VIEWPORT_WIDTH + 200);
@@ -1014,14 +1014,14 @@ function renderMario() {
     marioCtx.fillRect(cloudX + 20, 40 + i * 30, 60, 30);
   }
 
-  // Platformy
+  
   for (var i = 0; i < marioPlatforms.length; i++) {
     var platform = marioPlatforms[i];
     var screenX = platform.x - marioCamera.x;
 
     if (screenX + platform.width > 0 && screenX < MARIO_VIEWPORT_WIDTH) {
       if (platform.type === "ground") {
-        // Podłoga - brązowa
+        
         marioCtx.fillStyle = "#8B4513";
         marioCtx.fillRect(screenX, platform.y, platform.width, platform.height);
         marioCtx.strokeStyle = "#654321";
@@ -1034,10 +1034,10 @@ function renderMario() {
         );
       } else if (platform.type === "breakable") {
         if (platform.broken) {
-          // Rozbity blok - pusty lub przezroczysty
-          continue; // Nie rysuj rozbitych bloków
+          
+          continue; 
         } else {
-          // Blok z pytajnikiem - żółty
+          
           marioCtx.fillStyle = "#F5B800";
           marioCtx.fillRect(
             screenX,
@@ -1046,7 +1046,7 @@ function renderMario() {
             platform.height
           );
 
-          // Obramowanie
+          
           marioCtx.strokeStyle = "#D89000";
           marioCtx.lineWidth = 3;
           marioCtx.strokeRect(
@@ -1056,7 +1056,7 @@ function renderMario() {
             platform.height
           );
 
-          // Znak pytajnika
+          
           marioCtx.fillStyle = "#FFF";
           marioCtx.font = "bold 20px Arial";
           marioCtx.textAlign = "center";
@@ -1070,11 +1070,11 @@ function renderMario() {
           marioCtx.textBaseline = "alphabetic";
         }
       } else {
-        // Cegiełki - czerwone z wzorem
+        
         marioCtx.fillStyle = "#D84B20";
         marioCtx.fillRect(screenX, platform.y, platform.width, platform.height);
 
-        // Linie cegiełki
+        
         marioCtx.strokeStyle = "#A03410";
         marioCtx.lineWidth = 2;
         marioCtx.strokeRect(
@@ -1084,7 +1084,7 @@ function renderMario() {
           platform.height
         );
 
-        // Wzór cegiełki
+        
         marioCtx.strokeStyle = "#E85A30";
         marioCtx.lineWidth = 1;
         marioCtx.beginPath();
@@ -1100,33 +1100,33 @@ function renderMario() {
     }
   }
 
-  // Rury
+  
   for (var i = 0; i < marioPipes.length; i++) {
     var pipe = marioPipes[i];
     var screenX = pipe.x - marioCamera.x;
 
     if (screenX + pipe.width > 0 && screenX < MARIO_VIEWPORT_WIDTH) {
-      // Rura - zielona
+      
       marioCtx.fillStyle = "#00A651";
       marioCtx.fillRect(screenX, pipe.y, pipe.width, pipe.height);
 
-      // Góra rury
+      
       marioCtx.fillStyle = "#00C965";
       marioCtx.fillRect(screenX - 5, pipe.y - 8, pipe.width + 10, 8);
 
-      // Obramowanie
+      
       marioCtx.strokeStyle = "#008040";
       marioCtx.lineWidth = 2;
       marioCtx.strokeRect(screenX, pipe.y, pipe.width, pipe.height);
       marioCtx.strokeRect(screenX - 5, pipe.y - 8, pipe.width + 10, 8);
 
-      // Ciemniejsza prawa strona
+      
       marioCtx.fillStyle = "#008040";
       marioCtx.fillRect(screenX + pipe.width - 8, pipe.y, 8, pipe.height);
     }
   }
 
-  // Monety
+  
   for (var i = 0; i < marioCoins.length; i++) {
     var coin = marioCoins[i];
     if (!coin.collected) {
@@ -1149,10 +1149,10 @@ function renderMario() {
     }
   }
 
-  // Flaga
+  
   var flagScreenX = marioFlag.x - marioCamera.x;
   if (flagScreenX + marioFlag.width > 0 && flagScreenX < MARIO_VIEWPORT_WIDTH) {
-    // Maszt flagi - brązowy
+    
     marioCtx.fillStyle = "#8B4513";
     marioCtx.fillRect(
       flagScreenX,
@@ -1161,17 +1161,17 @@ function renderMario() {
       marioFlag.height
     );
 
-    // Zawieszka flagi - niebieska
+    
     marioCtx.fillStyle = "#0095DA";
     if (marioFlag.touched) {
-      // Flaga na dole po dotknięciu
+      
       marioCtx.fillRect(flagScreenX + 10, marioFlag.y + 120, 40, 30);
     } else {
-      // Flaga na górze przed dotknięciem
+      
       marioCtx.fillRect(flagScreenX + 10, marioFlag.y, 40, 30);
     }
 
-    // Obramowanie zawieszki
+    
     marioCtx.strokeStyle = "#000";
     marioCtx.lineWidth = 2;
     if (marioFlag.touched) {
@@ -1180,7 +1180,7 @@ function renderMario() {
       marioCtx.strokeRect(flagScreenX + 10, marioFlag.y, 40, 30);
     }
 
-    // Litera P na zawieszce
+    
     marioCtx.fillStyle = "#FFF";
     marioCtx.font = "bold 20px Arial";
     marioCtx.textAlign = "center";
@@ -1194,14 +1194,14 @@ function renderMario() {
     marioCtx.textBaseline = "alphabetic";
   }
 
-  // Lakitu na chmurce
+  
   var lakituScreenX = marioLakitu.x - marioCamera.x;
   if (
     !marioInSecretLevel &&
     lakituScreenX + marioLakitu.width > 0 &&
     lakituScreenX < MARIO_VIEWPORT_WIDTH
   ) {
-    // Chmurka
+    
     marioCtx.fillStyle = "#FFF";
     marioCtx.beginPath();
     marioCtx.ellipse(
@@ -1218,16 +1218,16 @@ function renderMario() {
     marioCtx.lineWidth = 2;
     marioCtx.stroke();
 
-    // Lakitu - ciało zielone
+    
     marioCtx.fillStyle = "#00A651";
     marioCtx.fillRect(lakituScreenX + 12, marioLakitu.y, 16, 20);
 
-    // Okulary
+    
     marioCtx.fillStyle = "#000";
     marioCtx.fillRect(lakituScreenX + 13, marioLakitu.y + 5, 6, 4);
     marioCtx.fillRect(lakituScreenX + 21, marioLakitu.y + 5, 6, 4);
 
-    // Wędka (trzyma chmurę)
+    
     marioCtx.strokeStyle = "#8B4513";
     marioCtx.lineWidth = 2;
     marioCtx.beginPath();
@@ -1236,7 +1236,7 @@ function renderMario() {
     marioCtx.stroke();
   }
 
-  // Firebole
+  
   for (var i = 0; i < marioFireballs.length; i++) {
     var fireball = marioFireballs[i];
     var fireballScreenX = fireball.x - marioCamera.x;
@@ -1244,7 +1244,7 @@ function renderMario() {
       fireballScreenX + fireball.width > 0 &&
       fireballScreenX < MARIO_VIEWPORT_WIDTH
     ) {
-      // Fireball - czerwona kula z płomieniem
+      
       marioCtx.fillStyle = "#FF4500";
       marioCtx.beginPath();
       marioCtx.arc(
@@ -1256,7 +1256,7 @@ function renderMario() {
       );
       marioCtx.fill();
 
-      // Środek - jaśniejszy
+      
       marioCtx.fillStyle = "#FFA500";
       marioCtx.beginPath();
       marioCtx.arc(
@@ -1270,17 +1270,17 @@ function renderMario() {
     }
   }
 
-  // Wrogowie
+  
   for (var i = 0; i < marioEnemies.length; i++) {
     var enemy = marioEnemies[i];
     var screenX = enemy.x - marioCamera.x;
 
     if (screenX + enemy.width > 0 && screenX < MARIO_VIEWPORT_WIDTH) {
-      // Goomba
+      
       marioCtx.fillStyle = "#8B4513";
       marioCtx.fillRect(screenX, enemy.y, enemy.width, enemy.height);
 
-      // Oczy
+      
       marioCtx.fillStyle = "#FFF";
       marioCtx.fillRect(screenX + 5, enemy.y + 8, 8, 8);
       marioCtx.fillRect(screenX + 17, enemy.y + 8, 8, 8);
@@ -1291,38 +1291,38 @@ function renderMario() {
     }
   }
 
-  // Księżniczka (sekretny poziom)
+  
   if (marioInSecretLevel && marioPrincess.active) {
     var princessScreenX = marioPrincess.x - marioCamera.x;
     if (
       princessScreenX + marioPrincess.width > 0 &&
       princessScreenX < MARIO_VIEWPORT_WIDTH
     ) {
-      // Suknia - różowa
+      
       marioCtx.fillStyle = "#FFC0CB";
       marioCtx.fillRect(princessScreenX + 5, marioPrincess.y + 20, 30, 30);
 
-      // Głowa
+      
       marioCtx.fillStyle = "#FFD9B3";
       marioCtx.fillRect(princessScreenX + 10, marioPrincess.y + 5, 20, 18);
 
-      // Korona
+      
       marioCtx.fillStyle = "#FFD700";
       marioCtx.fillRect(princessScreenX + 8, marioPrincess.y, 24, 6);
       marioCtx.fillRect(princessScreenX + 10, marioPrincess.y - 3, 4, 4);
       marioCtx.fillRect(princessScreenX + 18, marioPrincess.y - 3, 4, 4);
       marioCtx.fillRect(princessScreenX + 26, marioPrincess.y - 3, 4, 4);
 
-      // Włosy - blond
+      
       marioCtx.fillStyle = "#FFD700";
       marioCtx.fillRect(princessScreenX + 8, marioPrincess.y + 6, 24, 10);
 
-      // Oczy
+      
       marioCtx.fillStyle = "#000";
       marioCtx.fillRect(princessScreenX + 14, marioPrincess.y + 12, 2, 2);
       marioCtx.fillRect(princessScreenX + 24, marioPrincess.y + 12, 2, 2);
 
-      // Napis "!"
+      
       marioCtx.fillStyle = "#FFF";
       marioCtx.font = "bold 16px Arial";
       marioCtx.textAlign = "center";
@@ -1331,19 +1331,19 @@ function renderMario() {
     }
   }
 
-  // Mario (Pisario)
+  
   var marioScreenX = marioPlayer.x - marioCamera.x;
   var flash =
     marioPlayer.invincible &&
     Math.floor(marioPlayer.invincibleTimer / 10) % 2 === 0;
 
-  // Nie rysuj Mario podczas wchodzenia do rury
+  
   if (!marioEnteringPipe && !flash) {
     var bodyHeight = marioPlayer.big ? 20 : 14;
     var headY = marioPlayer.big ? marioPlayer.y + 6 : marioPlayer.y + 8;
     var capY = marioPlayer.big ? marioPlayer.y + 2 : marioPlayer.y + 6;
 
-    // Ciało - niebieski kombinezon
+    
     marioCtx.fillStyle = "#0095DA";
     if (marioPlayer.big) {
       marioCtx.fillRect(marioScreenX + 6, marioPlayer.y + 18, 20, bodyHeight);
@@ -1351,63 +1351,63 @@ function renderMario() {
       marioCtx.fillRect(marioScreenX + 8, marioPlayer.y + 16, 16, bodyHeight);
     }
 
-    // Głowa
+    
     marioCtx.fillStyle = "#FFD9B3";
     marioCtx.fillRect(marioScreenX + 10, headY, 12, 12);
 
-    // Czapka - niebieska
+    
     marioCtx.fillStyle = "#0095DA";
     marioCtx.fillRect(marioScreenX + 8, capY, 16, 6);
 
-    // Logo P (zamiast M)
+    
     marioCtx.fillStyle = "#FFF";
     marioCtx.font = "bold 10px Arial";
     marioCtx.fillText("P", marioScreenX + 13, capY + 5);
 
-    // Wąsy
+    
     marioCtx.fillStyle = "#000";
     marioCtx.fillRect(marioScreenX + 12, headY + 6, 8, 2);
 
-    // Oczy
+    
     marioCtx.fillStyle = "#000";
     marioCtx.fillRect(marioScreenX + 12, headY + 3, 2, 2);
     marioCtx.fillRect(marioScreenX + 18, headY + 3, 2, 2);
 
-    // Ręce
+    
     marioCtx.fillStyle = "#FFD9B3";
     marioCtx.fillRect(marioScreenX + 4, marioPlayer.y + 20, 4, 8);
     marioCtx.fillRect(marioScreenX + 24, marioPlayer.y + 20, 4, 8);
 
-    // Nogi - niebieskie spodnie
+    
     marioCtx.fillStyle = "#0095DA";
     if (marioPlayer.big) {
-      // Lewa noga
+      
       marioCtx.fillRect(marioScreenX + 8, marioPlayer.y + 38, 7, 10);
-      // Prawa noga
+      
       marioCtx.fillRect(marioScreenX + 17, marioPlayer.y + 38, 7, 10);
     } else {
-      // Lewa noga (mały Mario)
+      
       marioCtx.fillRect(marioScreenX + 10, marioPlayer.y + 30, 5, 8);
-      // Prawa noga (mały Mario)
+      
       marioCtx.fillRect(marioScreenX + 17, marioPlayer.y + 30, 5, 8);
     }
 
-    // Buty - brązowe
+    
     marioCtx.fillStyle = "#8B4513";
     if (marioPlayer.big) {
-      // Lewy but
+      
       marioCtx.fillRect(marioScreenX + 6, marioPlayer.y + 46, 9, 2);
-      // Prawy but
+      
       marioCtx.fillRect(marioScreenX + 17, marioPlayer.y + 46, 9, 2);
     } else {
-      // Lewy but (mały Mario)
+      
       marioCtx.fillRect(marioScreenX + 8, marioPlayer.y + 36, 7, 2);
-      // Prawy but (mały Mario)
+      
       marioCtx.fillRect(marioScreenX + 17, marioPlayer.y + 36, 7, 2);
     }
   }
 
-  // Ekran końca gry
+  
   if (marioGameOver || marioWon) {
     marioCtx.fillStyle = "rgba(0, 0, 0, 0.7)";
     marioCtx.fillRect(0, 0, MARIO_VIEWPORT_WIDTH, MARIO_VIEWPORT_HEIGHT);
@@ -1433,8 +1433,8 @@ function renderMario() {
   }
 }
 
-// Koniec gry
-// Funkcja pokazująca śmieszne zakończenie z księżniczką
+
+
 function showPrincessEnding() {
   marioActive = false;
   clearInterval(marioInterval);
@@ -1442,7 +1442,7 @@ function showPrincessEnding() {
   document.removeEventListener("keydown", handleMarioKeyDown);
   document.removeEventListener("keyup", handleMarioKeyUp);
 
-  // Resetuj stan klawiszy
+  
   marioKeys.left = false;
   marioKeys.right = false;
   marioKeys.jump = false;
@@ -1551,14 +1551,14 @@ function showPrincessEnding() {
     </div>
   `;
 
-  // Odblokuj osiągnięcia
+  
   unlockAchievement("secret_ending");
   if (marioPlayer.coins >= 20) {
     unlockAchievement("coin_collector");
   }
   addCompletedGame("mario");
 
-  // Nagroda 10 monet
+  
   addCoins(10);
   showToast("+10 🪙 za sekretne zakończenie!");
 
@@ -1572,7 +1572,7 @@ function endMario(won) {
   document.removeEventListener("keydown", handleMarioKeyDown);
   document.removeEventListener("keyup", handleMarioKeyUp);
 
-  // Resetuj stan klawiszy
+  
   marioKeys.left = false;
   marioKeys.right = false;
   marioKeys.jump = false;
@@ -1603,7 +1603,7 @@ function endMario(won) {
     }
     addCompletedGame("mario");
 
-    // Nagród 10 monet
+    
     addCoins(10);
     showToast("+10 🪙 za ukończenie Mario!");
 
@@ -1631,19 +1631,19 @@ function endMario(won) {
   }
 }
 
-// Stop gry
+
 function stopMario() {
   marioActive = false;
   if (marioInterval) clearInterval(marioInterval);
   document.removeEventListener("keydown", handleMarioKeyDown);
   document.removeEventListener("keyup", handleMarioKeyUp);
 
-  // Resetuj stan klawiszy
+  
   marioKeys.left = false;
   marioKeys.right = false;
   marioKeys.jump = false;
 
-  // Resetuj stan secret level
+  
   marioInSecretLevel = false;
   marioEnteringPipe = false;
   marioPrincess.active = false;

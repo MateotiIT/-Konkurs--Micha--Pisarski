@@ -1,25 +1,25 @@
-// puzzle.js - Gra: PISAREK PUZZLE (Sliding Puzzle 3x3)
+
 
 let puzzleActive = false;
 let puzzleGrid = [];
-let emptyPos = 8; // Pozycja pustego pola (0-8)
+let emptyPos = 8; 
 let puzzleMoves = 0;
-let selectedImage = "./assets/fanart/placeholder1.jpg"; // Wybrany obrazek
+let selectedImage = "./assets/img/placeholder1.jpg"; 
 
-// Dostępne obrazki do wyboru
+
 const puzzleImages = [
-  { path: "./assets/fanart/fanart12.png", name: "Obrazek 1" },
-  { path: "./assets/fanart/fanart13.png", name: "Obrazek 2" },
-  { path: "./assets/fanart/fanart14.png", name: "Obrazek 3" },
+  { path: "./assets/img/ns.jpg", name: "🎮 NS" },
+  { path: "./assets/img/ps.jpg", name: "🎮 PS" },
+  { path: "./assets/img/sega.jpg", name: "🎮 SEGA" },
 ];
 
-// Funkcja startowania puzzle
+
 function startPuzzle() {
-  // Zawsze pokazuj historię na początku
+  
   showPuzzleStory();
 }
 
-// Funkcja wyświetlania historii przed puzzle
+
 function showPuzzleStory() {
   const gameContent = document.getElementById("game-content");
   gameContent.innerHTML = `
@@ -52,7 +52,7 @@ function showPuzzleStory() {
           color: var(--white);
           margin-bottom: 15px;
         ">
-          🎨 Źli ludzie pomieszali wszystkie<br/>śmieszne obrazki Pisario!
+          � Legendarni łotrzy pocięli loga<br/>znanych konsol na kawałki!
         </p>
         
         <p style="
@@ -61,7 +61,7 @@ function showPuzzleStory() {
           color: var(--white);
           margin-bottom: 15px;
         ">
-          🖼️ Fanartowe rysunki zostały pocięte<br/>na kawałki i trzeba je poskładać!
+          🖼️ PlayStation, Nintendo Switch i SEGA<br/>zostały pomieszane!
         </p>
         
         <p style="
@@ -71,7 +71,7 @@ function showPuzzleStory() {
           margin-bottom: 15px;
           font-weight: bold;
         ">
-          🔍 Tylko Ty potrafisz<br/>je ułożyć!
+          🔍 Tylko Ty możesz<br/>przywrócić im dawną chwałę!
         </p>
         
         <p style="
@@ -79,7 +79,7 @@ function showPuzzleStory() {
           line-height: 1.8;
           color: var(--white);
         ">
-          ⚡ Poskładaj śmieszne animacje<br/>i ciesz się widokiem<br/>ukończonego dzieła!
+          ⚡ Ułóż kultowe loga konsol<br/>i ciesz się widokiem<br/>ukończonego dzieła!
         </p>
       </div>
       
@@ -133,7 +133,7 @@ function showPuzzleStory() {
   document
     .getElementById("puzzle-story-start-btn")
     .addEventListener("click", () => {
-      // Przejdź do wyboru obrazka
+      
       puzzleActive = false;
       puzzleMoves = 0;
       document.getElementById("game-title").textContent = "PISAREK PUZZLE";
@@ -142,7 +142,7 @@ function showPuzzleStory() {
     });
 }
 
-// Funkcja wyświetlania wyboru obrazka
+
 function showImageSelection() {
   const gameContent = document.getElementById("game-content");
 
@@ -162,9 +162,14 @@ function showImageSelection() {
             overflow: hidden;
             transition: transform 0.2s, border-color 0.2s;
             background: var(--light-gray);
+            display: flex;
+            flex-direction: column;
+            height: 200px;
           ">
-            <img src="${img.path}" alt="${img.name}" style="width: 100%; height: auto; display: block;">
-            <p style="font-size: 10px; color: var(--dark-gray); padding: 10px; margin: 0;">
+            <div style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 10px;">
+              <img src="${img.path}" alt="${img.name}" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+            </div>
+            <p style="font-size: 12px; font-weight: bold; color: #000; padding: 10px; margin: 0; background: rgba(255,255,255,0.9);">
               ${img.name}
             </p>
           </div>
@@ -175,7 +180,7 @@ function showImageSelection() {
     </div>
   `;
 
-  // Dodaj event listenery do wyboru obrazka
+  
   const choices = gameContent.querySelectorAll(".image-choice");
   choices.forEach((choice, index) => {
     choice.addEventListener("click", function () {
@@ -184,7 +189,7 @@ function showImageSelection() {
       playBeep(660, 0.1);
     });
 
-    // Hover effect
+    
     choice.addEventListener("mouseenter", function () {
       this.style.transform = "scale(1.05)";
       this.style.borderColor = "var(--yellow)";
@@ -197,28 +202,28 @@ function showImageSelection() {
   });
 }
 
-// Funkcja startowania właściwej gry po wyborze obrazka
+
 function startPuzzleGame() {
   puzzleActive = true;
   puzzleMoves = 0;
 
-  // Ustaw wynik
+  
   document.getElementById("game-score").textContent = "RUCHY: 0";
 
-  // Inicjalizuj grid (0-8, gdzie 8 = puste pole)
+  
   puzzleGrid = [0, 1, 2, 3, 4, 5, 6, 7, 8];
   emptyPos = 8;
 
-  // Przetasuj puzzle (zapewniając rozwiązywalność)
+  
   shufflePuzzle();
 
-  // Renderuj puzzle
+  
   renderPuzzle();
 }
 
-// Funkcja tasowania puzzle (losowe ruchy)
+
 function shufflePuzzle() {
-  // Wykonaj 100 losowych ruchów
+  
   for (let i = 0; i < 100; i++) {
     const neighbors = getNeighbors(emptyPos);
     const randomNeighbor =
@@ -226,40 +231,40 @@ function shufflePuzzle() {
     swapTiles(emptyPos, randomNeighbor);
   }
 
-  // Reset licznika ruchów po tasowaniu
+  
   puzzleMoves = 0;
 }
 
-// Funkcja pobierania sąsiadów (góra, dół, lewo, prawo)
+
 function getNeighbors(pos) {
   const neighbors = [];
   const row = Math.floor(pos / 3);
   const col = pos % 3;
 
-  // Góra
+  
   if (row > 0) neighbors.push(pos - 3);
-  // Dół
+  
   if (row < 2) neighbors.push(pos + 3);
-  // Lewo
+  
   if (col > 0) neighbors.push(pos - 1);
-  // Prawo
+  
   if (col < 2) neighbors.push(pos + 1);
 
   return neighbors;
 }
 
-// Funkcja zamiany kafelków
+
 function swapTiles(pos1, pos2) {
   const temp = puzzleGrid[pos1];
   puzzleGrid[pos1] = puzzleGrid[pos2];
   puzzleGrid[pos2] = temp;
 
-  // Aktualizuj pozycję pustego pola
+  
   if (puzzleGrid[pos1] === 8) emptyPos = pos1;
   if (puzzleGrid[pos2] === 8) emptyPos = pos2;
 }
 
-// Funkcja renderowania puzzle
+
 function renderPuzzle() {
   const gameContent = document.getElementById("game-content");
 
@@ -275,11 +280,11 @@ function renderPuzzle() {
             ">
                 ${puzzleGrid
                   .map((tile, index) => {
-                    // Oblicz pozycję kolumny i wiersza dla kafelka (0-8)
+                    
                     const col = tile % 3;
                     const row = Math.floor(tile / 3);
-                    const bgPosX = col * -150; // -150px dla każdej kolumny (450px / 3 = 150px)
-                    const bgPosY = row * -150; // -150px dla każdego wiersza
+                    const bgPosX = col * -150; 
+                    const bgPosY = row * -150; 
 
                     return `
                     <div class="puzzle-tile ${tile === 8 ? "empty" : ""}" 
@@ -310,7 +315,7 @@ function renderPuzzle() {
         </div>
     `;
 
-  // Dodaj event listenery do kafelków
+  
   const tiles = gameContent.querySelectorAll(".puzzle-tile");
   tiles.forEach((tile) => {
     tile.addEventListener("click", function () {
@@ -318,7 +323,7 @@ function renderPuzzle() {
       handleTileClick(index);
     });
 
-    // Hover effect
+    
     tile.addEventListener("mouseenter", function () {
       if (this.getAttribute("data-tile") !== "8") {
         this.style.transform = "scale(0.95)";
@@ -331,37 +336,37 @@ function renderPuzzle() {
   });
 }
 
-// Funkcja obsługi kliknięcia kafelka
+
 function handleTileClick(index) {
   if (!puzzleActive) return;
 
   const tileValue = puzzleGrid[index];
 
-  // Sprawdź czy kafelek jest obok pustego pola
+  
   const neighbors = getNeighbors(emptyPos);
 
   if (neighbors.includes(index) && tileValue !== 8) {
-    // Zamień miejscami
+    
     swapTiles(emptyPos, index);
     puzzleMoves++;
 
-    // Aktualizuj licznik ruchów
+    
     document.getElementById("game-score").textContent = "RUCHY: " + puzzleMoves;
 
-    // Renderuj ponownie
+    
     renderPuzzle();
 
-    // Odtwórz dźwięk
+    
     playBeep(440, 0.05);
 
-    // Sprawdź czy puzzle jest ułożone
+    
     checkPuzzleWin();
   }
 }
 
-// Funkcja sprawdzania wygranej
+
 function checkPuzzleWin() {
-  // Sprawdź czy wszystkie kafelki są na swoim miejscu
+  
   const solved = puzzleGrid.every((tile, index) => tile === index);
 
   if (solved) {
@@ -369,7 +374,7 @@ function checkPuzzleWin() {
   }
 }
 
-// Funkcja końca puzzle
+
 function endPuzzle(won) {
   puzzleActive = false;
   const gameContent = document.getElementById("game-content");
@@ -390,23 +395,23 @@ function endPuzzle(won) {
             </div>
         `;
 
-    // Dodaj do ukończonych gier
+    
     addCompletedGame("puzzle");
-    // Nagród 10 monet
+    
     addCoins(10);
     showToast("+10 🪙 za ukończenie Puzzle!");
 
-    // Sprawdź osiągnięcie MISTRZ UKŁADANIA (<60 ruchów)
+    
     if (puzzleMoves < 60) {
       unlockAchievement("mistrz_ukladania");
     }
 
-    // Odtwórz dźwięk wygranej
+    
     playWinSound();
   }
 }
 
-// Funkcja zatrzymania puzzle
+
 function stopPuzzle() {
   puzzleActive = false;
 }

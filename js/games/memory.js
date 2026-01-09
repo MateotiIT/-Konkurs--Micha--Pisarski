@@ -1,4 +1,4 @@
-// memory.js - Gra: PISARIO MEMORY (Znajdź pary)
+
 
 let memoryActive = false;
 let memoryCards = [];
@@ -8,25 +8,25 @@ let memoryMoves = 0;
 let memoryTimer = 0;
 let memoryInterval = null;
 
-// Obrazki kart (8 par = 16 kart)
+
 const cardImages = [
-  "./assets/memory/card1.svg", // 🍄
-  "./assets/memory/card2.svg", // ⭐
-  "./assets/memory/card3.svg", // 🪙
-  "./assets/memory/card4.svg", // 👾
-  "./assets/memory/card5.svg", // 🎮
-  "./assets/memory/card6.svg", // 🗡️
-  "./assets/memory/card7.svg", // 🏆
-  "./assets/memory/card8.svg", // 💣
+  "./assets/memory/card1.svg", 
+  "./assets/memory/card2.svg", 
+  "./assets/memory/card3.svg", 
+  "./assets/memory/card4.svg", 
+  "./assets/memory/card5.svg", 
+  "./assets/memory/card6.svg", 
+  "./assets/memory/card7.svg", 
+  "./assets/memory/card8.svg", 
 ];
 
-// Funkcja startowania Memory
+
 function startMemory() {
-  // Zawsze pokazuj historię na początku
+  
   showMemoryStory();
 }
 
-// Funkcja wyświetlania historii przed Memory
+
 function showMemoryStory() {
   const gameContent = document.getElementById("game-content");
   gameContent.innerHTML = `
@@ -140,7 +140,7 @@ function showMemoryStory() {
   document
     .getElementById("memory-story-start-btn")
     .addEventListener("click", () => {
-      // Rozpocznij właściwą grę
+      
       memoryActive = true;
       memoryMoves = 0;
       matchedPairs = 0;
@@ -156,20 +156,20 @@ function showMemoryStory() {
     });
 }
 
-// Funkcja tworzenia planszy
+
 function createMemoryBoard() {
-  // Stwórz pary (każdy obrazek 2 razy)
+  
   memoryCards = [];
   cardImages.forEach((image, index) => {
     memoryCards.push({ id: index, image: image, matched: false });
     memoryCards.push({ id: index, image: image, matched: false });
   });
 
-  // Przetasuj karty
+  
   memoryCards = shuffleArray(memoryCards);
 }
 
-// Funkcja renderowania planszy
+
 function renderMemoryBoard() {
   const gameContent = document.getElementById("game-content");
 
@@ -232,14 +232,14 @@ function renderMemoryBoard() {
     </div>
   `;
 
-  // Dodaj event listenery do kart
+  
   const cards = gameContent.querySelectorAll(".memory-card");
   cards.forEach((card, index) => {
     card.addEventListener("click", function () {
       handleCardClick(index);
     });
 
-    // Hover effect
+    
     card.addEventListener("mouseenter", function () {
       if (!memoryCards[index].matched && !this.classList.contains("flipped")) {
         this.style.transform = "scale(1.05)";
@@ -252,14 +252,14 @@ function renderMemoryBoard() {
   });
 }
 
-// Funkcja obsługi kliknięcia karty
+
 function handleCardClick(index) {
   if (!memoryActive) return;
 
   const card = memoryCards[index];
   const cardElement = document.querySelectorAll(".memory-card")[index];
 
-  // Ignoruj jeśli karta już odkryta lub dopasowana
+  
   if (
     card.matched ||
     cardElement.classList.contains("flipped") ||
@@ -268,11 +268,11 @@ function handleCardClick(index) {
     return;
   }
 
-  // Odkryj kartę
+  
   flipCard(index);
   flippedCards.push(index);
 
-  // Jeśli odkryto 2 karty, sprawdź czy pasują
+  
   if (flippedCards.length === 2) {
     memoryMoves++;
     updateMemoryScore();
@@ -283,7 +283,7 @@ function handleCardClick(index) {
   }
 }
 
-// Funkcja odkrywania karty
+
 function flipCard(index) {
   const cardElement = document.querySelectorAll(".memory-card")[index];
   cardElement.classList.add("flipped");
@@ -297,7 +297,7 @@ function flipCard(index) {
   playBeep(440, 0.1);
 }
 
-// Funkcja chowania karty
+
 function unflipCard(index) {
   const cardElement = document.querySelectorAll(".memory-card")[index];
   cardElement.classList.remove("flipped");
@@ -309,33 +309,33 @@ function unflipCard(index) {
   cardFront.style.opacity = "0";
 }
 
-// Funkcja sprawdzania dopasowania
+
 function checkMatch() {
   const [index1, index2] = flippedCards;
   const card1 = memoryCards[index1];
   const card2 = memoryCards[index2];
 
   if (card1.id === card2.id) {
-    // Para pasuje!
+    
     card1.matched = true;
     card2.matched = true;
     matchedPairs++;
 
-    // Animacja dopasowania
+    
     const cardElements = document.querySelectorAll(".memory-card");
     cardElements[index1].style.opacity = "0.6";
     cardElements[index2].style.opacity = "0.6";
 
     playBeep(660, 0.2);
 
-    // Sprawdź czy gra skończona
+    
     if (matchedPairs === 8) {
       setTimeout(() => {
         endMemory();
       }, 500);
     }
   } else {
-    // Para nie pasuje - schowaj karty
+    
     setTimeout(() => {
       unflipCard(index1);
       unflipCard(index2);
@@ -346,7 +346,7 @@ function checkMatch() {
   flippedCards = [];
 }
 
-// Funkcja aktualizacji wyniku
+
 function updateMemoryScore() {
   const minutes = Math.floor(memoryTimer / 60);
   const seconds = memoryTimer % 60;
@@ -359,7 +359,7 @@ function updateMemoryScore() {
     "RUCHY: " + memoryMoves + " | CZAS: " + timeString;
 }
 
-// Funkcja timera
+
 function startMemoryTimer() {
   memoryInterval = setInterval(() => {
     if (memoryActive) {
@@ -369,7 +369,7 @@ function startMemoryTimer() {
   }, 1000);
 }
 
-// Funkcja końca gry
+
 function endMemory() {
   memoryActive = false;
   clearInterval(memoryInterval);
@@ -416,22 +416,22 @@ function endMemory() {
     </div>
   `;
 
-  // Zapisz wynik
+  
   saveScore("memory_best_moves", memoryMoves);
   saveScore("memory_best_time", memoryTimer);
 
-  // Dodaj do ukończonych gier
+  
   addCompletedGame("memory");
 
-  // Nagród 10 monet
+  
   addCoins(10);
   showToast("+10 🪙 za ukończenie Memory!");
 
-  // Dźwięk wygranej
+  
   playWinSound();
 }
 
-// Funkcja zatrzymania gry
+
 function stopMemory() {
   memoryActive = false;
   if (memoryInterval) {

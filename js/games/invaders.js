@@ -1,15 +1,15 @@
-// invaders.js - Gra: PISARIO INVADERS (Space Invaders z bossem)
+
 
 let invadersActive = false;
 let invadersCanvas = null;
 let invadersCtx = null;
 let invadersInterval = null;
 
-// Wymiary
+
 const INVADERS_WIDTH = 700;
 const INVADERS_HEIGHT = 600;
 
-// Gracz (statek)
+
 let invadersPlayer = {
   x: 350,
   y: 550,
@@ -19,45 +19,45 @@ let invadersPlayer = {
   lives: 3,
 };
 
-// Pociski gracza
+
 let invadersBullets = [];
 
-// Wrogowie
+
 let invadersEnemies = [];
-let invadersDirection = 1; // 1 = prawo, -1 = lewo
+let invadersDirection = 1; 
 let invadersSpeed = 1;
 let invadersDownTimer = 0;
 
-// Pociski wrogów
+
 let invadersEnemyBullets = [];
 let invadersEnemyShootTimer = 0;
 
-// Boss
+
 let invadersBoss = null;
 let invadersBossActive = false;
 let invadersBossHealth = 0;
 
-// Stan gry
+
 let invadersScore = 0;
 let invadersLevel = 1;
 let invadersGameOver = false;
 let invadersWon = false;
 
-// Sterowanie
+
 let invadersKeys = {
   left: false,
   right: false,
   space: false,
-  spacePressed: false, // Zapobiega ciągłemu strzelaniu
+  spacePressed: false, 
 };
 
-// Funkcja startowania gry
+
 function startInvaders() {
-  // Zawsze pokazuj historię na początku
+  
   showInvadersStory();
 }
 
-// Funkcja wyświetlania historii przed Invaders
+
 function showInvadersStory() {
   const gameContent = document.getElementById("game-content");
   gameContent.innerHTML = `
@@ -181,14 +181,14 @@ function showInvadersStory() {
   document
     .getElementById("invaders-story-start-btn")
     .addEventListener("click", () => {
-      // Rozpocznij właściwą grę
+      
       startInvadersGame();
     });
 }
 
-// Funkcja rozpoczynająca właściwą grę (wydzielona z startInvaders)
+
 function startInvadersGame() {
-  // Zatrzymaj poprzednią grę jeśli była aktywna
+  
   if (invadersInterval) {
     clearInterval(invadersInterval);
   }
@@ -199,15 +199,15 @@ function startInvadersGame() {
   invadersScore = 0;
   invadersLevel = 1;
 
-  // Reset bossa
+  
   invadersBossActive = false;
   invadersBoss = null;
 
-  // Reset pocisków
+  
   invadersBullets = [];
   invadersEnemyBullets = [];
 
-  // Reset klawiszy
+  
   invadersKeys.left = false;
   invadersKeys.right = false;
   invadersKeys.space = false;
@@ -235,21 +235,21 @@ function startInvadersGame() {
   invadersCanvas = document.getElementById("invaders-canvas");
   invadersCtx = invadersCanvas.getContext("2d");
 
-  // Inicjalizuj grę
+  
   resetInvadersPlayer();
   createInvadersEnemies();
 
-  // Event listenery
+  
   document.addEventListener("keydown", handleInvadersKeyDown);
   document.addEventListener("keyup", handleInvadersKeyUp);
 
-  // Start pętli gry
+  
   invadersInterval = setInterval(invadersGameLoop, 1000 / 60);
 
   incrementGamesPlayed();
 }
 
-// Reset gracza
+
 function resetInvadersPlayer() {
   invadersPlayer.x = INVADERS_WIDTH / 2 - invadersPlayer.width / 2;
   invadersPlayer.y = INVADERS_HEIGHT - 50;
@@ -257,7 +257,7 @@ function resetInvadersPlayer() {
   invadersBullets = [];
 }
 
-// Tworzenie wrogów
+
 function createInvadersEnemies() {
   invadersEnemies = [];
   invadersDirection = 1;
@@ -285,7 +285,7 @@ function createInvadersEnemies() {
   }
 }
 
-// Tworzenie bossa
+
 function createInvadersBoss() {
   const isFinalBoss = invadersLevel === 2;
 
@@ -305,7 +305,7 @@ function createInvadersBoss() {
   invadersBossHealth = invadersBoss.health;
 }
 
-// Aktualizacja wyniku
+
 function updateInvadersScore() {
   const hearts = "❤️".repeat(invadersPlayer.lives);
   document.getElementById(
@@ -313,7 +313,7 @@ function updateInvadersScore() {
   ).textContent = `${hearts} | PUNKTY: ${invadersScore} | POZIOM: ${invadersLevel}`;
 }
 
-// Obsługa klawiszy
+
 function handleInvadersKeyDown(e) {
   if (e.key === "ArrowLeft") invadersKeys.left = true;
   if (e.key === "ArrowRight") invadersKeys.right = true;
@@ -332,7 +332,7 @@ function handleInvadersKeyUp(e) {
   }
 }
 
-// Pętla gry
+
 function invadersGameLoop() {
   if (invadersGameOver || invadersWon) return;
 
@@ -340,9 +340,9 @@ function invadersGameLoop() {
   renderInvaders();
 }
 
-// Aktualizacja logiki
+
 function updateInvaders() {
-  // Ruch gracza
+  
   if (invadersKeys.left && invadersPlayer.x > 0) {
     invadersPlayer.x -= invadersPlayer.speed;
   }
@@ -353,7 +353,7 @@ function updateInvaders() {
     invadersPlayer.x += invadersPlayer.speed;
   }
 
-  // Strzał gracza
+  
   if (invadersKeys.space && !invadersKeys.spacePressed) {
     invadersBullets.push({
       x: invadersPlayer.x + invadersPlayer.width / 2 - 2,
@@ -366,7 +366,7 @@ function updateInvaders() {
     playBeep(880, 0.05);
   }
 
-  // Aktualizuj pociski gracza
+  
   for (let i = invadersBullets.length - 1; i >= 0; i--) {
     invadersBullets[i].y += invadersBullets[i].vy;
     if (invadersBullets[i].y < 0) {
@@ -374,23 +374,23 @@ function updateInvaders() {
     }
   }
 
-  // Aktualizuj wrogów (jeśli nie ma bossa)
+  
   if (!invadersBossActive) {
     updateInvadersEnemies();
   } else {
     updateInvadersBoss();
   }
 
-  // Aktualizuj pociski wrogów
+  
   updateInvadersEnemyBullets();
 
-  // Kolizje pocisków gracza z wrogami
+  
   checkInvadersBulletCollisions();
 
-  // Kolizje pocisków wrogów z graczem
+  
   checkInvadersPlayerHit();
 
-  // Sprawdź czy wszyscy wrogowie pokonani
+  
   if (
     !invadersBossActive &&
     invadersEnemies.filter((e) => e.alive).length === 0
@@ -398,7 +398,7 @@ function updateInvaders() {
     createInvadersBoss();
   }
 
-  // Sprawdź czy boss pokonany
+  
   if (invadersBossActive && invadersBoss && invadersBoss.health <= 0) {
     invadersBossActive = false;
     const wasFinalBoss = invadersBoss.isFinal;
@@ -409,17 +409,17 @@ function updateInvaders() {
     playBeep(660, 0.3);
 
     if (wasFinalBoss) {
-      // Wygrana po pokonaniu drugiego (finalnego) bossa
-      invadersWon = true; // Ustaw flagę wygranej natychmiast
+      
+      invadersWon = true; 
 
-      // Wyczyść wszystkich wrogów i pociski
+      
       invadersEnemies = [];
       invadersBullets = [];
       invadersEnemyBullets = [];
 
       setTimeout(() => endInvaders(true), 1000);
     } else {
-      // Następna fala wrogów po pierwszym bossie
+      
       setTimeout(() => {
         if (invadersActive && !invadersGameOver && !invadersWon) {
           createInvadersEnemies();
@@ -429,19 +429,19 @@ function updateInvaders() {
   }
 }
 
-// Aktualizacja wrogów
+
 function updateInvadersEnemies() {
   let moveDown = false;
   let aliveEnemies = invadersEnemies.filter((e) => e.alive);
 
   if (aliveEnemies.length === 0) return;
 
-  // Ruch w prawo/lewo
+  
   for (let enemy of aliveEnemies) {
     enemy.x += invadersDirection * invadersSpeed;
   }
 
-  // Sprawdź krawędzie
+  
   for (let enemy of aliveEnemies) {
     if (enemy.x <= 0 || enemy.x >= INVADERS_WIDTH - enemy.width) {
       moveDown = true;
@@ -456,7 +456,7 @@ function updateInvadersEnemies() {
     }
   }
 
-  // Wrogowie strzelają losowo
+  
   invadersEnemyShootTimer++;
   if (invadersEnemyShootTimer > 30 && aliveEnemies.length > 0) {
     invadersEnemyShootTimer = 0;
@@ -471,7 +471,7 @@ function updateInvadersEnemies() {
     });
   }
 
-  // Sprawdź czy wrogowie dotarli do gracza
+  
   for (let enemy of aliveEnemies) {
     if (enemy.y + enemy.height >= invadersPlayer.y) {
       invadersPlayerDie();
@@ -480,11 +480,11 @@ function updateInvadersEnemies() {
   }
 }
 
-// Aktualizacja bossa
+
 function updateInvadersBoss() {
   if (!invadersBoss) return;
 
-  // Ruch bossa
+  
   invadersBoss.x += invadersBoss.vx;
 
   if (
@@ -494,13 +494,13 @@ function updateInvadersBoss() {
     invadersBoss.vx *= -1;
   }
 
-  // Boss strzela
+  
   invadersBoss.shootTimer++;
   if (invadersBoss.shootTimer >= invadersBoss.shootInterval) {
     invadersBoss.shootTimer = 0;
 
     if (invadersBoss.isFinal) {
-      // Final boss - 4 pociski
+      
       invadersEnemyBullets.push(
         {
           x: invadersBoss.x + 30,
@@ -532,7 +532,7 @@ function updateInvadersBoss() {
         }
       );
     } else {
-      // Zwykły boss - 2 pociski
+      
       invadersEnemyBullets.push(
         {
           x: invadersBoss.x + 30,
@@ -553,7 +553,7 @@ function updateInvadersBoss() {
   }
 }
 
-// Aktualizacja pocisków wrogów
+
 function updateInvadersEnemyBullets() {
   for (let i = invadersEnemyBullets.length - 1; i >= 0; i--) {
     invadersEnemyBullets[i].y += invadersEnemyBullets[i].vy;
@@ -563,12 +563,12 @@ function updateInvadersEnemyBullets() {
   }
 }
 
-// Kolizje pocisków gracza
+
 function checkInvadersBulletCollisions() {
   for (let i = invadersBullets.length - 1; i >= 0; i--) {
     const bullet = invadersBullets[i];
 
-    // Kolizja z wrogami
+    
     if (!invadersBossActive) {
       for (let enemy of invadersEnemies) {
         if (
@@ -589,7 +589,7 @@ function checkInvadersBulletCollisions() {
       }
     }
 
-    // Kolizja z bossem
+    
     if (invadersBossActive && invadersBoss && i < invadersBullets.length) {
       if (
         bullet.x + bullet.width > invadersBoss.x &&
@@ -607,7 +607,7 @@ function checkInvadersBulletCollisions() {
   }
 }
 
-// Sprawdzenie trafienia gracza
+
 function checkInvadersPlayerHit() {
   for (let i = invadersEnemyBullets.length - 1; i >= 0; i--) {
     const bullet = invadersEnemyBullets[i];
@@ -624,7 +624,7 @@ function checkInvadersPlayerHit() {
   }
 }
 
-// Śmierć gracza
+
 function invadersPlayerDie() {
   invadersPlayer.lives--;
   updateInvadersScore();
@@ -633,36 +633,36 @@ function invadersPlayerDie() {
   if (invadersPlayer.lives <= 0) {
     endInvaders(false);
   } else {
-    // Reset pozycji
+    
     invadersPlayer.x = INVADERS_WIDTH / 2 - invadersPlayer.width / 2;
     invadersBullets = [];
     invadersEnemyBullets = [];
   }
 }
 
-// Renderowanie
+
 function renderInvaders() {
-  // Wyczyść canvas
+  
   invadersCtx.fillStyle = "#000";
   invadersCtx.fillRect(0, 0, INVADERS_WIDTH, INVADERS_HEIGHT);
 
-  // Rysuj gracza (statek)
+  
   invadersCtx.fillStyle = "#00FF00";
-  // Korpus statku
+  
   invadersCtx.fillRect(invadersPlayer.x + 10, invadersPlayer.y + 10, 20, 20);
-  // Działo
+  
   invadersCtx.fillRect(invadersPlayer.x + 18, invadersPlayer.y, 4, 12);
-  // Skrzydła
+  
   invadersCtx.fillRect(invadersPlayer.x, invadersPlayer.y + 20, 10, 10);
   invadersCtx.fillRect(invadersPlayer.x + 30, invadersPlayer.y + 20, 10, 10);
 
-  // Rysuj pociski gracza
+  
   invadersCtx.fillStyle = "#FFFF00";
   for (let bullet of invadersBullets) {
     invadersCtx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
   }
 
-  // Rysuj wrogów
+  
   if (!invadersBossActive) {
     for (let enemy of invadersEnemies) {
       if (enemy.alive) {
@@ -674,10 +674,10 @@ function renderInvaders() {
           invadersCtx.fillStyle = "#FF0000";
         }
 
-        // Prostokątny wróg
+        
         invadersCtx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
 
-        // Oczy
+        
         invadersCtx.fillStyle = "#FFF";
         invadersCtx.fillRect(enemy.x + 8, enemy.y + 8, 4, 4);
         invadersCtx.fillRect(enemy.x + 18, enemy.y + 8, 4, 4);
@@ -685,11 +685,11 @@ function renderInvaders() {
     }
   }
 
-  // Rysuj bossa
+  
   if (invadersBossActive && invadersBoss) {
     const isFinal = invadersBoss.isFinal;
 
-    // Ciało bossa - duże i groźne
+    
     invadersCtx.fillStyle = isFinal ? "#FF0000" : "#8B00FF";
     invadersCtx.fillRect(
       invadersBoss.x + (isFinal ? 25 : 20),
@@ -698,7 +698,7 @@ function renderInvaders() {
       isFinal ? 60 : 50
     );
 
-    // Głowa
+    
     invadersCtx.fillRect(
       invadersBoss.x + (isFinal ? 45 : 40),
       invadersBoss.y,
@@ -706,7 +706,7 @@ function renderInvaders() {
       isFinal ? 30 : 25
     );
 
-    // Oczy
+    
     invadersCtx.fillStyle = isFinal ? "#FFFF00" : "#FF0000";
     const eyeSize = isFinal ? 12 : 10;
     invadersCtx.fillRect(
@@ -722,7 +722,7 @@ function renderInvaders() {
       eyeSize
     );
 
-    // Działa
+    
     invadersCtx.fillStyle = "#666";
     invadersCtx.fillRect(
       invadersBoss.x + (isFinal ? 30 : 25),
@@ -737,13 +737,13 @@ function renderInvaders() {
       isFinal ? 15 : 10
     );
 
-    // Dodatkowe działa dla finalnego bossa
+    
     if (isFinal) {
       invadersCtx.fillRect(invadersBoss.x + 60, invadersBoss.y + 85, 10, 15);
       invadersCtx.fillRect(invadersBoss.x + 80, invadersBoss.y + 85, 10, 15);
     }
 
-    // Pasek zdrowia bossa
+    
     const healthBarWidth = 100;
     const healthBarHeight = 10;
     const healthBarX = INVADERS_WIDTH / 2 - healthBarWidth / 2;
@@ -776,7 +776,7 @@ function renderInvaders() {
       healthBarHeight
     );
 
-    // Napis BOSS
+    
     invadersCtx.fillStyle = isFinal ? "#FF0000" : "#FFF";
     invadersCtx.font = isFinal
       ? "bold 12px 'Press Start 2P'"
@@ -790,14 +790,14 @@ function renderInvaders() {
     invadersCtx.textAlign = "left";
   }
 
-  // Rysuj pociski wrogów
+  
   invadersCtx.fillStyle = "#FF0000";
   for (let bullet of invadersEnemyBullets) {
     invadersCtx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
   }
 }
 
-// Koniec gry
+
 function endInvaders(won) {
   invadersGameOver = !won;
   invadersWon = won;
@@ -814,11 +814,11 @@ function endInvaders(won) {
     addCompletedGame("invaders");
     saveScore("invaders_score", invadersScore);
 
-    // Nagród 10 monet
+    
     addCoins(10);
     showToast("+10 🪙 za ukończenie Invaders!");
 
-    // Pokaż specjalne zakończenie
+    
     showInvadersVictoryEnding();
     playBeep(880, 0.5);
   } else {
@@ -843,7 +843,7 @@ function endInvaders(won) {
   }
 }
 
-// Stop gry
+
 function stopInvaders() {
   invadersActive = false;
   if (invadersInterval) clearInterval(invadersInterval);
@@ -855,11 +855,11 @@ function stopInvaders() {
   invadersKeys.space = false;
 }
 
-// Funkcja pokazująca specjalne zakończenie po wygranej
+
 function showInvadersVictoryEnding() {
   const gameContent = document.getElementById("game-content");
 
-  // Pobierz nick gracza
+  
   const data = loadData();
   const playerNick = data.profile?.nick || "BOHATERZE";
 

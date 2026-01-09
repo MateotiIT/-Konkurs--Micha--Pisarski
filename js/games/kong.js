@@ -1,4 +1,4 @@
-// kong.js - Gra: PISARIO KONG (Donkey Kong 1981)
+
 
 let kongActive = false;
 let kongCanvas = null;
@@ -6,11 +6,11 @@ let kongCtx = null;
 let kongInterval = null;
 let storyShown = false;
 
-// Wymiary canvasa
+
 const KONG_WIDTH = 600;
 const KONG_HEIGHT = 800;
 
-// Gracz Pisario
+
 let kongPlayer = {
   x: 50,
   y: 720,
@@ -29,17 +29,17 @@ let kongPlayer = {
   deaths: 0,
 };
 
-// Beczki
+
 let kongBarrels = [];
 let barrelSpawnTimer = 0;
-let barrelSpawnInterval = 2000; // ms
+let barrelSpawnInterval = 2000; 
 let gameTime = 0;
 
-// Poziomy
+
 let currentLevel = 1;
 const maxLevel = 3;
 
-// Switch 2 (cel)
+
 let kongSwitch = {
   x: 280,
   y: 50,
@@ -47,7 +47,7 @@ let kongSwitch = {
   height: 24,
 };
 
-// Boss (rzucający beczki)
+
 let kongBoss = {
   x: 250,
   y: 20,
@@ -55,7 +55,7 @@ let kongBoss = {
   height: 60,
 };
 
-// Layouts poziomów
+
 const levelLayouts = {
   1: {
     platforms: [
@@ -140,21 +140,21 @@ const levelLayouts = {
   },
 };
 
-// Platformy i drabiny (dynamiczne - zmieniane per poziom)
+
 let kongPlatforms = [];
 let kongLadders = [];
 
-// Grawitacja
+
 const GRAVITY = 0.5;
 
-// Typy beczek
+
 const BARREL_TYPES = {
   NORMAL: { color: "#8B4513", speed: 3, chance: 50 },
   FAST: { color: "#e60012", speed: 5.5, chance: 30 },
   BOUNCE: { color: "#0095da", speed: 2.5, chance: 20 },
 };
 
-// Sterowanie
+
 let kongKeys = {
   left: false,
   right: false,
@@ -163,7 +163,7 @@ let kongKeys = {
   space: false,
 };
 
-// Funkcja wyświetlania historyjki
+
 function showKongStory() {
   const gameContent = document.getElementById("game-content");
   gameContent.innerHTML = `
@@ -279,14 +279,14 @@ function showKongStory() {
   });
 }
 
-// Funkcja startowania gry
+
 function startKong() {
   kongActive = true;
 
-  // Reset poziomu
+  
   currentLevel = 1;
 
-  // Reset gracza
+  
   kongPlayer.x = 50;
   kongPlayer.y = 720;
   kongPlayer.velocityX = 0;
@@ -297,24 +297,24 @@ function startKong() {
   kongPlayer.lives = 3;
   kongPlayer.deaths = 0;
 
-  // Reset beczek i timera
+  
   kongBarrels = [];
   barrelSpawnTimer = 0;
   barrelSpawnInterval = 2500;
   gameTime = 0;
 
-  // Reset klawiszy
+  
   kongKeys.left = false;
   kongKeys.right = false;
   kongKeys.up = false;
   kongKeys.down = false;
   kongKeys.space = false;
 
-  // Ustaw tytuł
+  
   document.getElementById("game-title").textContent = "PISARIO KONG - POZIOM 1";
   document.getElementById("game-score").textContent = "❤️❤️❤️ | POZIOM: 1";
 
-  // Stwórz canvas
+  
   const gameContent = document.getElementById("game-content");
   gameContent.innerHTML = `
     <div style="text-align: center;">
@@ -331,41 +331,41 @@ function startKong() {
     </div>
   `;
 
-  // Pobierz canvas
+  
   kongCanvas = document.getElementById("kong-canvas");
   kongCtx = kongCanvas.getContext("2d");
 
-  // Załaduj poziom 1 (pierwszy start - nie resetuj gracza)
+  
   loadLevel(currentLevel, true);
 
-  // Spawn pierwszej beczki
+  
   spawnBarrel();
 
-  // Event listenery
+  
   document.addEventListener("keydown", handleKongKeyDown);
   document.addEventListener("keyup", handleKongKeyUp);
 
-  // Start pętli
-  kongInterval = setInterval(kongGameLoop, 1000 / 60); // 60 FPS
+  
+  kongInterval = setInterval(kongGameLoop, 1000 / 60); 
 }
 
-// Funkcja ładowania poziomu
+
 function loadLevel(level, isFirstLoad = false) {
-  // Załaduj layout poziomu
+  
   const layout = levelLayouts[level];
   kongPlatforms = [...layout.platforms];
   kongLadders = [...layout.ladders];
 
-  // Ustawienia trudności per poziom
+  
   if (level === 1) {
     barrelSpawnInterval = 2000;
   } else if (level === 2) {
-    barrelSpawnInterval = 1500; // Szybciej
+    barrelSpawnInterval = 1500; 
   } else if (level === 3) {
-    barrelSpawnInterval = 1200; // Jeszcze szybciej
+    barrelSpawnInterval = 1200; 
   }
 
-  // Reset gracza (tylko dla kolejnych poziomów, nie przy pierwszym starcie)
+  
   if (!isFirstLoad) {
     kongPlayer.x = 50;
     kongPlayer.y = 720;
@@ -374,36 +374,36 @@ function loadLevel(level, isFirstLoad = false) {
     kongPlayer.onGround = false;
     kongPlayer.climbing = false;
 
-    // Reset beczek
+    
     kongBarrels = [];
     barrelSpawnTimer = 0;
     gameTime = 0;
 
-    // Spawn pierwszej beczki
+    
     spawnBarrel();
 
-    // Aktualizuj tytuł
+    
     document.getElementById("game-title").textContent =
       "PISARIO KONG - POZIOM " + level;
   }
 }
 
-// Funkcja przejścia do następnego poziomu
+
 function nextLevel() {
   currentLevel++;
 
   if (currentLevel > maxLevel) {
-    // Wygrana - ukończono wszystkie poziomy!
+    
     endKong(true);
   } else {
-    // Załaduj następny poziom
+    
     loadLevel(currentLevel);
     playBeep(880, 0.5);
     showMessage("POZIOM " + currentLevel + "!", 2000);
   }
 }
 
-// Funkcja wyświetlania wiadomości
+
 function showMessage(text, duration) {
   const gameContent = document.getElementById("game-content");
   const message = document.createElement("div");
@@ -425,7 +425,7 @@ function showMessage(text, duration) {
   }, duration);
 }
 
-// Obsługa klawiszy
+
 function handleKongKeyDown(e) {
   if (!kongActive) return;
 
@@ -447,7 +447,7 @@ function handleKongKeyUp(e) {
   if (e.key === " ") kongKeys.space = false;
 }
 
-// Główna pętla gry
+
 function kongGameLoop() {
   if (!kongActive) return;
 
@@ -455,23 +455,23 @@ function kongGameLoop() {
   renderKong();
 }
 
-// Aktualizacja logiki
-function updateKong() {
-  gameTime += 16; // ~60fps = 16ms per frame
 
-  // Przyspiesz beczki po 30 sekundach
+function updateKong() {
+  gameTime += 16; 
+
+  
   if (gameTime > 30000 && barrelSpawnInterval > 1500) {
     barrelSpawnInterval = 1500;
   }
 
-  // Spawn beczek
+  
   barrelSpawnTimer += 16;
   if (barrelSpawnTimer >= barrelSpawnInterval) {
     spawnBarrel();
     barrelSpawnTimer = 0;
   }
 
-  // Sprawdź czy gracz jest na drabinie
+  
   kongPlayer.onLadder = false;
   for (let ladder of kongLadders) {
     if (
@@ -485,7 +485,7 @@ function updateKong() {
     }
   }
 
-  // Ruch gracza
+  
   if (kongKeys.left && !kongPlayer.climbing) {
     kongPlayer.velocityX = -kongPlayer.speed;
   } else if (kongKeys.right && !kongPlayer.climbing) {
@@ -494,7 +494,7 @@ function updateKong() {
     kongPlayer.velocityX = 0;
   }
 
-  // Wspinanie
+  
   if (kongPlayer.onLadder) {
     if (kongKeys.up) {
       kongPlayer.climbing = true;
@@ -511,37 +511,37 @@ function updateKong() {
     kongPlayer.climbing = false;
   }
 
-  // Skok
+  
   if (kongKeys.space && kongPlayer.onGround && !kongPlayer.climbing) {
     kongPlayer.velocityY = kongPlayer.jumpPower;
     kongPlayer.onGround = false;
     playBeep(440, 0.1);
   }
 
-  // Grawitacja (nie podczas wspinania)
+  
   if (!kongPlayer.climbing) {
     kongPlayer.velocityY += GRAVITY;
   }
 
-  // Ruch
+  
   kongPlayer.x += kongPlayer.velocityX;
   kongPlayer.y += kongPlayer.velocityY;
 
-  // Animacja chodzenia
+  
   if (Math.abs(kongPlayer.velocityX) > 0) {
     kongPlayer.animTimer += 16;
     if (kongPlayer.animTimer > 150) {
-      kongPlayer.animFrame = 1 - kongPlayer.animFrame; // Toggle 0/1
+      kongPlayer.animFrame = 1 - kongPlayer.animFrame; 
       kongPlayer.animTimer = 0;
     }
   }
 
-  // Granice ekranu
+  
   if (kongPlayer.x < 0) kongPlayer.x = 0;
   if (kongPlayer.x + kongPlayer.width > KONG_WIDTH)
     kongPlayer.x = KONG_WIDTH - kongPlayer.width;
 
-  // Kolizje z platformami
+  
   kongPlayer.onGround = false;
   for (let platform of kongPlatforms) {
     if (
@@ -558,23 +558,23 @@ function updateKong() {
     }
   }
 
-  // Śmierć przez spadnięcie
+  
   if (kongPlayer.y > KONG_HEIGHT) {
     playerDeath();
   }
 
-  // Aktualizuj beczki
+  
   for (let i = kongBarrels.length - 1; i >= 0; i--) {
     let barrel = kongBarrels[i];
 
-    // Grawitacja
+    
     barrel.velocityY += GRAVITY;
 
-    // Ruch
+    
     barrel.x += barrel.velocityX;
     barrel.y += barrel.velocityY;
 
-    // Odbicie od ścian
+    
     if (barrel.x <= 0) {
       barrel.x = 0;
       barrel.velocityX = -barrel.velocityX;
@@ -586,7 +586,7 @@ function updateKong() {
       playBeep(440, 0.05);
     }
 
-    // Kolizje z platformami
+    
     barrel.onGround = false;
     for (let platform of kongPlatforms) {
       if (
@@ -600,7 +600,7 @@ function updateKong() {
         barrel.velocityY = 0;
         barrel.onGround = true;
 
-        // Bounce dla niebieskich beczek
+        
         if (barrel.type === "BOUNCE") {
           barrel.velocityY = -8;
           playBeep(880, 0.05);
@@ -608,7 +608,7 @@ function updateKong() {
       }
     }
 
-    // Usuń beczki poza ekranem
+    
     if (
       barrel.y > KONG_HEIGHT ||
       barrel.x < -50 ||
@@ -618,19 +618,19 @@ function updateKong() {
       continue;
     }
 
-    // Kolizja z graczem
+    
     if (
       kongPlayer.x + kongPlayer.width > barrel.x &&
       kongPlayer.x < barrel.x + barrel.width &&
       kongPlayer.y + kongPlayer.height > barrel.y &&
       kongPlayer.y < barrel.y + barrel.height
     ) {
-      // Śmierć gracza
+      
       playerDeath();
     }
   }
 
-  // Kolizja z Switch 2 (przejście do następnego poziomu)
+  
   if (
     kongPlayer.x + kongPlayer.width > kongSwitch.x &&
     kongPlayer.x < kongSwitch.x + kongSwitch.width &&
@@ -641,13 +641,13 @@ function updateKong() {
   }
 }
 
-// Renderowanie
+
 function renderKong() {
-  // Wyczyść canvas
+  
   kongCtx.fillStyle = "#000";
   kongCtx.fillRect(0, 0, KONG_WIDTH, KONG_HEIGHT);
 
-  // Rysuj platformy
+  
   kongCtx.fillStyle = "#e60012";
   kongCtx.strokeStyle = "#ff6b6b";
   kongCtx.lineWidth = 2;
@@ -657,7 +657,7 @@ function renderKong() {
     kongCtx.strokeRect(platform.x1, platform.y, platform.x2 - platform.x1, 8);
   }
 
-  // Rysuj drabiny
+  
   kongCtx.fillStyle = "#ffed00";
   kongCtx.strokeStyle = "#ffd700";
 
@@ -666,7 +666,7 @@ function renderKong() {
     const height = ladder.y2 - ladder.y1;
     kongCtx.fillRect(ladder.x - width / 2, ladder.y1, width, height);
 
-    // Szczebelki
+    
     kongCtx.strokeStyle = "#000";
     kongCtx.lineWidth = 2;
     for (let y = ladder.y1; y < ladder.y2; y += 20) {
@@ -677,21 +677,21 @@ function renderKong() {
     }
   }
 
-  // Rysuj bossa (goryl)
-  // Ciało - brązowe
+  
+  
   kongCtx.fillStyle = "#6B4423";
   kongCtx.fillRect(kongBoss.x + 10, kongBoss.y + 15, 30, 35);
 
-  // Ramiona - mocniejsze
+  
   kongCtx.fillStyle = "#5A3618";
-  kongCtx.fillRect(kongBoss.x, kongBoss.y + 20, 12, 20); // Lewe ramię
-  kongCtx.fillRect(kongBoss.x + 38, kongBoss.y + 20, 12, 20); // Prawe ramię
+  kongCtx.fillRect(kongBoss.x, kongBoss.y + 20, 12, 20); 
+  kongCtx.fillRect(kongBoss.x + 38, kongBoss.y + 20, 12, 20); 
 
-  // Głowa - duża, brązowa
+  
   kongCtx.fillStyle = "#6B4423";
   kongCtx.fillRect(kongBoss.x + 8, kongBoss.y, 34, 20);
 
-  // Oczy - białe z czarnymi źrenicami
+  
   kongCtx.fillStyle = "#FFF";
   kongCtx.fillRect(kongBoss.x + 14, kongBoss.y + 6, 6, 6);
   kongCtx.fillRect(kongBoss.x + 30, kongBoss.y + 6, 6, 6);
@@ -699,17 +699,17 @@ function renderKong() {
   kongCtx.fillRect(kongBoss.x + 16, kongBoss.y + 8, 3, 3);
   kongCtx.fillRect(kongBoss.x + 32, kongBoss.y + 8, 3, 3);
 
-  // Nozdrza
+  
   kongCtx.fillStyle = "#000";
   kongCtx.fillRect(kongBoss.x + 20, kongBoss.y + 14, 3, 3);
   kongCtx.fillRect(kongBoss.x + 27, kongBoss.y + 14, 3, 3);
 
-  // Nogi
+  
   kongCtx.fillStyle = "#5A3618";
   kongCtx.fillRect(kongBoss.x + 12, kongBoss.y + 50, 12, 10);
   kongCtx.fillRect(kongBoss.x + 26, kongBoss.y + 50, 12, 10);
 
-  // Rysuj Switch 2 (cel)
+  
   kongCtx.fillStyle = "#e60012";
   kongCtx.fillRect(
     kongSwitch.x,
@@ -734,7 +734,7 @@ function renderKong() {
     kongSwitch.y + 15
   );
 
-  // Rysuj beczki
+  
   for (let barrel of kongBarrels) {
     kongCtx.fillStyle = barrel.color;
     kongCtx.fillRect(barrel.x, barrel.y, barrel.width, barrel.height);
@@ -743,40 +743,40 @@ function renderKong() {
     kongCtx.strokeRect(barrel.x, barrel.y, barrel.width, barrel.height);
   }
 
-  // Rysuj gracza (Mario/Pisario) - identyczny jak w grze Mario
+  
 
-  // Ciało - niebieski kombinezon
+  
   kongCtx.fillStyle = "#0095DA";
   kongCtx.fillRect(kongPlayer.x + 3, kongPlayer.y + 9, 10, 10);
 
-  // Głowa - beżowa
+  
   kongCtx.fillStyle = "#FFD9B3";
   kongCtx.fillRect(kongPlayer.x + 4, kongPlayer.y + 4, 8, 7);
 
-  // Czapka - niebieska
+  
   kongCtx.fillStyle = "#0095DA";
   kongCtx.fillRect(kongPlayer.x + 3, kongPlayer.y + 1, 10, 4);
 
-  // Logo P na czapce
+  
   kongCtx.fillStyle = "#FFF";
   kongCtx.font = "bold 6px Arial";
   kongCtx.fillText("P", kongPlayer.x + 6, kongPlayer.y + 4);
 
-  // Wąsy
+  
   kongCtx.fillStyle = "#000";
   kongCtx.fillRect(kongPlayer.x + 5, kongPlayer.y + 8, 6, 1);
 
-  // Oczy
+  
   kongCtx.fillStyle = "#000";
   kongCtx.fillRect(kongPlayer.x + 5, kongPlayer.y + 6, 1, 1);
   kongCtx.fillRect(kongPlayer.x + 10, kongPlayer.y + 6, 1, 1);
 
-  // Ręce
+  
   kongCtx.fillStyle = "#FFD9B3";
   kongCtx.fillRect(kongPlayer.x + 1, kongPlayer.y + 10, 2, 4);
   kongCtx.fillRect(kongPlayer.x + 13, kongPlayer.y + 10, 2, 4);
 
-  // Nogi - niebieskie spodnie (animacja)
+  
   kongCtx.fillStyle = "#0095DA";
   if (kongPlayer.animFrame === 0) {
     kongCtx.fillRect(kongPlayer.x + 4, kongPlayer.y + 19, 4, 5);
@@ -786,7 +786,7 @@ function renderKong() {
     kongCtx.fillRect(kongPlayer.x + 8, kongPlayer.y + 19, 3, 5);
   }
 
-  // Buty - brązowe
+  
   kongCtx.fillStyle = "#8B4513";
   if (kongPlayer.animFrame === 0) {
     kongCtx.fillRect(kongPlayer.x + 3, kongPlayer.y + 23, 5, 1);
@@ -797,9 +797,9 @@ function renderKong() {
   }
 }
 
-// Spawn beczki
+
 function spawnBarrel() {
-  // Losuj typ beczki
+  
   const rand = Math.random() * 100;
   let type, color, speed;
 
@@ -832,32 +832,32 @@ function spawnBarrel() {
   playBeep(220, 0.05);
 }
 
-// Śmierć gracza
+
 function playerDeath() {
   kongPlayer.lives--;
   kongPlayer.deaths++;
 
   playBeep(220, 0.5);
 
-  // Aktualizuj wynik
+  
   updateKongScore();
 
   if (kongPlayer.lives <= 0) {
-    // Game Over
+    
     endKong(false);
   } else {
-    // Respawn
+    
     kongPlayer.x = 50;
     kongPlayer.y = 720;
     kongPlayer.velocityX = 0;
     kongPlayer.velocityY = 0;
 
-    // Wyczyść beczki
+    
     kongBarrels = [];
   }
 }
 
-// Aktualizuj wynik
+
 function updateKongScore() {
   let hearts = "";
   for (let i = 0; i < kongPlayer.lives; i++) {
@@ -867,12 +867,12 @@ function updateKongScore() {
     hearts + " | POZIOM: " + currentLevel;
 }
 
-// Koniec gry
+
 function endKong(won) {
   kongActive = false;
   clearInterval(kongInterval);
 
-  // Usuń event listenery
+  
   document.removeEventListener("keydown", handleKongKeyDown);
   document.removeEventListener("keyup", handleKongKeyUp);
 
@@ -900,16 +900,16 @@ function endKong(won) {
       </div>
     `;
 
-    // Perfekcja (bez śmierci)
+    
     if (kongPlayer.deaths === 0) {
       unlockAchievement("kong_perfection");
     }
 
-    // Zapisz wynik
+    
     saveScore("kong_wins", (loadData().scores?.kong_wins || 0) + 1);
     addCompletedGame("kong");
 
-    // Nagród 10 monet
+    
     addCoins(10);
     showToast("+10 🪙 za ukończenie Kong!");
 
@@ -937,7 +937,7 @@ function endKong(won) {
   }
 }
 
-// Stop gry
+
 function stopKong() {
   kongActive = false;
   if (kongInterval) {

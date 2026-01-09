@@ -1,17 +1,17 @@
-// quiz.js - Gra: PISARIO QUIZ (Milionerzy)
 
-// Zmienna do zatrzymywania gry
+
+
 let quizActive = false;
 let selectedCategory = null;
 
-// Kategorie pytań
+
 const quizCategories = [
   { id: "pisario", name: "Pisarion3000", icon: "🎮", color: "var(--red)" },
   { id: "nintendo", name: "Nintendo", icon: "🕹️", color: "var(--blue)" },
   { id: "retro", name: "Retro Gierki", icon: "👾", color: "var(--purple)" },
 ];
 
-// Pula pytań podzielona na kategorie
+
 const quizQuestions = {
   pisario: [
     {
@@ -36,7 +36,7 @@ const quizQuestions = {
     },
     {
       question:
-        "W jakiej serii na swoim kanale opowiadał o mniej znanych konsolach (często będących klapami), co zainspirowało temat książki?",
+        "W jakiej serii na swoim kanale Michał opowiadał o mniej znanych konsolach (często będących klapami), co zainspirowało temat książki?",
       answers: [
         "Niedzielny Live",
         "TechTygodnik",
@@ -59,7 +59,7 @@ const quizQuestions = {
     },
     {
       question:
-        "Jaka forma rozdziałów najbardziej mu odpowiadała w „Przegranych”?",
+        "Jaka forma rozdziałów najbardziej odpowiadała Michałowi w „Przegranych”?",
       answers: [
         "Same suche daty i tabelki",
         "Wyłącznie opowiadanie fabularne",
@@ -69,7 +69,7 @@ const quizQuestions = {
       correct: 2,
     },
     {
-      question: "Dlaczego nie chciał iść w self-publishing?",
+      question: "Dlaczego Michał chciał iść w self-publishing?",
       answers: [
         "Bo nie mógł znaleźć drukarni",
         "Bo bał się krytyki",
@@ -80,24 +80,23 @@ const quizQuestions = {
     },
     {
       question:
-        "Które wydawnictwo (według wywiadu) samo się do niego zgłosiło z propozycją współpracy?",
+        "Które wydawnictwo samo się do niego zgłosiło z propozycją współpracy?",
       answers: ["Znak Horyzont", "Gamebook", "Open Beta", "APN Promise"],
       correct: 0,
     },
     {
       question:
-        "Co dało mu najwięcej stresu tuż przed wysłaniem książki do druku?",
+        "Co dało Michałowi najwięcej stresu tuż przed wysłaniem książki do druku?",
       answers: [
         "Zmiana tytułu w ostatniej chwili",
-        "Przeróbka rozdziału o Virtual Boy’u tuż przed drukiem",
+        "Przeróbka rozdziału o Virtual Boyu tuż przed drukiem",
         "Problemy z ilustracjami",
         "Zgubienie notatek",
       ],
       correct: 1,
     },
     {
-      question:
-        "Który zestaw to patronaty medialne, które wymienił w wywiadzie?",
+      question: "Który zestaw to patronaty medialne?",
       answers: [
         "Polygon, IGN, Eurogamer",
         "TVN, Polsat, Radio ZET",
@@ -107,7 +106,7 @@ const quizQuestions = {
       correct: 2,
     },
     {
-      question: "Gdzie (według wywiadu) lubi czytać opinie o książce?",
+      question: "Gdzie lubi czytać opinie o książce?",
       answers: [
         "Tylko na TikToku",
         "Na LinkedInie i Slacku",
@@ -133,7 +132,7 @@ const quizQuestions = {
       correct: 1,
     },
     {
-      question: "Którą konsolę wskazał jako swój nostalgiczny faworyt?",
+      question: "Którą konsolę wskazałby jako swój nostalgiczny faworyt?",
       answers: ["Switch", "Wii", "GameCube", "SNES"],
       correct: 2,
     },
@@ -149,8 +148,7 @@ const quizQuestions = {
       correct: 3,
     },
     {
-      question:
-        "W jaką grę indie (z ostatniego roku) mówił, że się „zakochał”?",
+      question: "W jaką grę indie Michał mówił, że się „zakochał”?",
       answers: ["The Messenger", "Hades", "Celeste", "Hollow Knight"],
       correct: 0,
     },
@@ -299,7 +297,7 @@ const quizQuestions = {
         "3D bez okularów",
         "Ekran dotykowy",
         "Wbudowany modem 5G",
-        "Gry na płytach miniDVD",
+        "Gry na płytach",
       ],
       correct: 0,
     },
@@ -403,7 +401,7 @@ const quizQuestions = {
     },
     {
       question:
-        "Która konsola Nintendo najbardziej kojarzy się z kontrolerami ruchowymi (motion controls)?",
+        "Która konsola Nintendo najbardziej kojarzy się z kontrolerami ruchowymi?",
       answers: ["GameCube", "Wii", "Nintendo 64", "Wii U"],
       correct: 1,
     },
@@ -559,7 +557,7 @@ const quizQuestions = {
     },
     {
       question:
-        "Jaka gra wyścigowa na PC z 1998 roku kojarzy się z pościgami policji i trybem „Hot Pursuit”?",
+        "Jaka gra wyścigowa na PC z 1998 roku kojarzy się z pościgami policji?",
       answers: [
         "Gran Turismo",
         "The Need for Speed",
@@ -674,18 +672,18 @@ const quizQuestions = {
   ],
 };
 
-// Zmienne stanu gry
+
 let currentQuestions = [];
 let currentQuestionIndex = 0;
 let quizScore = 0;
 
-// Funkcja startowania quizu
+
 function startQuiz() {
-  // Zawsze pokazuj historię na początku
+  
   showQuizStory();
 }
 
-// Funkcja wyświetlania historii przed quizem
+
 function showQuizStory() {
   const gameContent = document.getElementById("game-content");
   gameContent.innerHTML = `
@@ -800,7 +798,7 @@ function showQuizStory() {
   document
     .getElementById("quiz-story-start-btn")
     .addEventListener("click", () => {
-      // Przejdź do wyboru kategorii
+      
       quizActive = false;
       selectedCategory = null;
       document.getElementById("game-title").textContent = "PISARIO QUIZ";
@@ -809,7 +807,7 @@ function showQuizStory() {
     });
 }
 
-// Funkcja wyświetlania wyboru kategorii
+
 function showCategorySelection() {
   const gameContent = document.getElementById("game-content");
 
@@ -845,7 +843,7 @@ function showCategorySelection() {
     </div>
   `;
 
-  // Dodaj event listenery do wyboru kategorii
+  
   const choices = gameContent.querySelectorAll(".category-choice");
   choices.forEach((choice) => {
     const categoryId = choice.getAttribute("data-category");
@@ -857,7 +855,7 @@ function showCategorySelection() {
       playBeep(660, 0.1);
     });
 
-    // Hover effect
+    
     choice.addEventListener("mouseenter", function () {
       this.style.transform = "scale(1.05) translateY(-5px)";
       this.style.borderColor = category.color;
@@ -872,15 +870,15 @@ function showCategorySelection() {
   });
 }
 
-// Funkcja startowania właściwej gry po wyborze kategorii
+
 function startQuizGame() {
   quizActive = true;
 
-  // Losuj 10 pytań z wybranej kategorii
+  
   const categoryQuestions = quizQuestions[selectedCategory] || [];
 
   if (categoryQuestions.length < 10) {
-    // Jeśli jest mniej niż 10 pytań, użyj wszystkich
+    
     currentQuestions = shuffleArray(categoryQuestions);
   } else {
     currentQuestions = shuffleArray(categoryQuestions).slice(0, 10);
@@ -889,19 +887,19 @@ function startQuizGame() {
   currentQuestionIndex = 0;
   quizScore = 0;
 
-  // Aktualizuj wynik
+  
   updateQuizScore();
 
-  // Pokaż pierwsze pytanie
+  
   showQuestion();
 }
 
-// Funkcja pokazywania pytania
+
 function showQuestion() {
   const gameContent = document.getElementById("game-content");
 
   if (currentQuestionIndex >= currentQuestions.length) {
-    // Koniec quizu - pokaż wynik!
+    
     endQuiz();
     return;
   }
@@ -935,7 +933,7 @@ function showQuestion() {
         </div>
     `;
 
-  // Dodaj event listenery do przycisków odpowiedzi
+  
   const answerButtons = gameContent.querySelectorAll(".quiz-answer-btn");
   answerButtons.forEach((btn) => {
     btn.addEventListener("click", function () {
@@ -944,66 +942,66 @@ function showQuestion() {
     });
   });
 
-  // Dodaj style dla przycisków odpowiedzi
+  
   addQuizStyles();
 }
 
-// Funkcja sprawdzania odpowiedzi
+
 function checkAnswer(selectedIndex) {
   if (!quizActive) return;
 
   const q = currentQuestions[currentQuestionIndex];
   const answerButtons = document.querySelectorAll(".quiz-answer-btn");
 
-  // Zablokuj wszystkie przyciski
+  
   answerButtons.forEach((btn) => {
     btn.style.pointerEvents = "none";
   });
 
-  // Pokaż poprawną odpowiedź na zielono
+  
   answerButtons[q.correct].style.background = "var(--green)";
   answerButtons[q.correct].style.borderColor = "var(--green)";
   answerButtons[q.correct].style.color = "var(--white)";
 
   if (selectedIndex === q.correct) {
-    // Poprawna odpowiedź!
+    
     quizScore++;
     playBeep(660, 0.15);
   } else {
-    // Błędna odpowiedź - pokaż wybraną odpowiedź na czerwono
+    
     answerButtons[selectedIndex].style.background = "var(--red)";
     answerButtons[selectedIndex].style.borderColor = "var(--red)";
     answerButtons[selectedIndex].style.color = "var(--white)";
     playBeep(220, 0.15);
   }
 
-  // Aktualizuj wynik
+  
   updateQuizScore();
 
-  // Następne pytanie po krótkiej chwili
+  
   setTimeout(() => {
     currentQuestionIndex++;
     showQuestion();
   }, 1500);
 }
 
-// Funkcja aktualizacji wyniku
+
 function updateQuizScore() {
   document.getElementById("game-score").textContent = quizScore + " / 10";
 }
 
-// Funkcja końca quizu
+
 function endQuiz() {
   quizActive = false;
   const gameContent = document.getElementById("game-content");
 
-  // Oblicz procent
+  
   const percentage = (quizScore / 10) * 100;
 
   let resultData = {};
 
   if (percentage < 30) {
-    // 0-30% - Przegrana
+    
     resultData = {
       emoji: "💀",
       title: "NIE POSZŁO...",
@@ -1012,7 +1010,7 @@ function endQuiz() {
       funnyText: "Nawet Goomba wiedziałby więcej!",
     };
   } else if (percentage < 60) {
-    // 30-60% - Średni wynik
+    
     resultData = {
       emoji: "😅",
       title: "NIEŹLE!",
@@ -1021,7 +1019,7 @@ function endQuiz() {
       funnyText: "Luigi byłby dumny (ale tylko trochę)",
     };
   } else if (percentage < 100) {
-    // 60-90% - Super wynik
+    
     resultData = {
       emoji: "⭐",
       title: "SUPER!",
@@ -1030,7 +1028,7 @@ function endQuiz() {
       funnyText: "Mario klepie Cię po plecach! 🍄",
     };
   } else {
-    // 100% - Mistrz
+    
     resultData = {
       emoji: "👑",
       title: "MISTRZ WIEDZY!",
@@ -1064,17 +1062,17 @@ function endQuiz() {
     </div>
   `;
 
-  // Zapisz wynik
+  
   saveScore("quiz_highscore", quizScore);
 
-  // Dodaj do ukończonych gier
+  
   addCompletedGame("quiz");
 
-  // Nagród 10 monet za wygraną
+  
   addCoins(10);
   showToast("+10 🪙 za ukończenie Quiz!");
 
-  // Odblokuj osiągnięcie dla perfekcjonistów
+  
   if (percentage === 100) {
     unlockAchievement("mistrz_wiedzy");
     playWinSound();
@@ -1083,14 +1081,14 @@ function endQuiz() {
   }
 }
 
-// Funkcja zatrzymania quizu
+
 function stopQuiz() {
   quizActive = false;
 }
 
-// Funkcja dodawania stylów dla przycisków quizu
+
 function addQuizStyles() {
-  // Sprawdź czy style już istnieją
+  
   if (document.getElementById("quiz-styles")) return;
 
   const style = document.createElement("style");

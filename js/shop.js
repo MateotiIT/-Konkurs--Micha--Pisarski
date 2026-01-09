@@ -1,8 +1,8 @@
-// shop.js - System sklepu z monetami
 
-// Katalog wszystkich przedmiotów w sklepie
+
+
 const shopItems = [
-  // AVATARY - 20 monet każdy
+  
   {
     id: "avatar_dino",
     type: "avatar",
@@ -36,7 +36,7 @@ const shopItems = [
     avatarId: "rocket",
   },
 
-  // KODY DO GIER - 30 monet każdy
+  
   {
     id: "code_pacman",
     type: "code",
@@ -62,7 +62,7 @@ const shopItems = [
     gameCode: "pong",
   },
 
-  // TŁA - 50 monet każde
+  
   {
     id: "bg_night",
     type: "background",
@@ -100,7 +100,7 @@ const shopItems = [
     preview: "Gradient czerwono-niebiesko-czarny",
   },
 
-  // STYLE MENU - 150 monet każdy
+  
   {
     id: "style_nes",
     type: "menu_style",
@@ -130,27 +130,27 @@ const shopItems = [
   },
 ];
 
-// Inicjalizacja sklepu
+
 function initShop() {
-  // Sprawdź czy to pierwsze wejście
+  
   const shopVisited = localStorage.getItem("shopVisited");
   if (!shopVisited) {
     document.getElementById("shop-welcome").style.display = "block";
     localStorage.setItem("shopVisited", "true");
   }
 
-  // Event listener dla zamknięcia welcoma
+  
   document
     .getElementById("shop-welcome-close")
     .addEventListener("click", () => {
       document.getElementById("shop-welcome").style.display = "none";
     });
 
-  // Renderuj wszystkie kategorie
+  
   renderShop();
 }
 
-// Renderowanie sklepu
+
 function renderShop() {
   renderShopCategory("avatar", "shop-avatars");
   renderShopCategory("code", "shop-codes");
@@ -158,7 +158,7 @@ function renderShop() {
   renderShopCategory("menu_style", "shop-styles");
 }
 
-// Renderowanie kategorii sklepu
+
 function renderShopCategory(type, containerId) {
   const container = document.getElementById(containerId);
   if (!container) return;
@@ -168,16 +168,16 @@ function renderShopCategory(type, containerId) {
   const items = shopItems.filter((item) => item.type === type);
 
   items.forEach((item) => {
-    // Sprawdź czy już kupiony
+    
     if (hasPurchased(item.id)) {
-      return; // Nie pokazuj kupionych przedmiotów
+      return; 
     }
 
-    // Sprawdź czy kod gry już odblokowany
+    
     if (item.type === "code") {
       const data = loadData();
       if (data.unlockedGames && data.unlockedGames.includes(item.gameCode)) {
-        return; // Nie pokazuj jeśli gra już odblokowana
+        return; 
       }
     }
 
@@ -219,7 +219,7 @@ function renderShopCategory(type, containerId) {
       ">KUP</button>
     `;
 
-    // Hover effect
+    
     itemCard.addEventListener("mouseenter", () => {
       itemCard.style.transform = "scale(1.05)";
       itemCard.style.borderColor = "var(--yellow)";
@@ -229,7 +229,7 @@ function renderShopCategory(type, containerId) {
       itemCard.style.borderColor = "var(--dark-gray)";
     });
 
-    // Event listener dla przycisku KUP
+    
     const buyBtn = itemCard.querySelector(".btn-shop-buy");
     buyBtn.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -239,7 +239,7 @@ function renderShopCategory(type, containerId) {
     container.appendChild(itemCard);
   });
 
-  // Jeśli brak przedmiotów, pokaż komunikat
+  
   if (container.children.length === 0) {
     container.innerHTML = `
       <p style="font-size: 8px; color: var(--gray); text-align: center; padding: 20px;">
@@ -249,39 +249,39 @@ function renderShopCategory(type, containerId) {
   }
 }
 
-// Zakup przedmiotu
+
 function purchaseItem(itemId) {
   const item = shopItems.find((i) => i.id === itemId);
   if (!item) return;
 
   const currentCoins = getCoins();
 
-  // Sprawdź czy gracz ma wystarczająco monet
+  
   if (currentCoins < item.price) {
     showToast(`❌ Za mało monet! Potrzebujesz ${item.price} 🪙`);
     return;
   }
 
-  // Wydaj monety
+  
   if (!spendCoins(item.price)) {
     showToast("❌ Błąd podczas zakupu!");
     return;
   }
 
-  // Dodaj do zakupionych
+  
   addPurchase(itemId);
 
-  // Wykonaj akcję w zależności od typu
+  
   switch (item.type) {
     case "avatar":
       showToast(`✅ Kupiono avatar ${item.emoji}! Zmień w profilu.`);
       break;
 
     case "code":
-      // Odblokuj grę
+      
       if (typeof unlockGame === "function") {
         unlockGame(item.gameCode);
-        // Odśwież UI gier
+        
         if (typeof updateUnlockedGames === "function") {
           updateUnlockedGames();
         }
@@ -302,37 +302,37 @@ function purchaseItem(itemId) {
       break;
   }
 
-  // Odśwież sklep
+  
   renderShop();
 }
 
-// Aplikowanie tła
+
 function applyBackground(bgClass) {
   const body = document.body;
 
-  // Usuń wszystkie klasy bg-*
+  
   body.classList.remove("bg-night", "bg-retro", "bg-neon", "bg-switch");
 
-  // Dodaj nową klasę (jeśli nie default)
+  
   if (bgClass !== "default") {
     body.classList.add(bgClass);
   }
 }
 
-// Aplikowanie stylu menu
+
 function applyMenuStyle(styleClass) {
   const body = document.body;
 
-  // Usuń wszystkie klasy menu-*
+  
   body.classList.remove("menu-nes", "menu-gameboy", "menu-switch");
 
-  // Dodaj nową klasę (jeśli nie default)
+  
   if (styleClass !== "default") {
     body.classList.add(styleClass);
   }
 }
 
-// Pobierz dostępne avatary (domyślne + kupione)
+
 function getAvailableAvatars() {
   const defaultAvatars = [
     "mario",
@@ -346,7 +346,7 @@ function getAvailableAvatars() {
   ];
   const purchasedAvatars = [];
 
-  // Dodaj kupione avatary
+  
   shopItems.forEach((item) => {
     if (item.type === "avatar" && hasPurchased(item.id)) {
       purchasedAvatars.push(item.avatarId);

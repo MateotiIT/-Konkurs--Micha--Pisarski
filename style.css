@@ -1,4 +1,4 @@
-/* RESET I ZMIENNE */
+
 * {
   margin: 0;
   padding: 0;
@@ -6,7 +6,7 @@
 }
 
 :root {
-  /* Paleta Nintendo */
+  
   --red: #e60012;
   --yellow: #ffed00;
   --blue: #0095da;
@@ -35,7 +35,7 @@ body {
   color: var(--dark-gray);
 }
 
-/* EKRAN STARTOWY */
+
 #start-screen {
   text-align: center;
   animation: fadeIn 0.5s ease-in;
@@ -49,7 +49,7 @@ body {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
-/* EKRAN PROFILU */
+
 #profile-screen {
   text-align: center;
   animation: fadeIn 0.5s ease-in;
@@ -101,7 +101,7 @@ body {
   box-shadow: 0 2px 0 var(--dark-gray);
 }
 
-/* MENU GŁÓWNE */
+
 #main-menu {
   background: var(--white);
   border-radius: 20px;
@@ -113,7 +113,7 @@ body {
   animation: fadeIn 0.5s ease-in;
 }
 
-/* ZAKŁADKI */
+
 .tabs {
   display: flex;
   gap: 10px;
@@ -147,7 +147,7 @@ body {
   box-shadow: 0 4px 0 var(--dark-gray);
 }
 
-/* ZAWARTOŚĆ ZAKŁADEK */
+
 .tab-content {
   display: none;
 }
@@ -170,7 +170,7 @@ body {
   margin-bottom: 15px;
 }
 
-/* GRID GIER */
+
 .games-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -233,7 +233,7 @@ body {
   transform: scale(1.05);
 }
 
-/* ZABLOKOWANE KARTY GIER */
+
 .game-card.locked {
   opacity: 0.6;
   filter: grayscale(1);
@@ -277,7 +277,7 @@ body {
   }
 }
 
-/* OSIĄGNIĘCIA */
+
 #achievements-list {
   display: grid;
   gap: 15px;
@@ -348,15 +348,15 @@ body {
   color: var(--white);
 }
 
-/* GALERIA FANARTÓW */
-#fanarts-gallery {
+
+#consoles-gallery {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 15px;
   margin-top: 20px;
 }
 
-.fanart-item {
+.console-item {
   position: relative;
   aspect-ratio: 3/2;
   border: 4px solid var(--dark-gray);
@@ -364,13 +364,17 @@ body {
   overflow: hidden;
   cursor: pointer;
   transition: transform 0.2s;
+  background: var(--light-gray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.fanart-item:hover {
+.console-item:hover {
   transform: scale(1.05);
 }
 
-.fanart-item.locked {
+.console-item.locked {
   background: var(--gray);
   display: flex;
   align-items: center;
@@ -381,13 +385,13 @@ body {
   cursor: not-allowed;
 }
 
-.fanart-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.console-item img {
+  max-width: 95%;
+  max-height: 95%;
+  object-fit: contain;
 }
 
-/* LIGHTBOX */
+
 #lightbox {
   position: fixed;
   top: 0;
@@ -433,7 +437,7 @@ body {
   border-radius: 10px;
 }
 
-/* EASTER EGGI */
+
 #eastereggs-list {
   min-height: 200px;
 }
@@ -464,7 +468,7 @@ body {
   color: var(--gray);
 }
 
-/* ZAKŁADKA KOD */
+
 .code-description {
   font-size: 10px;
   line-height: 1.8;
@@ -534,7 +538,7 @@ body {
   white-space: pre-wrap;
 }
 
-/* KONTENER GRY */
+
 #game-container {
   width: 100%;
   max-width: 900px;
@@ -594,7 +598,7 @@ body {
   background: var(--blue);
 }
 
-/* TOAST */
+
 #toast {
   position: fixed;
   top: 20px;
@@ -611,7 +615,7 @@ body {
   animation: slideDown 0.3s ease-out;
 }
 
-/* ANIMACJE */
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -632,7 +636,7 @@ body {
   }
 }
 
-/* RESPONSYWNOŚĆ */
+
 @media (max-width: 768px) {
   .logo {
     font-size: 24px;
@@ -688,7 +692,7 @@ body {
   }
 }
 
-/* ============== STYLE SKLEPU ============== */
+
 
 .shop-category {
   margin-bottom: 30px;
@@ -707,9 +711,9 @@ body {
   transform: scale(1.1);
 }
 
-/* ============== ALTERNATYWNE TŁA ============== */
 
-/* Tło Nocne */
+
+
 .bg-night {
   background: linear-gradient(
     135deg,
@@ -719,7 +723,7 @@ body {
   ) !important;
 }
 
-/* Tło Retro */
+
 .bg-retro {
   background: linear-gradient(
     135deg,
@@ -729,7 +733,7 @@ body {
   ) !important;
 }
 
-/* Tło Neon */
+
 .bg-neon {
   background: linear-gradient(
     135deg,
@@ -739,7 +743,7 @@ body {
   ) !important;
 }
 
-/* Tło Nintendo Switch */
+
 .bg-switch {
   background: linear-gradient(
     to right,
@@ -749,9 +753,9 @@ body {
   ) !important;
 }
 
-/* ============== ALTERNATYWNE STYLE MENU ============== */
 
-/* Styl NES - kwadratowe, pixelowe */
+
+
 .menu-nes .btn-start,
 .menu-nes .btn-secondary,
 .menu-nes .btn-play,
@@ -771,7 +775,7 @@ body {
   border-radius: 0 !important;
 }
 
-/* Styl Game Boy - zielonkawy, zaokrąglone */
+
 .menu-gameboy {
   filter: sepia(0.3) hue-rotate(60deg) saturate(1.2);
 }
@@ -793,90 +797,141 @@ body {
   border-radius: 15px !important;
 }
 
-/* Styl Nintendo Switch - nowoczesny, joy-con colors */
+
 .menu-switch {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", sans-serif !important;
+  font-size: 16px !important;
 }
 
-.menu-switch h1,
-.menu-switch h2,
+.menu-switch h1 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", sans-serif !important;
+  font-weight: 800 !important;
+  font-size: 32px !important;
+  letter-spacing: -0.5px !important;
+}
+
+.menu-switch h2 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 24px !important;
+  margin-top: 40px !important;
+  margin-bottom: 20px !important;
+}
+
 .menu-switch h3,
 .menu-switch .logo {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", sans-serif !important;
   font-weight: 700 !important;
+  font-size: 18px !important;
 }
 
-.menu-switch #main-menu,
-.menu-switch .game-card,
-.menu-switch .achievement-item {
-  background: var(--white) !important;
-  border-radius: 15px !important;
-  border: 3px solid var(--dark-gray) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+.menu-switch p,
+.menu-switch span,
+.menu-switch div {
+  font-size: 15px !important;
+}
+
+.menu-switch #main-menu {
+  background: #f8f9fa !important;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 40px 30px !important;
 }
 
 .menu-switch .game-card {
-  border: 4px solid var(--dark-gray) !important;
-  transition: all 0.3s ease !important;
+  background: var(--white) !important;
+  border-radius: 20px !important;
+  border: none !important;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08) !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  overflow: hidden !important;
 }
 
 .menu-switch .game-card:hover {
-  transform: translateY(-4px) !important;
-  box-shadow: 0 8px 20px rgba(230, 0, 18, 0.3) !important;
-  border-color: var(--red) !important;
+  transform: translateY(-8px) scale(1.02) !important;
+  box-shadow: 0 16px 32px rgba(230, 0, 18, 0.15) !important;
+}
+
+.menu-switch .game-icon {
+  border-radius: 16px !important;
+  box-shadow: none !important;
+  border: none !important;
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 1 !important;
+  object-fit: cover !important;
+  font-size: 80px !important;
+  min-height: 150px !important;
 }
 
 .menu-switch .btn-start,
 .menu-switch .btn-secondary,
 .menu-switch .btn-play {
-  border-radius: 25px !important;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
-  background: linear-gradient(135deg, var(--red), #ff4444) !important;
-  border: 3px solid var(--dark-gray) !important;
-  font-weight: 600 !important;
-  transition: all 0.3s ease !important;
+  border-radius: 30px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  background: linear-gradient(135deg, #e60012, #ff3a3a) !important;
+  border: none !important;
+  font-weight: 700 !important;
+  font-size: 16px !important;
+  padding: 16px 32px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  text-transform: none !important;
+  letter-spacing: 0.5px !important;
 }
 
 .menu-switch .btn-start:hover,
 .menu-switch .btn-secondary:hover,
 .menu-switch .btn-play:hover {
-  transform: scale(1.05) !important;
-  box-shadow: 0 6px 12px rgba(230, 0, 18, 0.4) !important;
+  transform: scale(1.05) translateY(-2px) !important;
+  box-shadow: 0 8px 20px rgba(230, 0, 18, 0.35) !important;
+  background: linear-gradient(135deg, #ff0018, #ff5050) !important;
 }
 
 .menu-switch .tab {
-  border-radius: 10px 10px 0 0 !important;
-  background: var(--light-gray) !important;
-  border: 3px solid var(--dark-gray) !important;
-  border-bottom: none !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", sans-serif !important;
+  border-radius: 16px 16px 0 0 !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 3px solid transparent !important;
   font-weight: 600 !important;
+  font-size: 16px !important;
   transition: all 0.2s ease !important;
+  padding: 16px 24px !important;
+  color: #6c757d !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
 }
 
 .menu-switch .tab.active {
-  background: linear-gradient(to right, var(--red), #00bcf1) !important;
-  color: var(--white) !important;
-  box-shadow: 0 -2px 8px rgba(230, 0, 18, 0.3) !important;
+  background: transparent !important;
+  color: var(--dark-gray) !important;
+  border-bottom: 3px solid #e60012 !important;
+  box-shadow: none !important;
 }
 
-.menu-switch .game-icon {
-  border-radius: 12px !important;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2) !important;
-  border: 3px solid var(--dark-gray) !important;
+.menu-switch .tab:hover {
+  color: var(--dark-gray) !important;
+  background: rgba(230, 0, 18, 0.05) !important;
 }
 
 .menu-switch .achievement-item {
-  border: 3px solid var(--dark-gray) !important;
-  background: var(--light-gray) !important;
+  border: none !important;
+  background: var(--white) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
 }
 
 .menu-switch .achievement-item.unlocked {
   background: linear-gradient(
     135deg,
-    rgba(230, 0, 18, 0.1),
-    rgba(0, 188, 241, 0.1)
+    rgba(230, 0, 18, 0.05),
+    rgba(0, 188, 241, 0.05)
   ) !important;
   border-color: var(--red) !important;
 }

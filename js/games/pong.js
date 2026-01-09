@@ -1,11 +1,11 @@
-// pong.js - Gra: PISARIO PONG (Klasyczny Pong)
+
 
 let pongActive = false;
 let pongCanvas = null;
 let pongCtx = null;
 let pongInterval = null;
 
-// Obiekty gry
+
 let pongPlayer = {
   x: 20,
   y: 0,
@@ -33,7 +33,7 @@ let pongBall = {
   speed: 5,
 };
 
-// Sterowanie
+
 let pongKeys = {
   w: false,
   s: false,
@@ -41,13 +41,13 @@ let pongKeys = {
   arrowDown: false,
 };
 
-// Funkcja startowania Ponga
+
 function startPong() {
-  // Zawsze pokazuj ekran retro na początku
+  
   showPongRetroScreen();
 }
 
-// Funkcja wyświetlania ekranu retro przed Pong
+
 function showPongRetroScreen() {
   const gameContent = document.getElementById("game-content");
   gameContent.innerHTML = `
@@ -164,20 +164,20 @@ function showPongRetroScreen() {
   document
     .getElementById("pong-retro-start-btn")
     .addEventListener("click", () => {
-      // Rozpocznij właściwą grę
+      
       startPongGame();
     });
 }
 
-// Funkcja rozpoczynająca właściwą grę (wydzielona z startPong)
+
 function startPongGame() {
   pongActive = true;
 
-  // Ustaw tytuł gry
+  
   document.getElementById("game-title").textContent = "PISARIO PONG";
   updatePongScore();
 
-  // Stwórz canvas
+  
   const gameContent = document.getElementById("game-content");
   gameContent.innerHTML = `
     <div style="width: 100%; max-width: 700px; text-align: center;">
@@ -194,43 +194,43 @@ function startPongGame() {
     </div>
   `;
 
-  // Pobierz canvas
+  
   pongCanvas = document.getElementById("pong-canvas");
   pongCtx = pongCanvas.getContext("2d");
 
-  // Inicjalizuj pozycje
+  
   initPong();
 
-  // Dodaj event listenery klawiatury
+  
   document.addEventListener("keydown", handlePongKeyDown);
   document.addEventListener("keyup", handlePongKeyUp);
 
-  // Uruchom pętlę gry
-  pongInterval = setInterval(pongGameLoop, 1000 / 60); // 60 FPS
+  
+  pongInterval = setInterval(pongGameLoop, 1000 / 60); 
 }
 
-// Funkcja inicjalizacji pozycji
+
 function initPong() {
-  // Wyśrodkuj paletki
+  
   pongPlayer.y = (pongCanvas.height - pongPlayer.height) / 2;
   pongAI.x = pongCanvas.width - pongAI.width - 20;
   pongAI.y = (pongCanvas.height - pongAI.height) / 2;
 
-  // Wyśrodkuj piłkę
+  
   resetBall();
 }
 
-// Funkcja resetowania piłki
+
 function resetBall() {
   pongBall.x = pongCanvas.width / 2;
   pongBall.y = pongCanvas.height / 2;
 
-  // Losowy kierunek
+  
   pongBall.speedX = (Math.random() > 0.5 ? 1 : -1) * pongBall.speed;
   pongBall.speedY = (Math.random() - 0.5) * pongBall.speed;
 }
 
-// Funkcja obsługi klawiatury
+
 function handlePongKeyDown(e) {
   if (!pongActive) return;
 
@@ -253,20 +253,20 @@ function handlePongKeyUp(e) {
   if (e.key === "ArrowDown") pongKeys.arrowDown = false;
 }
 
-// Główna pętla gry
+
 function pongGameLoop() {
   if (!pongActive) return;
 
-  // Aktualizuj
+  
   updatePong();
 
-  // Renderuj
+  
   renderPong();
 }
 
-// Funkcja aktualizacji logiki
+
 function updatePong() {
-  // Ruch gracza
+  
   if ((pongKeys.w || pongKeys.arrowUp) && pongPlayer.y > 0) {
     pongPlayer.y -= pongPlayer.speed;
   }
@@ -277,7 +277,7 @@ function updatePong() {
     pongPlayer.y += pongPlayer.speed;
   }
 
-  // Ruch AI (śledzi piłkę)
+  
   const aiCenter = pongAI.y + pongAI.height / 2;
   if (pongBall.y < aiCenter - 35 && pongAI.y > 0) {
     pongAI.y -= pongAI.speed;
@@ -288,11 +288,11 @@ function updatePong() {
     pongAI.y += pongAI.speed;
   }
 
-  // Ruch piłki
+  
   pongBall.x += pongBall.speedX;
   pongBall.y += pongBall.speedY;
 
-  // Odbicie od góry/dołu
+  
   if (
     pongBall.y - pongBall.radius <= 0 ||
     pongBall.y + pongBall.radius >= pongCanvas.height
@@ -301,31 +301,31 @@ function updatePong() {
     playBeep(440, 0.05);
   }
 
-  // Kolizja z paletką gracza
+  
   if (
     pongBall.x - pongBall.radius <= pongPlayer.x + pongPlayer.width &&
     pongBall.y >= pongPlayer.y &&
     pongBall.y <= pongPlayer.y + pongPlayer.height &&
     pongBall.speedX < 0
   ) {
-    pongBall.speedX = -pongBall.speedX * 1.05; // Przyśpieszenie
+    pongBall.speedX = -pongBall.speedX * 1.05; 
     pongBall.speedY += (Math.random() - 0.5) * 2;
     playBeep(660, 0.1);
   }
 
-  // Kolizja z paletką AI
+  
   if (
     pongBall.x + pongBall.radius >= pongAI.x &&
     pongBall.y >= pongAI.y &&
     pongBall.y <= pongAI.y + pongAI.height &&
     pongBall.speedX > 0
   ) {
-    pongBall.speedX = -pongBall.speedX * 1.05; // Przyśpieszenie
+    pongBall.speedX = -pongBall.speedX * 1.05; 
     pongBall.speedY += (Math.random() - 0.5) * 2;
     playBeep(660, 0.1);
   }
 
-  // Punkt dla AI (piłka poza lewą krawędzią)
+  
   if (pongBall.x - pongBall.radius <= 0) {
     pongAI.score++;
     updatePongScore();
@@ -334,7 +334,7 @@ function updatePong() {
     checkPongWin();
   }
 
-  // Punkt dla gracza (piłka poza prawą krawędzią)
+  
   if (pongBall.x + pongBall.radius >= pongCanvas.width) {
     pongPlayer.score++;
     updatePongScore();
@@ -344,13 +344,13 @@ function updatePong() {
   }
 }
 
-// Funkcja renderowania
+
 function renderPong() {
-  // Wyczyść canvas
+  
   pongCtx.fillStyle = "#2c2c2c";
   pongCtx.fillRect(0, 0, pongCanvas.width, pongCanvas.height);
 
-  // Linia środkowa (przerywana)
+  
   pongCtx.strokeStyle = "#8c8c8c";
   pongCtx.lineWidth = 4;
   pongCtx.setLineDash([10, 10]);
@@ -360,8 +360,8 @@ function renderPong() {
   pongCtx.stroke();
   pongCtx.setLineDash([]);
 
-  // Paletka gracza
-  pongCtx.fillStyle = "#0095da"; // Niebieski
+  
+  pongCtx.fillStyle = "#0095da"; 
   pongCtx.fillRect(
     pongPlayer.x,
     pongPlayer.y,
@@ -369,17 +369,17 @@ function renderPong() {
     pongPlayer.height
   );
 
-  // Paletka AI
-  pongCtx.fillStyle = "#e60012"; // Czerwony
+  
+  pongCtx.fillStyle = "#e60012"; 
   pongCtx.fillRect(pongAI.x, pongAI.y, pongAI.width, pongAI.height);
 
-  // Piłka
-  pongCtx.fillStyle = "#ffed00"; // Żółty
+  
+  pongCtx.fillStyle = "#ffed00"; 
   pongCtx.beginPath();
   pongCtx.arc(pongBall.x, pongBall.y, pongBall.radius, 0, Math.PI * 2);
   pongCtx.fill();
 
-  // Wyniki (duże cyfry)
+  
   pongCtx.fillStyle = "#f0f0f0";
   pongCtx.font = "48px 'Press Start 2P', cursive";
   pongCtx.textAlign = "center";
@@ -387,13 +387,13 @@ function renderPong() {
   pongCtx.fillText(pongAI.score, (pongCanvas.width / 4) * 3, 60);
 }
 
-// Funkcja aktualizacji wyniku
+
 function updatePongScore() {
   document.getElementById("game-score").textContent =
     "PUNKTY: " + pongPlayer.score + " | AI: " + pongAI.score;
 }
 
-// Funkcja sprawdzania wygranej
+
 function checkPongWin() {
   if (pongPlayer.score >= 5) {
     endPong(true);
@@ -402,19 +402,19 @@ function checkPongWin() {
   }
 }
 
-// Funkcja końca gry
+
 function endPong(playerWon) {
   pongActive = false;
   clearInterval(pongInterval);
 
-  // Usuń event listenery
+  
   document.removeEventListener("keydown", handlePongKeyDown);
   document.removeEventListener("keyup", handlePongKeyUp);
 
   const gameContent = document.getElementById("game-content");
 
   if (playerWon) {
-    // Wygrana gracza
+    
     gameContent.innerHTML = `
       <div style="text-align: center;">
         <h2 style="font-size: 32px; color: var(--green); margin-bottom: 20px;">
@@ -433,24 +433,24 @@ function endPong(playerWon) {
       </div>
     `;
 
-    // Osiągnięcie za perfekcyjną grę (5-0)
+    
     if (pongAI.score === 0) {
       unlockAchievement("pong_perfekcja");
     }
 
-    // Zapisz wynik
+    
     saveScore("pong_wins", (loadData().scores?.pong_wins || 0) + 1);
 
-    // Dodaj do ukończonych gier
+    
     addCompletedGame("pong");
 
-    // Nagród 10 monet
+    
     addCoins(10);
     showToast("+10 🪙 za wygraną w Pong!");
 
     playWinSound();
   } else {
-    // Przegrana gracza
+    
     gameContent.innerHTML = `
       <div style="text-align: center;">
         <h2 style="font-size: 24px; color: var(--red); margin-bottom: 20px;">
@@ -472,19 +472,19 @@ function endPong(playerWon) {
     playBeep(220, 0.5);
   }
 
-  // Reset wyniku
+  
   pongPlayer.score = 0;
   pongAI.score = 0;
 }
 
-// Funkcja zatrzymania gry
+
 function stopPong() {
   pongActive = false;
   if (pongInterval) {
     clearInterval(pongInterval);
   }
 
-  // Usuń event listenery
+  
   document.removeEventListener("keydown", handlePongKeyDown);
   document.removeEventListener("keyup", handlePongKeyUp);
 }

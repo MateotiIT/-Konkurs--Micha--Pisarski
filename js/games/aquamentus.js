@@ -1,11 +1,11 @@
-// aquamentus.js - Gra: ZELDA BOSS FIGHT - Aquamentus
+
 
 let aquamentusActive = false;
 let aquamentusCanvas;
 let aquamentusCtx;
 let aquamentusInterval;
 
-// Link (gracz)
+
 let link = {
   x: 100,
   y: 180,
@@ -15,11 +15,11 @@ let link = {
   hp: 10,
   maxHp: 10,
   attackCooldown: 0,
-  invincible: 0, // Ramki nietykalności po trafieniu
-  direction: "right", // Kierunek patrzenia
+  invincible: 0, 
+  direction: "right", 
 };
 
-// Aquamentus (boss)
+
 let aquamentus = {
   x: 450,
   y: 120,
@@ -31,14 +31,14 @@ let aquamentus = {
   moveInterval: 60,
   direction: { x: 0, y: 1 },
   shootTimer: 0,
-  shootInterval: 120, // Co 2 sekundy strzela
+  shootInterval: 120, 
 };
 
-// Pociski
+
 let fireballs = [];
 let swordSlashes = [];
 
-// Kontrolki
+
 let aquamentusKeys = {
   up: false,
   down: false,
@@ -47,18 +47,18 @@ let aquamentusKeys = {
   space: false,
 };
 
-// Stan gry
+
 let aquamentusGameOver = false;
 let aquamentusVictory = false;
 
-// Funkcja startowania gry
+
 function startAquamentus() {
-  // Reset zmiennych
+  
   aquamentusActive = true;
   aquamentusGameOver = false;
   aquamentusVictory = false;
 
-  // Reset gracza
+  
   link.x = 100;
   link.y = 180;
   link.hp = 10;
@@ -66,7 +66,7 @@ function startAquamentus() {
   link.invincible = 0;
   link.direction = "right";
 
-  // Reset bossa
+  
   aquamentus.x = 450;
   aquamentus.y = 120;
   aquamentus.hp = 15;
@@ -74,39 +74,39 @@ function startAquamentus() {
   aquamentus.shootTimer = 0;
   aquamentus.direction = { x: 0, y: 1 };
 
-  // Wyczyść pociski
+  
   fireballs = [];
   swordSlashes = [];
 
-  // Reset klawiszy
+  
   aquamentusKeys.up = false;
   aquamentusKeys.down = false;
   aquamentusKeys.left = false;
   aquamentusKeys.right = false;
   aquamentusKeys.space = false;
 
-  // Ukryj menu, pokaż grę
+  
   document.getElementById("main-menu").style.display = "none";
   document.getElementById("game-container").style.display = "flex";
 
-  // Ustaw tytuł i wynik
+  
   document.getElementById("game-title").innerText = "ZELDA: AQUAMENTUS";
   document.getElementById("game-score").innerText = `❤️ ${Math.ceil(
     link.hp / 2
   )} | BOSS: ${aquamentus.hp}`;
 
-  // Stwórz canvas
+  
   const gameContent = document.getElementById("game-content");
   gameContent.innerHTML = `<canvas id="aquamentus-canvas" width="600" height="400"></canvas>`;
 
   aquamentusCanvas = document.getElementById("aquamentus-canvas");
   aquamentusCtx = aquamentusCanvas.getContext("2d");
 
-  // Dodaj event listenery
+  
   document.addEventListener("keydown", handleAquamentusKeyDown);
   document.addEventListener("keyup", handleAquamentusKeyUp);
 
-  // Uruchom grę z 60 FPS
+  
   aquamentusInterval = setInterval(() => {
     aquamentusGameLoop();
   }, 1000 / 60);
@@ -114,7 +114,7 @@ function startAquamentus() {
   playBeep(440, 0.1);
 }
 
-// Obsługa klawiszy
+
 function handleAquamentusKeyDown(e) {
   if (!aquamentusActive) return;
 
@@ -139,7 +139,7 @@ function handleAquamentusKeyUp(e) {
   if (e.key === " ") aquamentusKeys.space = false;
 }
 
-// Główna pętla gry
+
 function aquamentusGameLoop() {
   if (!aquamentusActive || aquamentusGameOver || aquamentusVictory) {
     return;
@@ -149,9 +149,9 @@ function aquamentusGameLoop() {
   drawAquamentus();
 }
 
-// Aktualizacja logiki gry
+
 function updateAquamentus() {
-  // Ruch gracza (8 kierunków)
+  
   let moveX = 0;
   let moveY = 0;
 
@@ -160,13 +160,13 @@ function updateAquamentus() {
   if (aquamentusKeys.left) moveX -= 1;
   if (aquamentusKeys.right) moveX += 1;
 
-  // Śledź kierunek patrzenia
+  
   if (moveX < 0) link.direction = "left";
   if (moveX > 0) link.direction = "right";
   if (moveY < 0) link.direction = "up";
   if (moveY > 0) link.direction = "down";
 
-  // Normalizacja ruchu po przekątnej
+  
   if (moveX !== 0 && moveY !== 0) {
     moveX *= 0.707;
     moveY *= 0.707;
@@ -175,17 +175,17 @@ function updateAquamentus() {
   link.x += moveX * link.speed;
   link.y += moveY * link.speed;
 
-  //Ograniczenia do canvas
+  
   if (link.x < 10) link.x = 10;
   if (link.x > 590 - link.width) link.x = 590 - link.width;
   if (link.y < 10) link.y = 10;
   if (link.y > 390 - link.height) link.y = 390 - link.height;
 
-  // Atak mieczem
+  
   if (aquamentusKeys.space && link.attackCooldown === 0) {
-    link.attackCooldown = 20; // 1/3 sekundy cooldown
+    link.attackCooldown = 20; 
 
-    // Stwórz slash przed graczem w kierunku patrzenia
+    
     let slashX = link.x;
     let slashY = link.y;
     let slashWidth = 8;
@@ -228,17 +228,17 @@ function updateAquamentus() {
   if (link.attackCooldown > 0) link.attackCooldown--;
   if (link.invincible > 0) link.invincible--;
 
-  // Aktualizuj slashe
+  
   swordSlashes = swordSlashes.filter((slash) => {
     slash.lifetime--;
     return slash.lifetime > 0;
   });
 
-  // Ruch bossa
+  
   aquamentus.moveTimer++;
   if (aquamentus.moveTimer >= aquamentus.moveInterval) {
     aquamentus.moveTimer = 0;
-    // Losowy kierunek
+    
     const dirs = [
       { x: 0, y: 1 },
       { x: 0, y: -1 },
@@ -251,7 +251,7 @@ function updateAquamentus() {
   aquamentus.x += aquamentus.direction.x * 1.5;
   aquamentus.y += aquamentus.direction.y * 1.5;
 
-  // Ograniczenia bossa
+  
   if (aquamentus.x < 300) aquamentus.x = 300;
   if (aquamentus.x > 590 - aquamentus.width)
     aquamentus.x = 590 - aquamentus.width;
@@ -259,25 +259,25 @@ function updateAquamentus() {
   if (aquamentus.y > 390 - aquamentus.height)
     aquamentus.y = 390 - aquamentus.height;
 
-  // Boss strzela
+  
   aquamentus.shootTimer++;
   if (aquamentus.shootTimer >= aquamentus.shootInterval) {
     aquamentus.shootTimer = 0;
     shootFireballs();
   }
 
-  // Aktualizuj pociski
+  
   fireballs.forEach((fb) => {
     fb.x += fb.vx;
     fb.y += fb.vy;
   });
 
-  // Usuń pociski poza ekranem
+  
   fireballs = fireballs.filter(
     (fb) => fb.x > -20 && fb.x < 620 && fb.y > -20 && fb.y < 420
   );
 
-  // Kolizje slash vs boss
+  
   swordSlashes.forEach((slash) => {
     if (
       slash.x < aquamentus.x + aquamentus.width &&
@@ -286,10 +286,10 @@ function updateAquamentus() {
       slash.y + slash.height > aquamentus.y
     ) {
       aquamentus.hp -= 1;
-      slash.lifetime = 0; // Usuń slash
+      slash.lifetime = 0; 
       playBeep(330, 0.1);
 
-      // Sprawdź wygraną
+      
       if (aquamentus.hp <= 0) {
         aquamentusVictory = true;
         endAquamentus(true);
@@ -297,7 +297,7 @@ function updateAquamentus() {
     }
   });
 
-  // Kolizje fireball vs gracz
+  
   if (link.invincible === 0) {
     fireballs.forEach((fb) => {
       if (
@@ -307,11 +307,11 @@ function updateAquamentus() {
         fb.y + fb.height > link.y
       ) {
         link.hp -= 2;
-        link.invincible = 60; // 1 sekunda nietykalności
-        fb.x = -100; // Usuń pocisk
+        link.invincible = 60; 
+        fb.x = -100; 
         playBeep(220, 0.2);
 
-        // Sprawdź przegraną
+        
         if (link.hp <= 0) {
           aquamentusGameOver = true;
           endAquamentus(false);
@@ -319,7 +319,7 @@ function updateAquamentus() {
       }
     });
 
-    // Kolizje Link vs Boss - nie można wchodzić w smoka!
+    
     if (
       link.x < aquamentus.x + aquamentus.width &&
       link.x + link.width > aquamentus.x &&
@@ -330,7 +330,7 @@ function updateAquamentus() {
       link.invincible = 60;
       playBeep(220, 0.2);
 
-      // Odepchnij Linka od bossa
+      
       const pushX = link.x < aquamentus.x ? -20 : 20;
       const pushY = link.y < aquamentus.y ? -20 : 20;
       link.x += pushX;
@@ -343,21 +343,21 @@ function updateAquamentus() {
     }
   }
 
-  // Aktualizuj HUD
+  
   document.getElementById("game-score").innerText = `❤️ ${Math.ceil(
     link.hp / 2
   )} | BOSS: ${aquamentus.hp}`;
 }
 
-// Rysowanie gry
+
 function drawAquamentus() {
   const ctx = aquamentusCtx;
 
-  // Tło - dungeon
+  
   ctx.fillStyle = "#1a1a1a";
   ctx.fillRect(0, 0, 600, 400);
 
-  // Kamienna podłoga
+  
   ctx.fillStyle = "#2a2a2a";
   for (let i = 0; i < 600; i += 40) {
     for (let j = 0; j < 400; j += 40) {
@@ -365,43 +365,43 @@ function drawAquamentus() {
     }
   }
 
-  // Link (zielony wojownik)
+  
   if (link.invincible % 8 < 4) {
-    // Migotanie gdy nietykalny
+    
     ctx.fillStyle = "#00ff00";
     ctx.fillRect(link.x, link.y, link.width, link.height);
 
-    // Tarcza
+    
     ctx.fillStyle = "#8b4513";
     ctx.fillRect(link.x - 6, link.y + 4, 8, 16);
   }
 
-  // Sword slashes (srebrne/białe promienie miecza)
+  
   swordSlashes.forEach((slash) => {
-    // Biały środek
+    
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(slash.x, slash.y, slash.width, slash.height);
 
-    // Srebrna otoczka
+    
     ctx.strokeStyle = "#c0c0c0";
     ctx.lineWidth = 2;
     ctx.strokeRect(slash.x, slash.y, slash.width, slash.height);
   });
 
-  // Aquamentus (zielony smok)
+  
   ctx.fillStyle = "#00aa00";
   ctx.fillRect(aquamentus.x, aquamentus.y, aquamentus.width, aquamentus.height);
 
-  // Głowa smoka
+  
   ctx.fillStyle = "#008800";
   ctx.fillRect(aquamentus.x - 20, aquamentus.y + 20, 25, 40);
 
-  // Rogi
+  
   ctx.fillStyle = "#ffffff";
   ctx.fillRect(aquamentus.x - 22, aquamentus.y + 18, 6, 12);
   ctx.fillRect(aquamentus.x - 22, aquamentus.y + 50, 6, 12);
 
-  // Fireballs (czerwone kule ognia)
+  
   ctx.fillStyle = "#ff3300";
   fireballs.forEach((fb) => {
     ctx.beginPath();
@@ -414,7 +414,7 @@ function drawAquamentus() {
     );
     ctx.fill();
 
-    // Pomarańczowy środek
+    
     ctx.fillStyle = "#ff9900";
     ctx.beginPath();
     ctx.arc(
@@ -428,26 +428,26 @@ function drawAquamentus() {
     ctx.fillStyle = "#ff3300";
   });
 
-  // Pasek HP bossa
+  
   ctx.fillStyle = "#333";
   ctx.fillRect(300, 10, 280, 20);
   ctx.fillStyle = "#00ff00";
   const hpPercent = aquamentus.hp / aquamentus.maxHp;
   ctx.fillRect(302, 12, 276 * hpPercent, 16);
 
-  // Tekst HP
+  
   ctx.fillStyle = "#fff";
   ctx.font = "12px 'Press Start 2P'";
   ctx.fillText("AQUAMENTUS", 310, 24);
 }
 
-// Funkcja strzelania ogniem
+
 function shootFireballs() {
   const centerX = aquamentus.x;
   const centerY = aquamentus.y + aquamentus.height / 2;
 
-  // 3 pociski w różnych kierunkach
-  const angles = [-0.3, 0, 0.3]; // Góra, środek, dół
+  
+  const angles = [-0.3, 0, 0.3]; 
 
   angles.forEach((angle) => {
     fireballs.push({
@@ -463,7 +463,7 @@ function shootFireballs() {
   playBeep(660, 0.1);
 }
 
-// Zakończenie gry
+
 function endAquamentus(won) {
   aquamentusActive = false;
   clearInterval(aquamentusInterval);
@@ -516,7 +516,7 @@ function endAquamentus(won) {
   }
 }
 
-// Zatrzymanie gry
+
 function stopAquamentus() {
   aquamentusActive = false;
   aquamentusGameOver = false;
@@ -529,20 +529,20 @@ function stopAquamentus() {
   document.removeEventListener("keydown", handleAquamentusKeyDown);
   document.removeEventListener("keyup", handleAquamentusKeyUp);
 
-  // Resetuj klawisze
+  
   aquamentusKeys.up = false;
   aquamentusKeys.down = false;
   aquamentusKeys.left = false;
   aquamentusKeys.right = false;
   aquamentusKeys.space = false;
 
-  // Wyczyść canvas
+  
   const gameContent = document.getElementById("game-content");
   if (gameContent) {
     gameContent.innerHTML = "";
   }
 
-  // Pokaż menu
+  
   document.getElementById("main-menu").style.display = "block";
   document.getElementById("game-container").style.display = "none";
 }
