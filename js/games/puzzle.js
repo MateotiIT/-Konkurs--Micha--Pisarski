@@ -1,11 +1,8 @@
-
-
 let puzzleActive = false;
 let puzzleGrid = [];
-let emptyPos = 8; 
+let emptyPos = 8;
 let puzzleMoves = 0;
-let selectedImage = "./assets/img/placeholder1.jpg"; 
-
+let selectedImage = "./assets/img/placeholder1.jpg";
 
 const puzzleImages = [
   { path: "./assets/img/ns.jpg", name: "🎮 NS" },
@@ -13,12 +10,9 @@ const puzzleImages = [
   { path: "./assets/img/sega.jpg", name: "🎮 SEGA" },
 ];
 
-
 function startPuzzle() {
-  
   showPuzzleStory();
 }
-
 
 function showPuzzleStory() {
   const gameContent = document.getElementById("game-content");
@@ -133,7 +127,6 @@ function showPuzzleStory() {
   document
     .getElementById("puzzle-story-start-btn")
     .addEventListener("click", () => {
-      
       puzzleActive = false;
       puzzleMoves = 0;
       document.getElementById("game-title").textContent = "PISAREK PUZZLE";
@@ -141,7 +134,6 @@ function showPuzzleStory() {
       showImageSelection();
     });
 }
-
 
 function showImageSelection() {
   const gameContent = document.getElementById("game-content");
@@ -180,7 +172,6 @@ function showImageSelection() {
     </div>
   `;
 
-  
   const choices = gameContent.querySelectorAll(".image-choice");
   choices.forEach((choice, index) => {
     choice.addEventListener("click", function () {
@@ -189,7 +180,6 @@ function showImageSelection() {
       playBeep(660, 0.1);
     });
 
-    
     choice.addEventListener("mouseenter", function () {
       this.style.transform = "scale(1.05)";
       this.style.borderColor = "var(--yellow)";
@@ -202,28 +192,21 @@ function showImageSelection() {
   });
 }
 
-
 function startPuzzleGame() {
   puzzleActive = true;
   puzzleMoves = 0;
 
-  
   document.getElementById("game-score").textContent = "RUCHY: 0";
 
-  
   puzzleGrid = [0, 1, 2, 3, 4, 5, 6, 7, 8];
   emptyPos = 8;
 
-  
   shufflePuzzle();
 
-  
   renderPuzzle();
 }
 
-
 function shufflePuzzle() {
-  
   for (let i = 0; i < 100; i++) {
     const neighbors = getNeighbors(emptyPos);
     const randomNeighbor =
@@ -231,45 +214,51 @@ function shufflePuzzle() {
     swapTiles(emptyPos, randomNeighbor);
   }
 
-  
   puzzleMoves = 0;
 }
-
 
 function getNeighbors(pos) {
   const neighbors = [];
   const row = Math.floor(pos / 3);
   const col = pos % 3;
 
-  
   if (row > 0) neighbors.push(pos - 3);
-  
+
   if (row < 2) neighbors.push(pos + 3);
-  
+
   if (col > 0) neighbors.push(pos - 1);
-  
+
   if (col < 2) neighbors.push(pos + 1);
 
   return neighbors;
 }
-
 
 function swapTiles(pos1, pos2) {
   const temp = puzzleGrid[pos1];
   puzzleGrid[pos1] = puzzleGrid[pos2];
   puzzleGrid[pos2] = temp;
 
-  
   if (puzzleGrid[pos1] === 8) emptyPos = pos1;
   if (puzzleGrid[pos2] === 8) emptyPos = pos2;
 }
-
 
 function renderPuzzle() {
   const gameContent = document.getElementById("game-content");
 
   gameContent.innerHTML = `
         <div style="width: 100%; max-width: 450px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <button id="preview-btn" style="
+                    font-family: 'Press Start 2P', cursive;
+                    font-size: 8px;
+                    padding: 8px 12px;
+                    background: var(--yellow);
+                    color: var(--dark-gray);
+                    border: 3px solid var(--dark-gray);
+                    border-radius: 5px;
+                    cursor: pointer;
+                ">PODGLĄD</button>
+            </div>
             <div id="puzzle-grid" style="
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
@@ -280,11 +269,10 @@ function renderPuzzle() {
             ">
                 ${puzzleGrid
                   .map((tile, index) => {
-                    
                     const col = tile % 3;
                     const row = Math.floor(tile / 3);
-                    const bgPosX = col * -150; 
-                    const bgPosY = row * -150; 
+                    const bgPosX = col * -150;
+                    const bgPosY = row * -150;
 
                     return `
                     <div class="puzzle-tile ${tile === 8 ? "empty" : ""}" 
@@ -303,7 +291,24 @@ function renderPuzzle() {
                              border-radius: 5px;
                              cursor: ${tile === 8 ? "default" : "pointer"};
                              transition: transform 0.1s;
+                             position: relative;
                          ">
+                         ${
+                           tile !== 8
+                             ? `<div style="
+                             position: absolute;
+                             top: 4px;
+                             right: 4px;
+                             background: rgba(0,0,0,0.7);
+                             color: var(--yellow);
+                             font-size: 10px;
+                             font-weight: bold;
+                             padding: 2px 6px;
+                             border-radius: 3px;
+                             font-family: 'Press Start 2P', cursive;
+                         ">${tile + 1}</div>`
+                             : ""
+                         }
                     </div>
                 `;
                   })
@@ -315,7 +320,13 @@ function renderPuzzle() {
         </div>
     `;
 
-  
+  const previewBtn = document.getElementById("preview-btn");
+  if (previewBtn) {
+    previewBtn.addEventListener("click", function () {
+      openLightbox(selectedImage);
+    });
+  }
+
   const tiles = gameContent.querySelectorAll(".puzzle-tile");
   tiles.forEach((tile) => {
     tile.addEventListener("click", function () {
@@ -323,7 +334,6 @@ function renderPuzzle() {
       handleTileClick(index);
     });
 
-    
     tile.addEventListener("mouseenter", function () {
       if (this.getAttribute("data-tile") !== "8") {
         this.style.transform = "scale(0.95)";
@@ -336,44 +346,34 @@ function renderPuzzle() {
   });
 }
 
-
 function handleTileClick(index) {
   if (!puzzleActive) return;
 
   const tileValue = puzzleGrid[index];
 
-  
   const neighbors = getNeighbors(emptyPos);
 
   if (neighbors.includes(index) && tileValue !== 8) {
-    
     swapTiles(emptyPos, index);
     puzzleMoves++;
 
-    
     document.getElementById("game-score").textContent = "RUCHY: " + puzzleMoves;
 
-    
     renderPuzzle();
 
-    
     playBeep(440, 0.05);
 
-    
     checkPuzzleWin();
   }
 }
 
-
 function checkPuzzleWin() {
-  
   const solved = puzzleGrid.every((tile, index) => tile === index);
 
   if (solved) {
     endPuzzle(true);
   }
 }
-
 
 function endPuzzle(won) {
   puzzleActive = false;
@@ -395,22 +395,18 @@ function endPuzzle(won) {
             </div>
         `;
 
-    
     addCompletedGame("puzzle");
-    
+
     addCoins(10);
     showToast("+10 🪙 za ukończenie Puzzle!");
 
-    
     if (puzzleMoves < 60) {
       unlockAchievement("mistrz_ukladania");
     }
 
-    
     playWinSound();
   }
 }
-
 
 function stopPuzzle() {
   puzzleActive = false;
