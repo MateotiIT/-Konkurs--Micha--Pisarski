@@ -1,16 +1,11 @@
-
-
-
 let quizActive = false;
 let selectedCategory = null;
-
 
 const quizCategories = [
   { id: "pisario", name: "Pisarion3000", icon: "🎮", color: "var(--red)" },
   { id: "nintendo", name: "Nintendo", icon: "🕹️", color: "var(--blue)" },
   { id: "retro", name: "Retro Gierki", icon: "👾", color: "var(--purple)" },
 ];
-
 
 const quizQuestions = {
   pisario: [
@@ -672,17 +667,13 @@ const quizQuestions = {
   ],
 };
 
-
 let currentQuestions = [];
 let currentQuestionIndex = 0;
 let quizScore = 0;
 
-
 function startQuiz() {
-  
   showQuizStory();
 }
-
 
 function showQuizStory() {
   const gameContent = document.getElementById("game-content");
@@ -798,7 +789,6 @@ function showQuizStory() {
   document
     .getElementById("quiz-story-start-btn")
     .addEventListener("click", () => {
-      
       quizActive = false;
       selectedCategory = null;
       document.getElementById("game-title").textContent = "PISARIO QUIZ";
@@ -806,7 +796,6 @@ function showQuizStory() {
       showCategorySelection();
     });
 }
-
 
 function showCategorySelection() {
   const gameContent = document.getElementById("game-content");
@@ -843,7 +832,6 @@ function showCategorySelection() {
     </div>
   `;
 
-  
   const choices = gameContent.querySelectorAll(".category-choice");
   choices.forEach((choice) => {
     const categoryId = choice.getAttribute("data-category");
@@ -855,7 +843,6 @@ function showCategorySelection() {
       playBeep(660, 0.1);
     });
 
-    
     choice.addEventListener("mouseenter", function () {
       this.style.transform = "scale(1.05) translateY(-5px)";
       this.style.borderColor = category.color;
@@ -870,15 +857,14 @@ function showCategorySelection() {
   });
 }
 
-
 function startQuizGame() {
   quizActive = true;
 
-  
+  incrementGamePlayed("Quiz");
+
   const categoryQuestions = quizQuestions[selectedCategory] || [];
 
   if (categoryQuestions.length < 10) {
-    
     currentQuestions = shuffleArray(categoryQuestions);
   } else {
     currentQuestions = shuffleArray(categoryQuestions).slice(0, 10);
@@ -887,19 +873,15 @@ function startQuizGame() {
   currentQuestionIndex = 0;
   quizScore = 0;
 
-  
   updateQuizScore();
 
-  
   showQuestion();
 }
-
 
 function showQuestion() {
   const gameContent = document.getElementById("game-content");
 
   if (currentQuestionIndex >= currentQuestions.length) {
-    
     endQuiz();
     return;
   }
@@ -933,7 +915,6 @@ function showQuestion() {
         </div>
     `;
 
-  
   const answerButtons = gameContent.querySelectorAll(".quiz-answer-btn");
   answerButtons.forEach((btn) => {
     btn.addEventListener("click", function () {
@@ -942,10 +923,8 @@ function showQuestion() {
     });
   });
 
-  
   addQuizStyles();
 }
-
 
 function checkAnswer(selectedIndex) {
   if (!quizActive) return;
@@ -953,55 +932,54 @@ function checkAnswer(selectedIndex) {
   const q = currentQuestions[currentQuestionIndex];
   const answerButtons = document.querySelectorAll(".quiz-answer-btn");
 
-  
   answerButtons.forEach((btn) => {
     btn.style.pointerEvents = "none";
   });
 
-  
   answerButtons[q.correct].style.background = "var(--green)";
   answerButtons[q.correct].style.borderColor = "var(--green)";
   answerButtons[q.correct].style.color = "var(--white)";
 
   if (selectedIndex === q.correct) {
-    
     quizScore++;
     playBeep(660, 0.15);
   } else {
-    
     answerButtons[selectedIndex].style.background = "var(--red)";
     answerButtons[selectedIndex].style.borderColor = "var(--red)";
     answerButtons[selectedIndex].style.color = "var(--white)";
     playBeep(220, 0.15);
   }
 
-  
   updateQuizScore();
 
-  
   setTimeout(() => {
     currentQuestionIndex++;
     showQuestion();
   }, 1500);
 }
 
-
 function updateQuizScore() {
   document.getElementById("game-score").textContent = quizScore + " / 10";
 }
-
 
 function endQuiz() {
   quizActive = false;
   const gameContent = document.getElementById("game-content");
 
-  
   const percentage = (quizScore / 10) * 100;
+
+  // Zapisz wynik zawsze
+  saveBestScore("quiz_highscore", quizScore, false);
+
+  if (percentage >= 70) {
+    incrementGameWon();
+  } else {
+    incrementGameLost();
+  }
 
   let resultData = {};
 
   if (percentage < 30) {
-    
     resultData = {
       emoji: "💀",
       title: "NIE POSZŁO...",
@@ -1010,7 +988,6 @@ function endQuiz() {
       funnyText: "Nawet Goomba wiedziałby więcej!",
     };
   } else if (percentage < 60) {
-    
     resultData = {
       emoji: "😅",
       title: "NIEŹLE!",
@@ -1019,7 +996,6 @@ function endQuiz() {
       funnyText: "Luigi byłby dumny (ale tylko trochę)",
     };
   } else if (percentage < 100) {
-    
     resultData = {
       emoji: "⭐",
       title: "SUPER!",
@@ -1028,7 +1004,6 @@ function endQuiz() {
       funnyText: "Mario klepie Cię po plecach! 🍄",
     };
   } else {
-    
     resultData = {
       emoji: "👑",
       title: "MISTRZ WIEDZY!",
@@ -1062,17 +1037,11 @@ function endQuiz() {
     </div>
   `;
 
-  
-  saveScore("quiz_highscore", quizScore);
-
-  
   addCompletedGame("quiz");
 
-  
   addCoins(10);
   showToast("+10 🪙 za ukończenie Quiz!");
 
-  
   if (percentage === 100) {
     unlockAchievement("mistrz_wiedzy");
     playWinSound();
@@ -1081,14 +1050,11 @@ function endQuiz() {
   }
 }
 
-
 function stopQuiz() {
   quizActive = false;
 }
 
-
 function addQuizStyles() {
-  
   if (document.getElementById("quiz-styles")) return;
 
   const style = document.createElement("style");

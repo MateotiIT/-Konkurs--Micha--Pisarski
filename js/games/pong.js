@@ -1,10 +1,7 @@
-
-
 let pongActive = false;
 let pongCanvas = null;
 let pongCtx = null;
 let pongInterval = null;
-
 
 let pongPlayer = {
   x: 20,
@@ -33,7 +30,6 @@ let pongBall = {
   speed: 5,
 };
 
-
 let pongKeys = {
   w: false,
   s: false,
@@ -41,12 +37,9 @@ let pongKeys = {
   arrowDown: false,
 };
 
-
 function startPong() {
-  
   showPongRetroScreen();
 }
-
 
 function showPongRetroScreen() {
   const gameContent = document.getElementById("game-content");
@@ -164,20 +157,23 @@ function showPongRetroScreen() {
   document
     .getElementById("pong-retro-start-btn")
     .addEventListener("click", () => {
-      
       startPongGame();
     });
 }
 
-
 function startPongGame() {
   pongActive = true;
+  incrementGamePlayed("Pong");
 
-  
+  // Wyczyść poprzedni interval jeśli istnieje
+  if (pongInterval) {
+    clearInterval(pongInterval);
+    pongInterval = null;
+  }
+
   document.getElementById("game-title").textContent = "PISARIO PONG";
   updatePongScore();
 
-  
   const gameContent = document.getElementById("game-content");
   gameContent.innerHTML = `
     <div style="width: 100%; max-width: 700px; text-align: center;">
@@ -194,42 +190,36 @@ function startPongGame() {
     </div>
   `;
 
-  
   pongCanvas = document.getElementById("pong-canvas");
   pongCtx = pongCanvas.getContext("2d");
 
-  
   initPong();
 
-  
   document.addEventListener("keydown", handlePongKeyDown);
   document.addEventListener("keyup", handlePongKeyUp);
 
-  
-  pongInterval = setInterval(pongGameLoop, 1000 / 60); 
+  pongInterval = setInterval(pongGameLoop, 1000 / 60);
 }
 
-
 function initPong() {
-  
+  // Resetuj wyniki na start gry
+  pongPlayer.score = 0;
+  pongAI.score = 0;
+
   pongPlayer.y = (pongCanvas.height - pongPlayer.height) / 2;
   pongAI.x = pongCanvas.width - pongAI.width - 20;
   pongAI.y = (pongCanvas.height - pongAI.height) / 2;
 
-  
   resetBall();
 }
-
 
 function resetBall() {
   pongBall.x = pongCanvas.width / 2;
   pongBall.y = pongCanvas.height / 2;
 
-  
   pongBall.speedX = (Math.random() > 0.5 ? 1 : -1) * pongBall.speed;
   pongBall.speedY = (Math.random() - 0.5) * pongBall.speed;
 }
-
 
 function handlePongKeyDown(e) {
   if (!pongActive) return;
@@ -253,20 +243,15 @@ function handlePongKeyUp(e) {
   if (e.key === "ArrowDown") pongKeys.arrowDown = false;
 }
 
-
 function pongGameLoop() {
   if (!pongActive) return;
 
-  
   updatePong();
 
-  
   renderPong();
 }
 
-
 function updatePong() {
-  
   if ((pongKeys.w || pongKeys.arrowUp) && pongPlayer.y > 0) {
     pongPlayer.y -= pongPlayer.speed;
   }
@@ -277,7 +262,6 @@ function updatePong() {
     pongPlayer.y += pongPlayer.speed;
   }
 
-  
   const aiCenter = pongAI.y + pongAI.height / 2;
   if (pongBall.y < aiCenter - 35 && pongAI.y > 0) {
     pongAI.y -= pongAI.speed;
@@ -288,11 +272,9 @@ function updatePong() {
     pongAI.y += pongAI.speed;
   }
 
-  
   pongBall.x += pongBall.speedX;
   pongBall.y += pongBall.speedY;
 
-  
   if (
     pongBall.y - pongBall.radius <= 0 ||
     pongBall.y + pongBall.radius >= pongCanvas.height
@@ -301,31 +283,28 @@ function updatePong() {
     playBeep(440, 0.05);
   }
 
-  
   if (
     pongBall.x - pongBall.radius <= pongPlayer.x + pongPlayer.width &&
     pongBall.y >= pongPlayer.y &&
     pongBall.y <= pongPlayer.y + pongPlayer.height &&
     pongBall.speedX < 0
   ) {
-    pongBall.speedX = -pongBall.speedX * 1.05; 
+    pongBall.speedX = -pongBall.speedX * 1.05;
     pongBall.speedY += (Math.random() - 0.5) * 2;
     playBeep(660, 0.1);
   }
 
-  
   if (
     pongBall.x + pongBall.radius >= pongAI.x &&
     pongBall.y >= pongAI.y &&
     pongBall.y <= pongAI.y + pongAI.height &&
     pongBall.speedX > 0
   ) {
-    pongBall.speedX = -pongBall.speedX * 1.05; 
+    pongBall.speedX = -pongBall.speedX * 1.05;
     pongBall.speedY += (Math.random() - 0.5) * 2;
     playBeep(660, 0.1);
   }
 
-  
   if (pongBall.x - pongBall.radius <= 0) {
     pongAI.score++;
     updatePongScore();
@@ -334,7 +313,6 @@ function updatePong() {
     checkPongWin();
   }
 
-  
   if (pongBall.x + pongBall.radius >= pongCanvas.width) {
     pongPlayer.score++;
     updatePongScore();
@@ -344,13 +322,10 @@ function updatePong() {
   }
 }
 
-
 function renderPong() {
-  
   pongCtx.fillStyle = "#2c2c2c";
   pongCtx.fillRect(0, 0, pongCanvas.width, pongCanvas.height);
 
-  
   pongCtx.strokeStyle = "#8c8c8c";
   pongCtx.lineWidth = 4;
   pongCtx.setLineDash([10, 10]);
@@ -360,8 +335,7 @@ function renderPong() {
   pongCtx.stroke();
   pongCtx.setLineDash([]);
 
-  
-  pongCtx.fillStyle = "#0095da"; 
+  pongCtx.fillStyle = "#0095da";
   pongCtx.fillRect(
     pongPlayer.x,
     pongPlayer.y,
@@ -369,17 +343,14 @@ function renderPong() {
     pongPlayer.height
   );
 
-  
-  pongCtx.fillStyle = "#e60012"; 
+  pongCtx.fillStyle = "#e60012";
   pongCtx.fillRect(pongAI.x, pongAI.y, pongAI.width, pongAI.height);
 
-  
-  pongCtx.fillStyle = "#ffed00"; 
+  pongCtx.fillStyle = "#ffed00";
   pongCtx.beginPath();
   pongCtx.arc(pongBall.x, pongBall.y, pongBall.radius, 0, Math.PI * 2);
   pongCtx.fill();
 
-  
   pongCtx.fillStyle = "#f0f0f0";
   pongCtx.font = "48px 'Press Start 2P', cursive";
   pongCtx.textAlign = "center";
@@ -387,12 +358,10 @@ function renderPong() {
   pongCtx.fillText(pongAI.score, (pongCanvas.width / 4) * 3, 60);
 }
 
-
 function updatePongScore() {
   document.getElementById("game-score").textContent =
     "PUNKTY: " + pongPlayer.score + " | AI: " + pongAI.score;
 }
-
 
 function checkPongWin() {
   if (pongPlayer.score >= 5) {
@@ -402,19 +371,30 @@ function checkPongWin() {
   }
 }
 
-
 function endPong(playerWon) {
   pongActive = false;
-  clearInterval(pongInterval);
 
-  
+  // Wyczyść interval
+  if (pongInterval) {
+    clearInterval(pongInterval);
+    pongInterval = null;
+  }
+
+  // Zapisz wynik niezależnie od wyniku gry
+  saveBestScore("pong_score", pongPlayer.score, false);
+
+  if (playerWon) {
+    incrementGameWon();
+  } else {
+    incrementGameLost();
+  }
+
   document.removeEventListener("keydown", handlePongKeyDown);
   document.removeEventListener("keyup", handlePongKeyUp);
 
   const gameContent = document.getElementById("game-content");
 
   if (playerWon) {
-    
     gameContent.innerHTML = `
       <div style="text-align: center;">
         <h2 style="font-size: 32px; color: var(--green); margin-bottom: 20px;">
@@ -433,24 +413,19 @@ function endPong(playerWon) {
       </div>
     `;
 
-    
     if (pongAI.score === 0) {
       unlockAchievement("pong_perfekcja");
     }
 
-    
     saveScore("pong_wins", (loadData().scores?.pong_wins || 0) + 1);
 
-    
     addCompletedGame("pong");
 
-    
     addCoins(10);
     showToast("+10 🪙 za wygraną w Pong!");
 
     playWinSound();
   } else {
-    
     gameContent.innerHTML = `
       <div style="text-align: center;">
         <h2 style="font-size: 24px; color: var(--red); margin-bottom: 20px;">
@@ -472,11 +447,9 @@ function endPong(playerWon) {
     playBeep(220, 0.5);
   }
 
-  
   pongPlayer.score = 0;
   pongAI.score = 0;
 }
-
 
 function stopPong() {
   pongActive = false;
@@ -484,7 +457,6 @@ function stopPong() {
     clearInterval(pongInterval);
   }
 
-  
   document.removeEventListener("keydown", handlePongKeyDown);
   document.removeEventListener("keyup", handlePongKeyUp);
 }

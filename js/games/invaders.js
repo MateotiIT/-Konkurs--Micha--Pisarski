@@ -1,14 +1,10 @@
-
-
 let invadersActive = false;
 let invadersCanvas = null;
 let invadersCtx = null;
 let invadersInterval = null;
 
-
 const INVADERS_WIDTH = 700;
 const INVADERS_HEIGHT = 600;
-
 
 let invadersPlayer = {
   x: 350,
@@ -19,44 +15,35 @@ let invadersPlayer = {
   lives: 3,
 };
 
-
 let invadersBullets = [];
 
-
 let invadersEnemies = [];
-let invadersDirection = 1; 
+let invadersDirection = 1;
 let invadersSpeed = 1;
 let invadersDownTimer = 0;
-
 
 let invadersEnemyBullets = [];
 let invadersEnemyShootTimer = 0;
 
-
 let invadersBoss = null;
 let invadersBossActive = false;
 let invadersBossHealth = 0;
-
 
 let invadersScore = 0;
 let invadersLevel = 1;
 let invadersGameOver = false;
 let invadersWon = false;
 
-
 let invadersKeys = {
   left: false,
   right: false,
   space: false,
-  spacePressed: false, 
+  spacePressed: false,
 };
 
-
 function startInvaders() {
-  
   showInvadersStory();
 }
-
 
 function showInvadersStory() {
   const gameContent = document.getElementById("game-content");
@@ -181,14 +168,11 @@ function showInvadersStory() {
   document
     .getElementById("invaders-story-start-btn")
     .addEventListener("click", () => {
-      
       startInvadersGame();
     });
 }
 
-
 function startInvadersGame() {
-  
   if (invadersInterval) {
     clearInterval(invadersInterval);
   }
@@ -198,16 +182,14 @@ function startInvadersGame() {
   invadersWon = false;
   invadersScore = 0;
   invadersLevel = 1;
+  incrementGamePlayed("Invaders");
 
-  
   invadersBossActive = false;
   invadersBoss = null;
 
-  
   invadersBullets = [];
   invadersEnemyBullets = [];
 
-  
   invadersKeys.left = false;
   invadersKeys.right = false;
   invadersKeys.space = false;
@@ -235,20 +217,16 @@ function startInvadersGame() {
   invadersCanvas = document.getElementById("invaders-canvas");
   invadersCtx = invadersCanvas.getContext("2d");
 
-  
   resetInvadersPlayer();
   createInvadersEnemies();
 
-  
   document.addEventListener("keydown", handleInvadersKeyDown);
   document.addEventListener("keyup", handleInvadersKeyUp);
 
-  
   invadersInterval = setInterval(invadersGameLoop, 1000 / 60);
 
   incrementGamesPlayed();
 }
-
 
 function resetInvadersPlayer() {
   invadersPlayer.x = INVADERS_WIDTH / 2 - invadersPlayer.width / 2;
@@ -256,7 +234,6 @@ function resetInvadersPlayer() {
   invadersPlayer.lives = 3;
   invadersBullets = [];
 }
-
 
 function createInvadersEnemies() {
   invadersEnemies = [];
@@ -285,7 +262,6 @@ function createInvadersEnemies() {
   }
 }
 
-
 function createInvadersBoss() {
   const isFinalBoss = invadersLevel === 2;
 
@@ -305,14 +281,12 @@ function createInvadersBoss() {
   invadersBossHealth = invadersBoss.health;
 }
 
-
 function updateInvadersScore() {
   const hearts = "❤️".repeat(invadersPlayer.lives);
   document.getElementById(
     "game-score"
   ).textContent = `${hearts} | PUNKTY: ${invadersScore} | POZIOM: ${invadersLevel}`;
 }
-
 
 function handleInvadersKeyDown(e) {
   if (e.key === "ArrowLeft") invadersKeys.left = true;
@@ -332,7 +306,6 @@ function handleInvadersKeyUp(e) {
   }
 }
 
-
 function invadersGameLoop() {
   if (invadersGameOver || invadersWon) return;
 
@@ -340,9 +313,7 @@ function invadersGameLoop() {
   renderInvaders();
 }
 
-
 function updateInvaders() {
-  
   if (invadersKeys.left && invadersPlayer.x > 0) {
     invadersPlayer.x -= invadersPlayer.speed;
   }
@@ -353,7 +324,6 @@ function updateInvaders() {
     invadersPlayer.x += invadersPlayer.speed;
   }
 
-  
   if (invadersKeys.space && !invadersKeys.spacePressed) {
     invadersBullets.push({
       x: invadersPlayer.x + invadersPlayer.width / 2 - 2,
@@ -366,7 +336,6 @@ function updateInvaders() {
     playBeep(880, 0.05);
   }
 
-  
   for (let i = invadersBullets.length - 1; i >= 0; i--) {
     invadersBullets[i].y += invadersBullets[i].vy;
     if (invadersBullets[i].y < 0) {
@@ -374,23 +343,18 @@ function updateInvaders() {
     }
   }
 
-  
   if (!invadersBossActive) {
     updateInvadersEnemies();
   } else {
     updateInvadersBoss();
   }
 
-  
   updateInvadersEnemyBullets();
 
-  
   checkInvadersBulletCollisions();
 
-  
   checkInvadersPlayerHit();
 
-  
   if (
     !invadersBossActive &&
     invadersEnemies.filter((e) => e.alive).length === 0
@@ -398,7 +362,6 @@ function updateInvaders() {
     createInvadersBoss();
   }
 
-  
   if (invadersBossActive && invadersBoss && invadersBoss.health <= 0) {
     invadersBossActive = false;
     const wasFinalBoss = invadersBoss.isFinal;
@@ -409,17 +372,14 @@ function updateInvaders() {
     playBeep(660, 0.3);
 
     if (wasFinalBoss) {
-      
-      invadersWon = true; 
+      invadersWon = true;
 
-      
       invadersEnemies = [];
       invadersBullets = [];
       invadersEnemyBullets = [];
 
       setTimeout(() => endInvaders(true), 1000);
     } else {
-      
       setTimeout(() => {
         if (invadersActive && !invadersGameOver && !invadersWon) {
           createInvadersEnemies();
@@ -429,19 +389,16 @@ function updateInvaders() {
   }
 }
 
-
 function updateInvadersEnemies() {
   let moveDown = false;
   let aliveEnemies = invadersEnemies.filter((e) => e.alive);
 
   if (aliveEnemies.length === 0) return;
 
-  
   for (let enemy of aliveEnemies) {
     enemy.x += invadersDirection * invadersSpeed;
   }
 
-  
   for (let enemy of aliveEnemies) {
     if (enemy.x <= 0 || enemy.x >= INVADERS_WIDTH - enemy.width) {
       moveDown = true;
@@ -456,7 +413,6 @@ function updateInvadersEnemies() {
     }
   }
 
-  
   invadersEnemyShootTimer++;
   if (invadersEnemyShootTimer > 30 && aliveEnemies.length > 0) {
     invadersEnemyShootTimer = 0;
@@ -471,7 +427,6 @@ function updateInvadersEnemies() {
     });
   }
 
-  
   for (let enemy of aliveEnemies) {
     if (enemy.y + enemy.height >= invadersPlayer.y) {
       invadersPlayerDie();
@@ -480,11 +435,9 @@ function updateInvadersEnemies() {
   }
 }
 
-
 function updateInvadersBoss() {
   if (!invadersBoss) return;
 
-  
   invadersBoss.x += invadersBoss.vx;
 
   if (
@@ -494,13 +447,11 @@ function updateInvadersBoss() {
     invadersBoss.vx *= -1;
   }
 
-  
   invadersBoss.shootTimer++;
   if (invadersBoss.shootTimer >= invadersBoss.shootInterval) {
     invadersBoss.shootTimer = 0;
 
     if (invadersBoss.isFinal) {
-      
       invadersEnemyBullets.push(
         {
           x: invadersBoss.x + 30,
@@ -532,7 +483,6 @@ function updateInvadersBoss() {
         }
       );
     } else {
-      
       invadersEnemyBullets.push(
         {
           x: invadersBoss.x + 30,
@@ -553,7 +503,6 @@ function updateInvadersBoss() {
   }
 }
 
-
 function updateInvadersEnemyBullets() {
   for (let i = invadersEnemyBullets.length - 1; i >= 0; i--) {
     invadersEnemyBullets[i].y += invadersEnemyBullets[i].vy;
@@ -563,12 +512,10 @@ function updateInvadersEnemyBullets() {
   }
 }
 
-
 function checkInvadersBulletCollisions() {
   for (let i = invadersBullets.length - 1; i >= 0; i--) {
     const bullet = invadersBullets[i];
 
-    
     if (!invadersBossActive) {
       for (let enemy of invadersEnemies) {
         if (
@@ -589,7 +536,6 @@ function checkInvadersBulletCollisions() {
       }
     }
 
-    
     if (invadersBossActive && invadersBoss && i < invadersBullets.length) {
       if (
         bullet.x + bullet.width > invadersBoss.x &&
@@ -607,7 +553,6 @@ function checkInvadersBulletCollisions() {
   }
 }
 
-
 function checkInvadersPlayerHit() {
   for (let i = invadersEnemyBullets.length - 1; i >= 0; i--) {
     const bullet = invadersEnemyBullets[i];
@@ -624,7 +569,6 @@ function checkInvadersPlayerHit() {
   }
 }
 
-
 function invadersPlayerDie() {
   invadersPlayer.lives--;
   updateInvadersScore();
@@ -633,36 +577,30 @@ function invadersPlayerDie() {
   if (invadersPlayer.lives <= 0) {
     endInvaders(false);
   } else {
-    
     invadersPlayer.x = INVADERS_WIDTH / 2 - invadersPlayer.width / 2;
     invadersBullets = [];
     invadersEnemyBullets = [];
   }
 }
 
-
 function renderInvaders() {
-  
   invadersCtx.fillStyle = "#000";
   invadersCtx.fillRect(0, 0, INVADERS_WIDTH, INVADERS_HEIGHT);
 
-  
   invadersCtx.fillStyle = "#00FF00";
-  
+
   invadersCtx.fillRect(invadersPlayer.x + 10, invadersPlayer.y + 10, 20, 20);
-  
+
   invadersCtx.fillRect(invadersPlayer.x + 18, invadersPlayer.y, 4, 12);
-  
+
   invadersCtx.fillRect(invadersPlayer.x, invadersPlayer.y + 20, 10, 10);
   invadersCtx.fillRect(invadersPlayer.x + 30, invadersPlayer.y + 20, 10, 10);
 
-  
   invadersCtx.fillStyle = "#FFFF00";
   for (let bullet of invadersBullets) {
     invadersCtx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
   }
 
-  
   if (!invadersBossActive) {
     for (let enemy of invadersEnemies) {
       if (enemy.alive) {
@@ -674,10 +612,8 @@ function renderInvaders() {
           invadersCtx.fillStyle = "#FF0000";
         }
 
-        
         invadersCtx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
 
-        
         invadersCtx.fillStyle = "#FFF";
         invadersCtx.fillRect(enemy.x + 8, enemy.y + 8, 4, 4);
         invadersCtx.fillRect(enemy.x + 18, enemy.y + 8, 4, 4);
@@ -685,11 +621,9 @@ function renderInvaders() {
     }
   }
 
-  
   if (invadersBossActive && invadersBoss) {
     const isFinal = invadersBoss.isFinal;
 
-    
     invadersCtx.fillStyle = isFinal ? "#FF0000" : "#8B00FF";
     invadersCtx.fillRect(
       invadersBoss.x + (isFinal ? 25 : 20),
@@ -698,7 +632,6 @@ function renderInvaders() {
       isFinal ? 60 : 50
     );
 
-    
     invadersCtx.fillRect(
       invadersBoss.x + (isFinal ? 45 : 40),
       invadersBoss.y,
@@ -706,7 +639,6 @@ function renderInvaders() {
       isFinal ? 30 : 25
     );
 
-    
     invadersCtx.fillStyle = isFinal ? "#FFFF00" : "#FF0000";
     const eyeSize = isFinal ? 12 : 10;
     invadersCtx.fillRect(
@@ -722,7 +654,6 @@ function renderInvaders() {
       eyeSize
     );
 
-    
     invadersCtx.fillStyle = "#666";
     invadersCtx.fillRect(
       invadersBoss.x + (isFinal ? 30 : 25),
@@ -737,13 +668,11 @@ function renderInvaders() {
       isFinal ? 15 : 10
     );
 
-    
     if (isFinal) {
       invadersCtx.fillRect(invadersBoss.x + 60, invadersBoss.y + 85, 10, 15);
       invadersCtx.fillRect(invadersBoss.x + 80, invadersBoss.y + 85, 10, 15);
     }
 
-    
     const healthBarWidth = 100;
     const healthBarHeight = 10;
     const healthBarX = INVADERS_WIDTH / 2 - healthBarWidth / 2;
@@ -776,7 +705,6 @@ function renderInvaders() {
       healthBarHeight
     );
 
-    
     invadersCtx.fillStyle = isFinal ? "#FF0000" : "#FFF";
     invadersCtx.font = isFinal
       ? "bold 12px 'Press Start 2P'"
@@ -790,19 +718,26 @@ function renderInvaders() {
     invadersCtx.textAlign = "left";
   }
 
-  
   invadersCtx.fillStyle = "#FF0000";
   for (let bullet of invadersEnemyBullets) {
     invadersCtx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
   }
 }
 
-
 function endInvaders(won) {
   invadersGameOver = !won;
   invadersWon = won;
   invadersActive = false;
   clearInterval(invadersInterval);
+
+  // Zapisz wynik niezależnie od wyniku gry
+  saveBestScore("invaders_score", invadersScore, false);
+
+  if (won) {
+    incrementGameWon();
+  } else {
+    incrementGameLost();
+  }
 
   document.removeEventListener("keydown", handleInvadersKeyDown);
   document.removeEventListener("keyup", handleInvadersKeyUp);
@@ -812,13 +747,10 @@ function endInvaders(won) {
   if (won) {
     unlockAchievement("invaders_master");
     addCompletedGame("invaders");
-    saveScore("invaders_score", invadersScore);
 
-    
     addCoins(10);
     showToast("+10 🪙 za ukończenie Invaders!");
 
-    
     showInvadersVictoryEnding();
     playBeep(880, 0.5);
   } else {
@@ -843,7 +775,6 @@ function endInvaders(won) {
   }
 }
 
-
 function stopInvaders() {
   invadersActive = false;
   if (invadersInterval) clearInterval(invadersInterval);
@@ -855,11 +786,9 @@ function stopInvaders() {
   invadersKeys.space = false;
 }
 
-
 function showInvadersVictoryEnding() {
   const gameContent = document.getElementById("game-content");
 
-  
   const data = loadData();
   const playerNick = data.profile?.nick || "BOHATERZE";
 

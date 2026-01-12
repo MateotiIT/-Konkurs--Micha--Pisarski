@@ -1,12 +1,7 @@
-
-
-
 function initStorage() {
-  
   const existing = localStorage.getItem("pisarskiArcade");
 
   if (!existing) {
-    
     const defaultData = {
       achievements: {
         mistrz_wiedzy: false,
@@ -49,11 +44,20 @@ function initStorage() {
         pong_score: 0,
         kong_score: 0,
         invaders_score: 0,
+        mario_score: 0,
+        memory_moves: 999,
+        puzzle_moves: 999,
+        dino_score: 0,
       },
       gamesCompleted: [],
       stats: {
         totalGamesPlayed: 0,
         totalPlaytime: 0,
+        gamesWon: 0,
+        gamesLost: 0,
+        totalCoinsEarned: 0,
+        sessionStart: Date.now(),
+        gamePlayCounts: {},
       },
       easterEggs: [],
       coins: 20,
@@ -64,10 +68,8 @@ function initStorage() {
       activeMenuStyle: "default",
     };
 
-    
     localStorage.setItem("pisarskiArcade", JSON.stringify(defaultData));
   } else {
-    
     const data = JSON.parse(existing);
     if (data.fanarts && !data.consoles) {
       data.consoles = {
@@ -89,31 +91,26 @@ function initStorage() {
   }
 }
 
-
 function saveData(key, value) {
   const data = loadData();
   data[key] = value;
   localStorage.setItem("pisarskiArcade", JSON.stringify(data));
 }
 
-
 function loadData() {
   const data = localStorage.getItem("pisarskiArcade");
   return data ? JSON.parse(data) : null;
 }
-
 
 function loadDataKey(key) {
   const data = loadData();
   return data ? data[key] : null;
 }
 
-
 function resetData() {
   localStorage.removeItem("pisarskiArcade");
   initStorage();
 }
-
 
 function saveAchievement(achievementId, unlocked) {
   const data = loadData();
@@ -121,55 +118,61 @@ function saveAchievement(achievementId, unlocked) {
   localStorage.setItem("pisarskiArcade", JSON.stringify(data));
 }
 
-
 function saveConsole(consoleId, unlocked) {
   const data = loadData();
   data.consoles[consoleId] = unlocked;
   localStorage.setItem("pisarskiArcade", JSON.stringify(data));
 }
 
-
 function addCompletedGame(gameName) {
   const data = loadData();
 
-  
   if (!data.gamesCompleted.includes(gameName)) {
     data.gamesCompleted.push(gameName);
     saveData("gamesCompleted", data.gamesCompleted);
 
-    
     if (data.gamesCompleted.length === 5) {
       unlockAchievement("weteran_arcade");
     }
 
-    
     if (data.gamesCompleted.length >= 5) {
       unlockInvadersGame();
     }
 
-    
     if (typeof updateCompletedGamesUI === "function") {
       updateCompletedGamesUI();
     }
   }
 }
 
-
 function saveScore(scoreKey, value) {
   const data = loadData();
 
-  
   if (value > (data.scores[scoreKey] || 0)) {
     data.scores[scoreKey] = value;
     saveData("scores", data.scores);
   }
 }
 
+function saveBestScore(scoreKey, value, lowerIsBetter) {
+  const data = loadData();
+
+  if (lowerIsBetter) {
+    if (!data.scores[scoreKey] || value < data.scores[scoreKey]) {
+      data.scores[scoreKey] = value;
+      saveData("scores", data.scores);
+    }
+  } else {
+    if (value > (data.scores[scoreKey] || 0)) {
+      data.scores[scoreKey] = value;
+      saveData("scores", data.scores);
+    }
+  }
+}
 
 function addEasterEgg(eggName, description) {
   const data = loadData();
 
-  
   const exists = data.easterEggs.find((egg) => egg.name === eggName);
 
   if (!exists) {
@@ -181,13 +184,9 @@ function addEasterEgg(eggName, description) {
 
     saveData("easterEggs", data.easterEggs);
 
-    
     showToast("🥚 Easter Egg znaleziony: " + eggName);
   }
 }
-
-
-
 
 function addCoins(amount) {
   const data = loadData();
@@ -195,7 +194,10 @@ function addCoins(amount) {
   data.coins += amount;
   saveData("coins", data.coins);
 
-  
+  if (amount > 0) {
+    addCoinsEarned(amount);
+  }
+
   if (typeof updateProfileDisplay === "function") {
     const nick = data.profile?.nick || "GRACZ";
     const avatar = data.profile?.avatar || "mario";
@@ -205,7 +207,6 @@ function addCoins(amount) {
   return data.coins;
 }
 
-
 function spendCoins(amount) {
   const data = loadData();
   if (!data.coins) data.coins = 0;
@@ -214,7 +215,6 @@ function spendCoins(amount) {
     data.coins -= amount;
     saveData("coins", data.coins);
 
-    
     if (typeof updateProfileDisplay === "function") {
       const nick = data.profile?.nick || "GRACZ";
       const avatar = data.profile?.avatar || "mario";
@@ -226,21 +226,16 @@ function spendCoins(amount) {
   return false;
 }
 
-
 function getCoins() {
   const data = loadData();
   return data.coins || 0;
 }
-
-
-
 
 function hasPurchased(itemId) {
   const data = loadData();
   if (!data.shop) data.shop = { purchased: [] };
   return data.shop.purchased.includes(itemId);
 }
-
 
 function addPurchase(itemId) {
   const data = loadData();
@@ -252,24 +247,139 @@ function addPurchase(itemId) {
   }
 }
 
-
 function setActiveBackground(bgId) {
   saveData("activeBackground", bgId);
 }
-
 
 function getActiveBackground() {
   const data = loadData();
   return data.activeBackground || "default";
 }
 
-
 function setActiveMenuStyle(styleId) {
   saveData("activeMenuStyle", styleId);
 }
 
+function updatePlaytime() {
+  var data = loadData();
+  if (!data.stats) data.stats = {};
+  if (!data.stats.sessionStart) data.stats.sessionStart = Date.now();
+
+  var currentTime = Date.now();
+  var sessionTime = Math.floor((currentTime - data.stats.sessionStart) / 1000);
+
+  if (!data.stats.totalPlaytime) data.stats.totalPlaytime = 0;
+  data.stats.totalPlaytime += sessionTime;
+  data.stats.sessionStart = currentTime;
+
+  localStorage.setItem("pisarskiArcade", JSON.stringify(data));
+}
+
+function incrementGamePlayed(gameName) {
+  var data = loadData();
+  if (!data.stats) data.stats = {};
+  if (!data.stats.totalGamesPlayed) data.stats.totalGamesPlayed = 0;
+  if (!data.stats.gamePlayCounts) data.stats.gamePlayCounts = {};
+
+  data.stats.totalGamesPlayed++;
+  if (!data.stats.gamePlayCounts[gameName]) {
+    data.stats.gamePlayCounts[gameName] = 0;
+  }
+  data.stats.gamePlayCounts[gameName]++;
+
+  localStorage.setItem("pisarskiArcade", JSON.stringify(data));
+}
+
+function incrementGameWon() {
+  var data = loadData();
+  if (!data.stats) data.stats = {};
+  if (!data.stats.gamesWon) data.stats.gamesWon = 0;
+  data.stats.gamesWon++;
+  localStorage.setItem("pisarskiArcade", JSON.stringify(data));
+}
+
+function incrementGameLost() {
+  var data = loadData();
+  if (!data.stats) data.stats = {};
+  if (!data.stats.gamesLost) data.stats.gamesLost = 0;
+  data.stats.gamesLost++;
+  localStorage.setItem("pisarskiArcade", JSON.stringify(data));
+}
+
+function addCoinsEarned(amount) {
+  var data = loadData();
+  if (!data.stats) data.stats = {};
+  if (!data.stats.totalCoinsEarned) data.stats.totalCoinsEarned = 0;
+  data.stats.totalCoinsEarned += amount;
+  localStorage.setItem("pisarskiArcade", JSON.stringify(data));
+}
+
+function getStats() {
+  var data = loadData();
+  return (
+    data.stats || {
+      totalGamesPlayed: 0,
+      totalPlaytime: 0,
+      gamesWon: 0,
+      gamesLost: 0,
+      totalCoinsEarned: 0,
+      gamePlayCounts: {},
+    }
+  );
+}
+
+function getFavoriteGame() {
+  var stats = getStats();
+  var counts = stats.gamePlayCounts || {};
+  var maxCount = 0;
+  var favGame = "Brak";
+
+  for (var game in counts) {
+    if (counts[game] > maxCount) {
+      maxCount = counts[game];
+      favGame = game;
+    }
+  }
+
+  // Mapowanie nazw gier na pełne nazwy
+  var gameNames = {
+    "Quiz": "PISARIO QUIZ",
+    "Mario": "SUPER PISARIO BROS",
+    "Pacman": "PISACMAN",
+    "Tetris": "PISARIS",
+    "Pong": "PISARIO PONG",
+    "Kong": "PISARIO KONG",
+    "Invaders": "SPACE INVADERS",
+    "Memory": "PISARIO MEMORY",
+    "Puzzle": "PISARIO PUZZLE",
+    "Dino": "YOSHI RUNNER"
+  };
+
+  return gameNames[favGame] || favGame;
+}
+
+function formatPlaytime(seconds) {
+  if (!seconds || seconds < 0) return "0 min";
+
+  var hours = Math.floor(seconds / 3600);
+  var minutes = Math.floor((seconds % 3600) / 60);
+
+  if (hours > 0) {
+    return hours + "h " + minutes + "min";
+  }
+  return minutes + " min";
+}
 
 function getActiveMenuStyle() {
   const data = loadData();
   return data.activeMenuStyle || "default";
+}
+function getAllHighScores() {
+  const data = loadData();
+  return data.scores || {};
+}
+
+function getHighScore(scoreKey) {
+  const data = loadData();
+  return data.scores[scoreKey] || 0;
 }

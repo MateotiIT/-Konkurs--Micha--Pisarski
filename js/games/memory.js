@@ -1,5 +1,3 @@
-
-
 let memoryActive = false;
 let memoryCards = [];
 let flippedCards = [];
@@ -8,24 +6,22 @@ let memoryMoves = 0;
 let memoryTimer = 0;
 let memoryInterval = null;
 
-
 const cardImages = [
-  "./assets/memory/card1.svg", 
-  "./assets/memory/card2.svg", 
-  "./assets/memory/card3.svg", 
-  "./assets/memory/card4.svg", 
-  "./assets/memory/card5.svg", 
-  "./assets/memory/card6.svg", 
-  "./assets/memory/card7.svg", 
-  "./assets/memory/card8.svg", 
+  "./assets/memory/card1.svg",
+  "./assets/memory/card2.svg",
+  "./assets/memory/card3.svg",
+  "./assets/memory/card4.svg",
+  "./assets/memory/card5.svg",
+  "./assets/memory/card6.svg",
+  "./assets/memory/card7.svg",
+  "./assets/memory/card8.svg",
 ];
 
-
 function startMemory() {
-  
+  incrementGamePlayed("Memory");
+
   showMemoryStory();
 }
-
 
 function showMemoryStory() {
   const gameContent = document.getElementById("game-content");
@@ -140,7 +136,6 @@ function showMemoryStory() {
   document
     .getElementById("memory-story-start-btn")
     .addEventListener("click", () => {
-      
       memoryActive = true;
       memoryMoves = 0;
       matchedPairs = 0;
@@ -156,19 +151,15 @@ function showMemoryStory() {
     });
 }
 
-
 function createMemoryBoard() {
-  
   memoryCards = [];
   cardImages.forEach((image, index) => {
     memoryCards.push({ id: index, image: image, matched: false });
     memoryCards.push({ id: index, image: image, matched: false });
   });
 
-  
   memoryCards = shuffleArray(memoryCards);
 }
-
 
 function renderMemoryBoard() {
   const gameContent = document.getElementById("game-content");
@@ -232,14 +223,12 @@ function renderMemoryBoard() {
     </div>
   `;
 
-  
   const cards = gameContent.querySelectorAll(".memory-card");
   cards.forEach((card, index) => {
     card.addEventListener("click", function () {
       handleCardClick(index);
     });
 
-    
     card.addEventListener("mouseenter", function () {
       if (!memoryCards[index].matched && !this.classList.contains("flipped")) {
         this.style.transform = "scale(1.05)";
@@ -252,14 +241,12 @@ function renderMemoryBoard() {
   });
 }
 
-
 function handleCardClick(index) {
   if (!memoryActive) return;
 
   const card = memoryCards[index];
   const cardElement = document.querySelectorAll(".memory-card")[index];
 
-  
   if (
     card.matched ||
     cardElement.classList.contains("flipped") ||
@@ -268,11 +255,9 @@ function handleCardClick(index) {
     return;
   }
 
-  
   flipCard(index);
   flippedCards.push(index);
 
-  
   if (flippedCards.length === 2) {
     memoryMoves++;
     updateMemoryScore();
@@ -282,7 +267,6 @@ function handleCardClick(index) {
     }, 800);
   }
 }
-
 
 function flipCard(index) {
   const cardElement = document.querySelectorAll(".memory-card")[index];
@@ -297,7 +281,6 @@ function flipCard(index) {
   playBeep(440, 0.1);
 }
 
-
 function unflipCard(index) {
   const cardElement = document.querySelectorAll(".memory-card")[index];
   cardElement.classList.remove("flipped");
@@ -309,33 +292,28 @@ function unflipCard(index) {
   cardFront.style.opacity = "0";
 }
 
-
 function checkMatch() {
   const [index1, index2] = flippedCards;
   const card1 = memoryCards[index1];
   const card2 = memoryCards[index2];
 
   if (card1.id === card2.id) {
-    
     card1.matched = true;
     card2.matched = true;
     matchedPairs++;
 
-    
     const cardElements = document.querySelectorAll(".memory-card");
     cardElements[index1].style.opacity = "0.6";
     cardElements[index2].style.opacity = "0.6";
 
     playBeep(660, 0.2);
 
-    
     if (matchedPairs === 8) {
       setTimeout(() => {
         endMemory();
       }, 500);
     }
   } else {
-    
     setTimeout(() => {
       unflipCard(index1);
       unflipCard(index2);
@@ -345,7 +323,6 @@ function checkMatch() {
 
   flippedCards = [];
 }
-
 
 function updateMemoryScore() {
   const minutes = Math.floor(memoryTimer / 60);
@@ -359,7 +336,6 @@ function updateMemoryScore() {
     "RUCHY: " + memoryMoves + " | CZAS: " + timeString;
 }
 
-
 function startMemoryTimer() {
   memoryInterval = setInterval(() => {
     if (memoryActive) {
@@ -369,10 +345,10 @@ function startMemoryTimer() {
   }, 1000);
 }
 
-
 function endMemory() {
   memoryActive = false;
   clearInterval(memoryInterval);
+  incrementGameWon();
 
   const gameContent = document.getElementById("game-content");
 
@@ -416,21 +392,15 @@ function endMemory() {
     </div>
   `;
 
-  
-  saveScore("memory_best_moves", memoryMoves);
-  saveScore("memory_best_time", memoryTimer);
+  saveBestScore("memory_moves", memoryMoves, true);
 
-  
   addCompletedGame("memory");
 
-  
   addCoins(10);
   showToast("+10 🪙 za ukończenie Memory!");
 
-  
   playWinSound();
 }
-
 
 function stopMemory() {
   memoryActive = false;

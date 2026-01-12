@@ -1,15 +1,11 @@
-
-
 let kongActive = false;
 let kongCanvas = null;
 let kongCtx = null;
 let kongInterval = null;
 let storyShown = false;
 
-
 const KONG_WIDTH = 600;
 const KONG_HEIGHT = 800;
-
 
 let kongPlayer = {
   x: 50,
@@ -29,16 +25,13 @@ let kongPlayer = {
   deaths: 0,
 };
 
-
 let kongBarrels = [];
 let barrelSpawnTimer = 0;
-let barrelSpawnInterval = 2000; 
+let barrelSpawnInterval = 2000;
 let gameTime = 0;
-
 
 let currentLevel = 1;
 const maxLevel = 3;
-
 
 let kongSwitch = {
   x: 280,
@@ -47,14 +40,12 @@ let kongSwitch = {
   height: 24,
 };
 
-
 let kongBoss = {
   x: 250,
   y: 20,
   width: 50,
   height: 60,
 };
-
 
 const levelLayouts = {
   1: {
@@ -140,20 +131,16 @@ const levelLayouts = {
   },
 };
 
-
 let kongPlatforms = [];
 let kongLadders = [];
 
-
 const GRAVITY = 0.5;
-
 
 const BARREL_TYPES = {
   NORMAL: { color: "#8B4513", speed: 3, chance: 50 },
   FAST: { color: "#e60012", speed: 5.5, chance: 30 },
   BOUNCE: { color: "#0095da", speed: 2.5, chance: 20 },
 };
-
 
 let kongKeys = {
   left: false,
@@ -162,7 +149,6 @@ let kongKeys = {
   down: false,
   space: false,
 };
-
 
 function showKongStory() {
   const gameContent = document.getElementById("game-content");
@@ -279,14 +265,12 @@ function showKongStory() {
   });
 }
 
-
 function startKong() {
   kongActive = true;
+  incrementGamePlayed("Kong");
 
-  
   currentLevel = 1;
 
-  
   kongPlayer.x = 50;
   kongPlayer.y = 720;
   kongPlayer.velocityX = 0;
@@ -297,24 +281,20 @@ function startKong() {
   kongPlayer.lives = 3;
   kongPlayer.deaths = 0;
 
-  
   kongBarrels = [];
   barrelSpawnTimer = 0;
   barrelSpawnInterval = 2500;
   gameTime = 0;
 
-  
   kongKeys.left = false;
   kongKeys.right = false;
   kongKeys.up = false;
   kongKeys.down = false;
   kongKeys.space = false;
 
-  
   document.getElementById("game-title").textContent = "PISARIO KONG - POZIOM 1";
   document.getElementById("game-score").textContent = "❤️❤️❤️ | POZIOM: 1";
 
-  
   const gameContent = document.getElementById("game-content");
   gameContent.innerHTML = `
     <div style="text-align: center;">
@@ -331,41 +311,32 @@ function startKong() {
     </div>
   `;
 
-  
   kongCanvas = document.getElementById("kong-canvas");
   kongCtx = kongCanvas.getContext("2d");
 
-  
   loadLevel(currentLevel, true);
 
-  
   spawnBarrel();
 
-  
   document.addEventListener("keydown", handleKongKeyDown);
   document.addEventListener("keyup", handleKongKeyUp);
 
-  
-  kongInterval = setInterval(kongGameLoop, 1000 / 60); 
+  kongInterval = setInterval(kongGameLoop, 1000 / 60);
 }
 
-
 function loadLevel(level, isFirstLoad = false) {
-  
   const layout = levelLayouts[level];
   kongPlatforms = [...layout.platforms];
   kongLadders = [...layout.ladders];
 
-  
   if (level === 1) {
     barrelSpawnInterval = 2000;
   } else if (level === 2) {
-    barrelSpawnInterval = 1500; 
+    barrelSpawnInterval = 1500;
   } else if (level === 3) {
-    barrelSpawnInterval = 1200; 
+    barrelSpawnInterval = 1200;
   }
 
-  
   if (!isFirstLoad) {
     kongPlayer.x = 50;
     kongPlayer.y = 720;
@@ -374,35 +345,28 @@ function loadLevel(level, isFirstLoad = false) {
     kongPlayer.onGround = false;
     kongPlayer.climbing = false;
 
-    
     kongBarrels = [];
     barrelSpawnTimer = 0;
     gameTime = 0;
 
-    
     spawnBarrel();
 
-    
     document.getElementById("game-title").textContent =
       "PISARIO KONG - POZIOM " + level;
   }
 }
 
-
 function nextLevel() {
   currentLevel++;
 
   if (currentLevel > maxLevel) {
-    
     endKong(true);
   } else {
-    
     loadLevel(currentLevel);
     playBeep(880, 0.5);
     showMessage("POZIOM " + currentLevel + "!", 2000);
   }
 }
-
 
 function showMessage(text, duration) {
   const gameContent = document.getElementById("game-content");
@@ -425,7 +389,6 @@ function showMessage(text, duration) {
   }, duration);
 }
 
-
 function handleKongKeyDown(e) {
   if (!kongActive) return;
 
@@ -447,7 +410,6 @@ function handleKongKeyUp(e) {
   if (e.key === " ") kongKeys.space = false;
 }
 
-
 function kongGameLoop() {
   if (!kongActive) return;
 
@@ -455,23 +417,19 @@ function kongGameLoop() {
   renderKong();
 }
 
-
 function updateKong() {
-  gameTime += 16; 
+  gameTime += 16;
 
-  
   if (gameTime > 30000 && barrelSpawnInterval > 1500) {
     barrelSpawnInterval = 1500;
   }
 
-  
   barrelSpawnTimer += 16;
   if (barrelSpawnTimer >= barrelSpawnInterval) {
     spawnBarrel();
     barrelSpawnTimer = 0;
   }
 
-  
   kongPlayer.onLadder = false;
   for (let ladder of kongLadders) {
     if (
@@ -485,7 +443,6 @@ function updateKong() {
     }
   }
 
-  
   if (kongKeys.left && !kongPlayer.climbing) {
     kongPlayer.velocityX = -kongPlayer.speed;
   } else if (kongKeys.right && !kongPlayer.climbing) {
@@ -494,7 +451,6 @@ function updateKong() {
     kongPlayer.velocityX = 0;
   }
 
-  
   if (kongPlayer.onLadder) {
     if (kongKeys.up) {
       kongPlayer.climbing = true;
@@ -511,37 +467,31 @@ function updateKong() {
     kongPlayer.climbing = false;
   }
 
-  
   if (kongKeys.space && kongPlayer.onGround && !kongPlayer.climbing) {
     kongPlayer.velocityY = kongPlayer.jumpPower;
     kongPlayer.onGround = false;
     playBeep(440, 0.1);
   }
 
-  
   if (!kongPlayer.climbing) {
     kongPlayer.velocityY += GRAVITY;
   }
 
-  
   kongPlayer.x += kongPlayer.velocityX;
   kongPlayer.y += kongPlayer.velocityY;
 
-  
   if (Math.abs(kongPlayer.velocityX) > 0) {
     kongPlayer.animTimer += 16;
     if (kongPlayer.animTimer > 150) {
-      kongPlayer.animFrame = 1 - kongPlayer.animFrame; 
+      kongPlayer.animFrame = 1 - kongPlayer.animFrame;
       kongPlayer.animTimer = 0;
     }
   }
 
-  
   if (kongPlayer.x < 0) kongPlayer.x = 0;
   if (kongPlayer.x + kongPlayer.width > KONG_WIDTH)
     kongPlayer.x = KONG_WIDTH - kongPlayer.width;
 
-  
   kongPlayer.onGround = false;
   for (let platform of kongPlatforms) {
     if (
@@ -558,23 +508,18 @@ function updateKong() {
     }
   }
 
-  
   if (kongPlayer.y > KONG_HEIGHT) {
     playerDeath();
   }
 
-  
   for (let i = kongBarrels.length - 1; i >= 0; i--) {
     let barrel = kongBarrels[i];
 
-    
     barrel.velocityY += GRAVITY;
 
-    
     barrel.x += barrel.velocityX;
     barrel.y += barrel.velocityY;
 
-    
     if (barrel.x <= 0) {
       barrel.x = 0;
       barrel.velocityX = -barrel.velocityX;
@@ -586,7 +531,6 @@ function updateKong() {
       playBeep(440, 0.05);
     }
 
-    
     barrel.onGround = false;
     for (let platform of kongPlatforms) {
       if (
@@ -600,7 +544,6 @@ function updateKong() {
         barrel.velocityY = 0;
         barrel.onGround = true;
 
-        
         if (barrel.type === "BOUNCE") {
           barrel.velocityY = -8;
           playBeep(880, 0.05);
@@ -608,7 +551,6 @@ function updateKong() {
       }
     }
 
-    
     if (
       barrel.y > KONG_HEIGHT ||
       barrel.x < -50 ||
@@ -618,19 +560,16 @@ function updateKong() {
       continue;
     }
 
-    
     if (
       kongPlayer.x + kongPlayer.width > barrel.x &&
       kongPlayer.x < barrel.x + barrel.width &&
       kongPlayer.y + kongPlayer.height > barrel.y &&
       kongPlayer.y < barrel.y + barrel.height
     ) {
-      
       playerDeath();
     }
   }
 
-  
   if (
     kongPlayer.x + kongPlayer.width > kongSwitch.x &&
     kongPlayer.x < kongSwitch.x + kongSwitch.width &&
@@ -641,13 +580,10 @@ function updateKong() {
   }
 }
 
-
 function renderKong() {
-  
   kongCtx.fillStyle = "#000";
   kongCtx.fillRect(0, 0, KONG_WIDTH, KONG_HEIGHT);
 
-  
   kongCtx.fillStyle = "#e60012";
   kongCtx.strokeStyle = "#ff6b6b";
   kongCtx.lineWidth = 2;
@@ -657,7 +593,6 @@ function renderKong() {
     kongCtx.strokeRect(platform.x1, platform.y, platform.x2 - platform.x1, 8);
   }
 
-  
   kongCtx.fillStyle = "#ffed00";
   kongCtx.strokeStyle = "#ffd700";
 
@@ -666,7 +601,6 @@ function renderKong() {
     const height = ladder.y2 - ladder.y1;
     kongCtx.fillRect(ladder.x - width / 2, ladder.y1, width, height);
 
-    
     kongCtx.strokeStyle = "#000";
     kongCtx.lineWidth = 2;
     for (let y = ladder.y1; y < ladder.y2; y += 20) {
@@ -677,21 +611,16 @@ function renderKong() {
     }
   }
 
-  
-  
   kongCtx.fillStyle = "#6B4423";
   kongCtx.fillRect(kongBoss.x + 10, kongBoss.y + 15, 30, 35);
 
-  
   kongCtx.fillStyle = "#5A3618";
-  kongCtx.fillRect(kongBoss.x, kongBoss.y + 20, 12, 20); 
-  kongCtx.fillRect(kongBoss.x + 38, kongBoss.y + 20, 12, 20); 
+  kongCtx.fillRect(kongBoss.x, kongBoss.y + 20, 12, 20);
+  kongCtx.fillRect(kongBoss.x + 38, kongBoss.y + 20, 12, 20);
 
-  
   kongCtx.fillStyle = "#6B4423";
   kongCtx.fillRect(kongBoss.x + 8, kongBoss.y, 34, 20);
 
-  
   kongCtx.fillStyle = "#FFF";
   kongCtx.fillRect(kongBoss.x + 14, kongBoss.y + 6, 6, 6);
   kongCtx.fillRect(kongBoss.x + 30, kongBoss.y + 6, 6, 6);
@@ -699,17 +628,14 @@ function renderKong() {
   kongCtx.fillRect(kongBoss.x + 16, kongBoss.y + 8, 3, 3);
   kongCtx.fillRect(kongBoss.x + 32, kongBoss.y + 8, 3, 3);
 
-  
   kongCtx.fillStyle = "#000";
   kongCtx.fillRect(kongBoss.x + 20, kongBoss.y + 14, 3, 3);
   kongCtx.fillRect(kongBoss.x + 27, kongBoss.y + 14, 3, 3);
 
-  
   kongCtx.fillStyle = "#5A3618";
   kongCtx.fillRect(kongBoss.x + 12, kongBoss.y + 50, 12, 10);
   kongCtx.fillRect(kongBoss.x + 26, kongBoss.y + 50, 12, 10);
 
-  
   kongCtx.fillStyle = "#e60012";
   kongCtx.fillRect(
     kongSwitch.x,
@@ -734,7 +660,6 @@ function renderKong() {
     kongSwitch.y + 15
   );
 
-  
   for (let barrel of kongBarrels) {
     kongCtx.fillStyle = barrel.color;
     kongCtx.fillRect(barrel.x, barrel.y, barrel.width, barrel.height);
@@ -743,40 +668,30 @@ function renderKong() {
     kongCtx.strokeRect(barrel.x, barrel.y, barrel.width, barrel.height);
   }
 
-  
-
-  
   kongCtx.fillStyle = "#0095DA";
   kongCtx.fillRect(kongPlayer.x + 3, kongPlayer.y + 9, 10, 10);
 
-  
   kongCtx.fillStyle = "#FFD9B3";
   kongCtx.fillRect(kongPlayer.x + 4, kongPlayer.y + 4, 8, 7);
 
-  
   kongCtx.fillStyle = "#0095DA";
   kongCtx.fillRect(kongPlayer.x + 3, kongPlayer.y + 1, 10, 4);
 
-  
   kongCtx.fillStyle = "#FFF";
   kongCtx.font = "bold 6px Arial";
   kongCtx.fillText("P", kongPlayer.x + 6, kongPlayer.y + 4);
 
-  
   kongCtx.fillStyle = "#000";
   kongCtx.fillRect(kongPlayer.x + 5, kongPlayer.y + 8, 6, 1);
 
-  
   kongCtx.fillStyle = "#000";
   kongCtx.fillRect(kongPlayer.x + 5, kongPlayer.y + 6, 1, 1);
   kongCtx.fillRect(kongPlayer.x + 10, kongPlayer.y + 6, 1, 1);
 
-  
   kongCtx.fillStyle = "#FFD9B3";
   kongCtx.fillRect(kongPlayer.x + 1, kongPlayer.y + 10, 2, 4);
   kongCtx.fillRect(kongPlayer.x + 13, kongPlayer.y + 10, 2, 4);
 
-  
   kongCtx.fillStyle = "#0095DA";
   if (kongPlayer.animFrame === 0) {
     kongCtx.fillRect(kongPlayer.x + 4, kongPlayer.y + 19, 4, 5);
@@ -786,7 +701,6 @@ function renderKong() {
     kongCtx.fillRect(kongPlayer.x + 8, kongPlayer.y + 19, 3, 5);
   }
 
-  
   kongCtx.fillStyle = "#8B4513";
   if (kongPlayer.animFrame === 0) {
     kongCtx.fillRect(kongPlayer.x + 3, kongPlayer.y + 23, 5, 1);
@@ -797,9 +711,7 @@ function renderKong() {
   }
 }
 
-
 function spawnBarrel() {
-  
   const rand = Math.random() * 100;
   let type, color, speed;
 
@@ -832,31 +744,25 @@ function spawnBarrel() {
   playBeep(220, 0.05);
 }
 
-
 function playerDeath() {
   kongPlayer.lives--;
   kongPlayer.deaths++;
 
   playBeep(220, 0.5);
 
-  
   updateKongScore();
 
   if (kongPlayer.lives <= 0) {
-    
     endKong(false);
   } else {
-    
     kongPlayer.x = 50;
     kongPlayer.y = 720;
     kongPlayer.velocityX = 0;
     kongPlayer.velocityY = 0;
 
-    
     kongBarrels = [];
   }
 }
-
 
 function updateKongScore() {
   let hearts = "";
@@ -867,12 +773,19 @@ function updateKongScore() {
     hearts + " | POZIOM: " + currentLevel;
 }
 
-
 function endKong(won) {
   kongActive = false;
   clearInterval(kongInterval);
 
-  
+  // Zapisz wynik niezależnie od wyniku gry
+  saveBestScore("kong_score", kongPlayer.score || 0, false);
+
+  if (won) {
+    incrementGameWon();
+  } else {
+    incrementGameLost();
+  }
+
   document.removeEventListener("keydown", handleKongKeyDown);
   document.removeEventListener("keyup", handleKongKeyUp);
 
@@ -900,16 +813,13 @@ function endKong(won) {
       </div>
     `;
 
-    
     if (kongPlayer.deaths === 0) {
       unlockAchievement("kong_perfection");
     }
 
-    
     saveScore("kong_wins", (loadData().scores?.kong_wins || 0) + 1);
     addCompletedGame("kong");
 
-    
     addCoins(10);
     showToast("+10 🪙 za ukończenie Kong!");
 
@@ -936,7 +846,6 @@ function endKong(won) {
     playBeep(220, 0.5);
   }
 }
-
 
 function stopKong() {
   kongActive = false;

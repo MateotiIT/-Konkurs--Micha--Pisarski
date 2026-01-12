@@ -195,6 +195,7 @@ function showImageSelection() {
 function startPuzzleGame() {
   puzzleActive = true;
   puzzleMoves = 0;
+  incrementGamePlayed("Puzzle");
 
   document.getElementById("game-score").textContent = "RUCHY: 0";
 
@@ -380,6 +381,8 @@ function endPuzzle(won) {
   const gameContent = document.getElementById("game-content");
 
   if (won) {
+    incrementGameWon();
+    saveBestScore("puzzle_moves", puzzleMoves, true);
     gameContent.innerHTML = `
             <div style="text-align: center;">
                 <h2 style="font-size: 24px; color: var(--green); margin-bottom: 20px;">

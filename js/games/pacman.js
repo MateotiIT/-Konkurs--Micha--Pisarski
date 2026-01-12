@@ -1,15 +1,11 @@
-
-
 let pacmanActive = false;
 let pacmanCanvas;
 let pacmanCtx;
 let pacmanAnimationId;
 
-
 const CELL_SIZE = 25;
 const GRID_WIDTH = 15;
 const GRID_HEIGHT = 15;
-
 
 let player = {
   x: 1,
@@ -18,13 +14,11 @@ let player = {
   nextDirection: "right",
 };
 
-
 let ghosts = [
   { x: 13, y: 1, color: "#FF1493", name: "Hejter" },
   { x: 13, y: 13, color: "#00CED1", name: "Troll" },
   { x: 1, y: 13, color: "#FF4500", name: "Bug" },
 ];
-
 
 let pacmanGrid = [];
 let totalDots = 0;
@@ -32,16 +26,12 @@ let dotsCollected = 0;
 let pacmanScore = 0;
 let pacmanDeaths = 0;
 
-
 let gameLoopInterval;
 let ghostMoveInterval;
 
-
 function startPacman() {
-  
   showPacmanRetroScreen();
 }
-
 
 function showPacmanRetroScreen() {
   const gameContent = document.getElementById("game-content");
@@ -159,23 +149,20 @@ function showPacmanRetroScreen() {
   document
     .getElementById("pacman-retro-start-btn")
     .addEventListener("click", () => {
-      
       startPacmanGame();
     });
 }
-
 
 function startPacmanGame() {
   pacmanActive = true;
   pacmanDeaths = 0;
   pacmanScore = 0;
   dotsCollected = 0;
+  incrementGamePlayed("Pacman");
 
-  
   document.getElementById("game-title").textContent = "PISACMAN";
   document.getElementById("game-score").textContent = "PUNKTY: 0";
 
-  
   const gameContent = document.getElementById("game-content");
   gameContent.innerHTML = `
         <canvas id="pacman-canvas" width="${GRID_WIDTH * CELL_SIZE}" height="${
@@ -188,10 +175,8 @@ function startPacmanGame() {
   pacmanCanvas = document.getElementById("pacman-canvas");
   pacmanCtx = pacmanCanvas.getContext("2d");
 
-  
   initPacmanGrid();
 
-  
   player = { x: 1, y: 1, direction: "right", nextDirection: "right" };
   ghosts = [
     { x: 13, y: 1, color: "#FF1493", name: "Hejter" },
@@ -199,20 +184,16 @@ function startPacmanGame() {
     { x: 1, y: 13, color: "#FF4500", name: "Bug" },
   ];
 
-  
   document.addEventListener("keydown", handlePacmanKeydown);
 
-  
   gameLoopInterval = setInterval(gamePacmanLoop, 150);
   ghostMoveInterval = setInterval(moveGhosts, 300);
 }
-
 
 function initPacmanGrid() {
   pacmanGrid = [];
   totalDots = 0;
 
-  
   const template = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
@@ -240,23 +221,17 @@ function initPacmanGrid() {
   }
 }
 
-
 function gamePacmanLoop() {
   if (!pacmanActive) return;
 
-  
   movePlayer();
 
-  
   checkCollisions();
 
-  
   drawPacman();
 }
 
-
 function movePlayer() {
-  
   const nextX = player.x + getDirX(player.nextDirection);
   const nextY = player.y + getDirY(player.nextDirection);
 
@@ -264,17 +239,14 @@ function movePlayer() {
     player.direction = player.nextDirection;
   }
 
-  
   const newX = player.x + getDirX(player.direction);
   const newY = player.y + getDirY(player.direction);
 
-  
   if (pacmanGrid[newY] && pacmanGrid[newY][newX] !== 1) {
     player.x = newX;
     player.y = newY;
   }
 }
-
 
 function getDirX(dir) {
   if (dir === "left") return -1;
@@ -282,13 +254,11 @@ function getDirX(dir) {
   return 0;
 }
 
-
 function getDirY(dir) {
   if (dir === "up") return -1;
   if (dir === "down") return 1;
   return 0;
 }
-
 
 function handlePacmanKeydown(e) {
   if (!pacmanActive) return;
@@ -308,24 +278,20 @@ function handlePacmanKeydown(e) {
   }
 }
 
-
 function moveGhosts() {
   if (!pacmanActive) return;
 
   ghosts.forEach((ghost) => {
-    
     const directions = ["up", "down", "left", "right"];
     const randomDir = directions[Math.floor(Math.random() * directions.length)];
 
     const newX = ghost.x + getDirX(randomDir);
     const newY = ghost.y + getDirY(randomDir);
 
-    
     if (pacmanGrid[newY] && pacmanGrid[newY][newX] !== 1) {
       ghost.x = newX;
       ghost.y = newY;
 
-      
       if (ghost.x === player.x && ghost.y === player.y) {
         pacmanDeaths++;
         playDeathSound();
@@ -336,9 +302,7 @@ function moveGhosts() {
   });
 }
 
-
 function checkCollisions() {
-  
   if (pacmanGrid[player.y][player.x] === 2) {
     pacmanGrid[player.y][player.x] = 0;
     dotsCollected++;
@@ -347,13 +311,11 @@ function checkCollisions() {
       "PUNKTY: " + pacmanScore;
     playBeep(440, 0.05);
 
-    
     if (dotsCollected >= totalDots) {
       endPacman(true);
     }
   }
 
-  
   ghosts.forEach((ghost) => {
     if (ghost.x === player.x && ghost.y === player.y) {
       pacmanDeaths++;
@@ -363,21 +325,16 @@ function checkCollisions() {
   });
 }
 
-
 function drawPacman() {
-  
   pacmanCtx.fillStyle = "black";
   pacmanCtx.fillRect(0, 0, pacmanCanvas.width, pacmanCanvas.height);
 
-  
   for (let y = 0; y < GRID_HEIGHT; y++) {
     for (let x = 0; x < GRID_WIDTH; x++) {
       if (pacmanGrid[y][x] === 1) {
-        
         pacmanCtx.fillStyle = "#0095DA";
         pacmanCtx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
       } else if (pacmanGrid[y][x] === 2) {
-        
         pacmanCtx.fillStyle = "white";
         pacmanCtx.beginPath();
         pacmanCtx.arc(
@@ -392,7 +349,6 @@ function drawPacman() {
     }
   }
 
-  
   pacmanCtx.fillStyle = "#FFED00";
   pacmanCtx.beginPath();
   pacmanCtx.arc(
@@ -408,7 +364,6 @@ function drawPacman() {
   );
   pacmanCtx.fill();
 
-  
   ghosts.forEach((ghost) => {
     pacmanCtx.fillStyle = ghost.color;
     pacmanCtx.beginPath();
@@ -435,12 +390,20 @@ function drawPacman() {
   });
 }
 
-
 function endPacman(won) {
   pacmanActive = false;
   clearInterval(gameLoopInterval);
   clearInterval(ghostMoveInterval);
   document.removeEventListener("keydown", handlePacmanKeydown);
+
+  // Zapisz wynik niezależnie od wyniku gry
+  saveBestScore("pacman_best", pacmanScore, false);
+
+  if (won) {
+    incrementGameWon();
+  } else {
+    incrementGameLost();
+  }
 
   const gameContent = document.getElementById("game-content");
 
@@ -460,17 +423,11 @@ function endPacman(won) {
             </div>
         `;
 
-    
-    saveScore("pacman_best", pacmanScore);
-
-    
     addCompletedGame("pacman");
 
-    
     addCoins(10);
     showToast("+10 🪙 za ukończenie Pacman!");
 
-    
     if (pacmanDeaths === 0) {
       unlockAchievement("perfekcjonista");
     }
@@ -493,7 +450,6 @@ function endPacman(won) {
         `;
   }
 }
-
 
 function stopPacman() {
   pacmanActive = false;

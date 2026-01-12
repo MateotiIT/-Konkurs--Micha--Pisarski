@@ -1,5 +1,3 @@
-
-
 let tetrisActive = false;
 let tetrisGrid = [];
 let currentPiece = null;
@@ -7,11 +5,9 @@ let tetrisScore = 0;
 let tetrisLines = 0;
 let tetrisInterval;
 
-
 const TETRIS_ROWS = 20;
 const TETRIS_COLS = 10;
 const CELL = 25;
-
 
 const PIECES = {
   I: { shape: [[1, 1, 1, 1]], color: "#00CED1" },
@@ -63,12 +59,9 @@ const PIECES = {
 
 const PIECE_TYPES = ["I", "O", "T", "L", "J", "S", "Z"];
 
-
 function startTetris() {
-  
   showTetrisRetroScreen();
 }
-
 
 function showTetrisRetroScreen() {
   const gameContent = document.getElementById("game-content");
@@ -186,39 +179,31 @@ function showTetrisRetroScreen() {
   document
     .getElementById("tetris-retro-start-btn")
     .addEventListener("click", () => {
-      
       startTetrisGame();
     });
 }
-
 
 function startTetrisGame() {
   tetrisActive = true;
   tetrisScore = 0;
   tetrisLines = 0;
+  incrementGamePlayed("Tetris");
 
-  
   document.getElementById("game-title").textContent = "PISARIS";
   updateTetrisScore();
 
-  
   tetrisGrid = Array(TETRIS_ROWS)
     .fill(null)
     .map(() => Array(TETRIS_COLS).fill(0));
 
-  
   renderTetrisGrid();
 
-  
   spawnPiece();
 
-  
   document.addEventListener("keydown", handleTetrisKeydown);
 
-  
   tetrisInterval = setInterval(dropPiece, 500);
 }
-
 
 function renderTetrisGrid() {
   const gameContent = document.getElementById("game-content");
@@ -253,7 +238,6 @@ function renderTetrisGrid() {
     `;
 }
 
-
 function spawnPiece() {
   const randomType =
     PIECE_TYPES[Math.floor(Math.random() * PIECE_TYPES.length)];
@@ -266,7 +250,6 @@ function spawnPiece() {
     y: 0,
   };
 
-  
   if (!canPlacePiece(currentPiece.x, currentPiece.y, currentPiece.shape)) {
     endTetris();
     return;
@@ -275,26 +258,21 @@ function spawnPiece() {
   drawTetris();
 }
 
-
 function dropPiece() {
   if (!tetrisActive || !currentPiece) return;
 
   if (canPlacePiece(currentPiece.x, currentPiece.y + 1, currentPiece.shape)) {
     currentPiece.y++;
   } else {
-    
     lockPiece();
 
-    
     clearLines();
 
-    
     spawnPiece();
   }
 
   drawTetris();
 }
-
 
 function canPlacePiece(x, y, shape) {
   for (let row = 0; row < shape.length; row++) {
@@ -303,12 +281,10 @@ function canPlacePiece(x, y, shape) {
         const newX = x + col;
         const newY = y + row;
 
-        
         if (newX < 0 || newX >= TETRIS_COLS || newY >= TETRIS_ROWS) {
           return false;
         }
 
-        
         if (newY >= 0 && tetrisGrid[newY][newX]) {
           return false;
         }
@@ -317,7 +293,6 @@ function canPlacePiece(x, y, shape) {
   }
   return true;
 }
-
 
 function lockPiece() {
   for (let row = 0; row < currentPiece.shape.length; row++) {
@@ -335,18 +310,16 @@ function lockPiece() {
   playBeep(440, 0.05);
 }
 
-
 function clearLines() {
   let linesCleared = 0;
 
   for (let row = TETRIS_ROWS - 1; row >= 0; row--) {
     if (tetrisGrid[row].every((cell) => cell !== 0)) {
-      
       tetrisGrid.splice(row, 1);
-      
+
       tetrisGrid.unshift(Array(TETRIS_COLS).fill(0));
       linesCleared++;
-      row++; 
+      row++;
     }
   }
 
@@ -357,7 +330,6 @@ function clearLines() {
     playBeep(880, 0.15);
   }
 }
-
 
 function rotatePiece() {
   const newShape = currentPiece.shape[0].map((_, i) =>
@@ -370,7 +342,6 @@ function rotatePiece() {
     playBeep(550, 0.05);
   }
 }
-
 
 function handleTetrisKeydown(e) {
   if (!tetrisActive || !currentPiece) return;
@@ -399,9 +370,7 @@ function handleTetrisKeydown(e) {
   }
 }
 
-
 function drawTetris() {
-  
   const cells = document.querySelectorAll(".tetris-cell");
   cells.forEach((cell) => {
     const row = parseInt(cell.getAttribute("data-row"));
@@ -414,7 +383,6 @@ function drawTetris() {
     }
   });
 
-  
   if (currentPiece) {
     for (let row = 0; row < currentPiece.shape.length; row++) {
       for (let col = 0; col < currentPiece.shape[row].length; col++) {
@@ -432,20 +400,20 @@ function drawTetris() {
   }
 }
 
-
 function updateTetrisScore() {
   document.getElementById(
     "game-score"
   ).textContent = `LINIE: ${tetrisLines} | PUNKTY: ${tetrisScore}`;
 }
 
-
 function endTetris() {
   tetrisActive = false;
   clearInterval(tetrisInterval);
   document.removeEventListener("keydown", handleTetrisKeydown);
 
-  
+  incrementGameLost();
+  saveBestScore("tetris_lines", tetrisLines, false);
+
   addCompletedGame("tetris");
 
   const gameContent = document.getElementById("game-content");
@@ -467,7 +435,6 @@ function endTetris() {
 
   playDeathSound();
 }
-
 
 function stopTetris() {
   tetrisActive = false;

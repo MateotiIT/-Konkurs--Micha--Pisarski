@@ -204,6 +204,7 @@ function showMarioStory() {
 
 function startMarioGame() {
   marioActive = true;
+  incrementGamePlayed("Mario");
 
   document.getElementById("game-title").textContent = "SUPER PISARIO BROS";
   document.getElementById("game-score").textContent =
@@ -1282,6 +1283,10 @@ function showPrincessEnding() {
   marioKeys.right = false;
   marioKeys.jump = false;
 
+  // Zapisz wynik i oznacz jako wygraną
+  saveBestScore("mario_score", marioPlayer.score, false);
+  incrementGameWon();
+
   var gameContent = document.getElementById("game-content");
 
   gameContent.innerHTML = `
@@ -1408,6 +1413,15 @@ function endMario(won) {
   marioKeys.left = false;
   marioKeys.right = false;
   marioKeys.jump = false;
+
+  // Zapisz wynik niezależnie od wyniku gry
+  saveBestScore("mario_score", marioPlayer.score, false);
+
+  if (won) {
+    incrementGameWon();
+  } else {
+    incrementGameLost();
+  }
 
   var gameContent = document.getElementById("game-content");
 

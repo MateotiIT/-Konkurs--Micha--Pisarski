@@ -15,7 +15,7 @@
   <body>
     <div id="start-screen">
       <div class="start-content">
-        <h1 class="logo">PISARSKI<br />RETRO<br />KONSOLA</h1>
+        <h1 class="logo">PRISARION3000<br />RETRO<br />KONSOLA</h1>
         <p class="subtitle">Retro Edycja</p>
         <button id="start-button" class="btn-start">START</button>
       </div>
@@ -368,10 +368,61 @@
 
       <section id="achievements-tab" class="tab-content">
         <h2>OSIĄGNIĘCIA</h2>
+
+        <div
+          style="
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(138, 43, 226, 0.1);
+            border: 3px solid var(--purple);
+            border-radius: 10px;
+            text-align: center;
+          "
+        >
+          <p
+            style="
+              font-size: 9px;
+              line-height: 1.8;
+              color: var(--dark-gray);
+              margin-bottom: 8px;
+            "
+          >
+            🏆 <strong>ZBIERAJ OSIĄGNIĘCIA!</strong> 🏆
+          </p>
+          <p style="font-size: 8px; line-height: 1.6; color: var(--dark-gray)">
+            🎮 Każde osiągnięcie = +5 monet<br />
+            🎰 Każde osiągnięcie odblokuje nową konsolę w galerii
+          </p>
+        </div>
+
         <div id="achievements-list"></div>
 
         <h2 style="margin-top: 40px">GALERIA KONSOL</h2>
         <div id="consoles-gallery"></div>
+
+        <h2 style="margin-top: 40px">🏆 TABELA REKORDÓW</h2>
+        <p
+          style="
+            font-size: 8px;
+            color: var(--gray);
+            text-align: center;
+            margin-bottom: 20px;
+          "
+        >
+          TWOJE NAJLEPSZE WYNIKI
+        </p>
+        <div
+          id="highscores-list"
+          style="
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+          "
+        >
+          <!-- Scores will be populated here -->
+        </div>
       </section>
 
       <section id="shop-tab" class="tab-content">
@@ -772,6 +823,8 @@
           border: 8px solid var(--dark-gray);
           max-width: 500px;
           width: 90%;
+          max-height: 90vh;
+          overflow-y: auto;
           position: relative;
         "
       >
@@ -1133,6 +1186,110 @@
           </div>
         </div>
 
+        <div style="margin-bottom: 30px">
+          <h3
+            style="
+              font-size: 12px;
+              color: var(--dark-gray);
+              margin-bottom: 15px;
+              text-align: center;
+              border-bottom: 3px solid var(--yellow);
+              padding-bottom: 10px;
+            "
+          >
+            📊 TWOJE STATYSTYKI
+          </h3>
+          <div
+            style="
+              background: var(--light-gray);
+              padding: 20px;
+              border-radius: 10px;
+              border: 4px solid var(--dark-gray);
+            "
+          >
+            <div
+              style="
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+                font-size: 8px;
+              "
+            >
+              <div style="text-align: center">
+                <div style="color: var(--gray); margin-bottom: 5px">
+                  ⏱️ CZAS GRY
+                </div>
+                <div
+                  id="stat-playtime"
+                  style="
+                    font-size: 14px;
+                    color: var(--dark-gray);
+                    font-weight: bold;
+                  "
+                >
+                  0 min
+                </div>
+              </div>
+              <div style="text-align: center">
+                <div style="color: var(--gray); margin-bottom: 5px">
+                  ⭐ ULUBIONA
+                </div>
+                <div
+                  id="stat-favorite"
+                  style="
+                    font-size: 10px;
+                    color: var(--dark-gray);
+                    font-weight: bold;
+                  "
+                >
+                  Brak
+                </div>
+              </div>
+              <div style="text-align: center">
+                <div style="color: var(--gray); margin-bottom: 5px">
+                  🏆 WYGRANE
+                </div>
+                <div
+                  id="stat-won"
+                  style="
+                    font-size: 14px;
+                    color: var(--green);
+                    font-weight: bold;
+                  "
+                >
+                  0
+                </div>
+              </div>
+              <div style="text-align: center">
+                <div style="color: var(--gray); margin-bottom: 5px">
+                  💀 PRZEGRANE
+                </div>
+                <div
+                  id="stat-lost"
+                  style="font-size: 14px; color: var(--red); font-weight: bold"
+                >
+                  0
+                </div>
+              </div>
+              <div style="text-align: center">
+                <div style="color: var(--gray); margin-bottom: 5px">
+                  🪙 ZEBRANE
+                </div>
+                <div
+                  id="stat-coins"
+                  style="
+                    font-size: 14px;
+                    color: var(--dark-gray);
+                    font-weight: bold;
+                  "
+                >
+                  0
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <button id="save-profile-btn" class="btn-start" style="width: 100%">
           ZAPISZ
         </button>
@@ -1175,7 +1332,7 @@
             text-shadow: 3px 3px 0 #000;
           "
         >
-          🎮 WITAJ W RETRO KONSOLI! 🎮
+          🎮 WITAJ W RETRO KONSOLI PISARION3000! 🎮
         </h2>
 
         <div
