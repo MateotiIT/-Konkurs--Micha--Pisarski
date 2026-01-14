@@ -2,7 +2,7 @@ let kongActive = false;
 let kongCanvas = null;
 let kongCtx = null;
 let kongInterval = null;
-let storyShown = false;
+window.storyShown = window.storyShown || false;
 
 const KONG_WIDTH = 600;
 const KONG_HEIGHT = 800;
@@ -254,13 +254,13 @@ function showKongStory() {
       onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 2px 0 #00752e'"
       onmouseup="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 0 #00752e'"
       >
-        ZACZNIJ MISJĘ!
+        ODDAWAJ SWITCHA!
       </button>
     </div>
   `;
 
   document.getElementById("story-start-btn").addEventListener("click", () => {
-    storyShown = true;
+    window.storyShown = true;
     startKong();
   });
 }

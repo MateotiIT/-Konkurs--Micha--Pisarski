@@ -128,7 +128,7 @@ function showMemoryStory() {
       onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 2px 0 #5b21b6'"
       onmouseup="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 0 #5b21b6'"
       >
-        ZACZNIJ SZUKAĆ!
+        ODNAJDŹ PARY!
       </button>
     </div>
   `;

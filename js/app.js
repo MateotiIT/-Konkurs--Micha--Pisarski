@@ -658,16 +658,28 @@ function startGame(gameName) {
       startMemory();
       break;
     case "pacman":
-      startPacman();
+      if (typeof showPacmanStory === "function") {
+        showPacmanStory();
+      } else {
+        startPacman();
+      }
       break;
     case "tetris":
-      startTetris();
+      if (typeof showTetrisStory === "function") {
+        showTetrisStory();
+      } else {
+        startTetris();
+      }
       break;
     case "pong":
-      startPong();
+      if (typeof showPongStory === "function") {
+        showPongStory();
+      } else {
+        startPong();
+      }
       break;
     case "kong":
-      if (typeof showKongStory === "function" && !storyShown) {
+      if (typeof showKongStory === "function" && !window.storyShown) {
         showKongStory();
       } else {
         startKong();
@@ -777,7 +789,12 @@ function handleCodeSubmit() {
     codeActivated = true;
 
     setTimeout(() => {
-      if (typeof startAquamentus === "function") {
+      if (
+        typeof showAquamentusStory === "function" &&
+        !window.aquamentusStoryShown
+      ) {
+        showAquamentusStory();
+      } else if (typeof startAquamentus === "function") {
         startAquamentus();
       }
     }, 500);

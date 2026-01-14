@@ -1,10 +1,8 @@
-
-
 let aquamentusActive = false;
 let aquamentusCanvas;
 let aquamentusCtx;
 let aquamentusInterval;
-
+window.aquamentusStoryShown = window.aquamentusStoryShown || false;
 
 let link = {
   x: 100,
@@ -15,10 +13,9 @@ let link = {
   hp: 10,
   maxHp: 10,
   attackCooldown: 0,
-  invincible: 0, 
-  direction: "right", 
+  invincible: 0,
+  direction: "right",
 };
-
 
 let aquamentus = {
   x: 450,
@@ -31,13 +28,11 @@ let aquamentus = {
   moveInterval: 60,
   direction: { x: 0, y: 1 },
   shootTimer: 0,
-  shootInterval: 120, 
+  shootInterval: 120,
 };
-
 
 let fireballs = [];
 let swordSlashes = [];
-
 
 let aquamentusKeys = {
   up: false,
@@ -47,18 +42,137 @@ let aquamentusKeys = {
   space: false,
 };
 
-
 let aquamentusGameOver = false;
 let aquamentusVictory = false;
 
+function showAquamentusStory() {
+  document.getElementById("main-menu").style.display = "none";
+  document.getElementById("game-container").style.display = "flex";
+  document.getElementById("game-title").innerText = "ZELDA: AQUAMENTUS";
+  document.getElementById("game-score").innerText = "";
+
+  const gameContent = document.getElementById("game-content");
+  gameContent.innerHTML = `
+    <div style="
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 30px;
+      text-align: center;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border: 4px solid var(--red);
+      border-radius: 15px;
+    ">
+      <h2 style="
+        font-size: 24px;
+        color: var(--red);
+        margin-bottom: 30px;
+        text-shadow: 2px 2px 0 #000;
+      ">🐉 FINALNE WYZWANIE 🐉</h2>
+      
+      <div style="
+        background: rgba(0,0,0,0.4);
+        padding: 25px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        border: 2px solid var(--red);
+      ">
+        <p style="
+          font-size: 11px;
+          line-height: 1.8;
+          color: var(--white);
+          margin-bottom: 15px;
+        ">
+          🎮 Dotarcieś do ostatniego poziomu!
+        </p>
+        
+        <p style="
+          font-size: 11px;
+          line-height: 1.8;
+          color: var(--white);
+          margin-bottom: 15px;
+        ">
+          😈 Źli szefowie Nintendo<br/>PRZEBRAŃ SIĘ ZA SMOKA AQUAMENTUSA,<br/>by chronic swój plan blokady polskiego języka!
+        </p>
+        
+        <p style="
+          font-size: 11px;
+          line-height: 1.8;
+          color: var(--red);
+          margin-bottom: 15px;
+          font-weight: bold;
+        ">
+          ⚔️ To FINALNA BITWA!
+        </p>
+        
+        <p style="
+          font-size: 11px;
+          line-height: 1.8;
+          color: var(--white);
+        ">
+          🐉 Pokonaj smoka-CEO,<br/>unikaj jego ognistych argumentów,<br/>i <span style="color: var(--green); font-weight: bold;">WYMUŚ SPOLSZCZENIE RAZ NA ZAWSZE!</span>
+        </p>
+      </div>
+      
+      <div style="
+        background: rgba(230, 0, 18, 0.2);
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+        border: 2px solid var(--red);
+      ">
+        <p style="
+          font-size: 9px;
+          color: var(--red);
+          margin-bottom: 8px;
+        ">
+          ⚠️ UWAGA ⚠️
+        </p>
+        <p style="
+          font-size: 9px;
+          color: var(--white);
+          line-height: 1.6;
+        ">
+          Smok ma 15 punktów życia!<br/>
+          To najważniejsza walka o polski język!<br/>
+          Jeśli przegrasz, wszystko straci sens!
+        </p>
+      </div>
+      
+      <button id="aquamentus-story-start-btn" style="
+        font-family: 'Press Start 2P', cursive;
+        font-size: 14px;
+        padding: 15px 40px;
+        background: var(--red);
+        color: var(--white);
+        border: 4px solid var(--dark-gray);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 6px 0 #8b0000;
+      "
+      onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 0 #8b0000'"
+      onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 0 #8b0000'"
+      onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 2px 0 #8b0000'"
+      onmouseup="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 0 #8b0000'"
+      >
+        FINALNA BITWA!
+      </button>
+    </div>
+  `;
+
+  document
+    .getElementById("aquamentus-story-start-btn")
+    .addEventListener("click", () => {
+      window.aquamentusStoryShown = true;
+      startAquamentus();
+    });
+}
 
 function startAquamentus() {
-  
   aquamentusActive = true;
   aquamentusGameOver = false;
   aquamentusVictory = false;
 
-  
   link.x = 100;
   link.y = 180;
   link.hp = 10;
@@ -66,7 +180,6 @@ function startAquamentus() {
   link.invincible = 0;
   link.direction = "right";
 
-  
   aquamentus.x = 450;
   aquamentus.y = 120;
   aquamentus.hp = 15;
@@ -74,46 +187,38 @@ function startAquamentus() {
   aquamentus.shootTimer = 0;
   aquamentus.direction = { x: 0, y: 1 };
 
-  
   fireballs = [];
   swordSlashes = [];
 
-  
   aquamentusKeys.up = false;
   aquamentusKeys.down = false;
   aquamentusKeys.left = false;
   aquamentusKeys.right = false;
   aquamentusKeys.space = false;
 
-  
   document.getElementById("main-menu").style.display = "none";
   document.getElementById("game-container").style.display = "flex";
 
-  
   document.getElementById("game-title").innerText = "ZELDA: AQUAMENTUS";
   document.getElementById("game-score").innerText = `❤️ ${Math.ceil(
     link.hp / 2
   )} | BOSS: ${aquamentus.hp}`;
 
-  
   const gameContent = document.getElementById("game-content");
   gameContent.innerHTML = `<canvas id="aquamentus-canvas" width="600" height="400"></canvas>`;
 
   aquamentusCanvas = document.getElementById("aquamentus-canvas");
   aquamentusCtx = aquamentusCanvas.getContext("2d");
 
-  
   document.addEventListener("keydown", handleAquamentusKeyDown);
   document.addEventListener("keyup", handleAquamentusKeyUp);
 
-  
   aquamentusInterval = setInterval(() => {
     aquamentusGameLoop();
   }, 1000 / 60);
 
   playBeep(440, 0.1);
 }
-
 
 function handleAquamentusKeyDown(e) {
   if (!aquamentusActive) return;
@@ -139,7 +244,6 @@ function handleAquamentusKeyUp(e) {
   if (e.key === " ") aquamentusKeys.space = false;
 }
 
-
 function aquamentusGameLoop() {
   if (!aquamentusActive || aquamentusGameOver || aquamentusVictory) {
     return;
@@ -149,9 +253,7 @@ function aquamentusGameLoop() {
   drawAquamentus();
 }
 
-
 function updateAquamentus() {
-  
   let moveX = 0;
   let moveY = 0;
 
@@ -160,13 +262,11 @@ function updateAquamentus() {
   if (aquamentusKeys.left) moveX -= 1;
   if (aquamentusKeys.right) moveX += 1;
 
-  
   if (moveX < 0) link.direction = "left";
   if (moveX > 0) link.direction = "right";
   if (moveY < 0) link.direction = "up";
   if (moveY > 0) link.direction = "down";
 
-  
   if (moveX !== 0 && moveY !== 0) {
     moveX *= 0.707;
     moveY *= 0.707;
@@ -175,17 +275,14 @@ function updateAquamentus() {
   link.x += moveX * link.speed;
   link.y += moveY * link.speed;
 
-  
   if (link.x < 10) link.x = 10;
   if (link.x > 590 - link.width) link.x = 590 - link.width;
   if (link.y < 10) link.y = 10;
   if (link.y > 390 - link.height) link.y = 390 - link.height;
 
-  
   if (aquamentusKeys.space && link.attackCooldown === 0) {
-    link.attackCooldown = 20; 
+    link.attackCooldown = 20;
 
-    
     let slashX = link.x;
     let slashY = link.y;
     let slashWidth = 8;
@@ -228,17 +325,15 @@ function updateAquamentus() {
   if (link.attackCooldown > 0) link.attackCooldown--;
   if (link.invincible > 0) link.invincible--;
 
-  
   swordSlashes = swordSlashes.filter((slash) => {
     slash.lifetime--;
     return slash.lifetime > 0;
   });
 
-  
   aquamentus.moveTimer++;
   if (aquamentus.moveTimer >= aquamentus.moveInterval) {
     aquamentus.moveTimer = 0;
-    
+
     const dirs = [
       { x: 0, y: 1 },
       { x: 0, y: -1 },
@@ -251,7 +346,6 @@ function updateAquamentus() {
   aquamentus.x += aquamentus.direction.x * 1.5;
   aquamentus.y += aquamentus.direction.y * 1.5;
 
-  
   if (aquamentus.x < 300) aquamentus.x = 300;
   if (aquamentus.x > 590 - aquamentus.width)
     aquamentus.x = 590 - aquamentus.width;
@@ -259,25 +353,21 @@ function updateAquamentus() {
   if (aquamentus.y > 390 - aquamentus.height)
     aquamentus.y = 390 - aquamentus.height;
 
-  
   aquamentus.shootTimer++;
   if (aquamentus.shootTimer >= aquamentus.shootInterval) {
     aquamentus.shootTimer = 0;
     shootFireballs();
   }
 
-  
   fireballs.forEach((fb) => {
     fb.x += fb.vx;
     fb.y += fb.vy;
   });
 
-  
   fireballs = fireballs.filter(
     (fb) => fb.x > -20 && fb.x < 620 && fb.y > -20 && fb.y < 420
   );
 
-  
   swordSlashes.forEach((slash) => {
     if (
       slash.x < aquamentus.x + aquamentus.width &&
@@ -286,10 +376,9 @@ function updateAquamentus() {
       slash.y + slash.height > aquamentus.y
     ) {
       aquamentus.hp -= 1;
-      slash.lifetime = 0; 
+      slash.lifetime = 0;
       playBeep(330, 0.1);
 
-      
       if (aquamentus.hp <= 0) {
         aquamentusVictory = true;
         endAquamentus(true);
@@ -297,7 +386,6 @@ function updateAquamentus() {
     }
   });
 
-  
   if (link.invincible === 0) {
     fireballs.forEach((fb) => {
       if (
@@ -307,11 +395,10 @@ function updateAquamentus() {
         fb.y + fb.height > link.y
       ) {
         link.hp -= 2;
-        link.invincible = 60; 
-        fb.x = -100; 
+        link.invincible = 60;
+        fb.x = -100;
         playBeep(220, 0.2);
 
-        
         if (link.hp <= 0) {
           aquamentusGameOver = true;
           endAquamentus(false);
@@ -319,7 +406,6 @@ function updateAquamentus() {
       }
     });
 
-    
     if (
       link.x < aquamentus.x + aquamentus.width &&
       link.x + link.width > aquamentus.x &&
@@ -330,7 +416,6 @@ function updateAquamentus() {
       link.invincible = 60;
       playBeep(220, 0.2);
 
-      
       const pushX = link.x < aquamentus.x ? -20 : 20;
       const pushY = link.y < aquamentus.y ? -20 : 20;
       link.x += pushX;
@@ -343,21 +428,17 @@ function updateAquamentus() {
     }
   }
 
-  
   document.getElementById("game-score").innerText = `❤️ ${Math.ceil(
     link.hp / 2
   )} | BOSS: ${aquamentus.hp}`;
 }
 
-
 function drawAquamentus() {
   const ctx = aquamentusCtx;
 
-  
   ctx.fillStyle = "#1a1a1a";
   ctx.fillRect(0, 0, 600, 400);
 
-  
   ctx.fillStyle = "#2a2a2a";
   for (let i = 0; i < 600; i += 40) {
     for (let j = 0; j < 400; j += 40) {
@@ -365,43 +446,33 @@ function drawAquamentus() {
     }
   }
 
-  
   if (link.invincible % 8 < 4) {
-    
     ctx.fillStyle = "#00ff00";
     ctx.fillRect(link.x, link.y, link.width, link.height);
 
-    
     ctx.fillStyle = "#8b4513";
     ctx.fillRect(link.x - 6, link.y + 4, 8, 16);
   }
 
-  
   swordSlashes.forEach((slash) => {
-    
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(slash.x, slash.y, slash.width, slash.height);
 
-    
     ctx.strokeStyle = "#c0c0c0";
     ctx.lineWidth = 2;
     ctx.strokeRect(slash.x, slash.y, slash.width, slash.height);
   });
 
-  
   ctx.fillStyle = "#00aa00";
   ctx.fillRect(aquamentus.x, aquamentus.y, aquamentus.width, aquamentus.height);
 
-  
   ctx.fillStyle = "#008800";
   ctx.fillRect(aquamentus.x - 20, aquamentus.y + 20, 25, 40);
 
-  
   ctx.fillStyle = "#ffffff";
   ctx.fillRect(aquamentus.x - 22, aquamentus.y + 18, 6, 12);
   ctx.fillRect(aquamentus.x - 22, aquamentus.y + 50, 6, 12);
 
-  
   ctx.fillStyle = "#ff3300";
   fireballs.forEach((fb) => {
     ctx.beginPath();
@@ -414,7 +485,6 @@ function drawAquamentus() {
     );
     ctx.fill();
 
-    
     ctx.fillStyle = "#ff9900";
     ctx.beginPath();
     ctx.arc(
@@ -428,26 +498,22 @@ function drawAquamentus() {
     ctx.fillStyle = "#ff3300";
   });
 
-  
   ctx.fillStyle = "#333";
   ctx.fillRect(300, 10, 280, 20);
   ctx.fillStyle = "#00ff00";
   const hpPercent = aquamentus.hp / aquamentus.maxHp;
   ctx.fillRect(302, 12, 276 * hpPercent, 16);
 
-  
   ctx.fillStyle = "#fff";
   ctx.font = "12px 'Press Start 2P'";
   ctx.fillText("AQUAMENTUS", 310, 24);
 }
 
-
 function shootFireballs() {
   const centerX = aquamentus.x;
   const centerY = aquamentus.y + aquamentus.height / 2;
 
-  
-  const angles = [-0.3, 0, 0.3]; 
+  const angles = [-0.3, 0, 0.3];
 
   angles.forEach((angle) => {
     fireballs.push({
@@ -463,7 +529,6 @@ function shootFireballs() {
   playBeep(660, 0.1);
 }
 
-
 function endAquamentus(won) {
   aquamentusActive = false;
   clearInterval(aquamentusInterval);
@@ -476,21 +541,82 @@ function endAquamentus(won) {
   if (won) {
     playAchievementSound();
     gameContent.innerHTML = `
-      <div style="text-align: center;">
-        <h2 style="font-size: 24px; color: var(--green); margin-bottom: 20px;">
-          🏆 AQUAMENTUS POKONANY! 🏆
-        </h2>
-        <p style="font-size: 14px; color: var(--dark-gray); margin-bottom: 15px;">
-          Link triumfuje!
-        </p>
-        <div style="font-size: 48px; margin: 20px 0;">
-          🗡️
+      <div style="
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 40px;
+        text-align: center;
+        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        border: 6px solid var(--yellow);
+        border-radius: 20px;
+        box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+      ">
+        <div style="font-size: 80px; margin-bottom: 20px; animation: bounce 1s infinite;">
+          🏆
         </div>
-        <p style="font-size: 16px; color: var(--green); margin-bottom: 20px; font-weight: bold;">
-          ZWYCIĘSTWO!
-        </p>
-        <button class="btn-play" onclick="startAquamentus()">ZAGRAJ PONOWNIE</button>
-        <button class="btn-secondary" onclick="stopAquamentus()" style="margin-top: 10px;">WYJDŹ</button>
+        
+        <h2 style="
+          font-size: 32px;
+          color: #1a1a2e;
+          margin-bottom: 25px;
+          text-shadow: 2px 2px 0 rgba(255,255,255,0.3);
+          font-weight: bold;
+        ">
+          GRATULACJE!<br/>
+          JESTEŚ WIELKIM ZWYCIĘZCĄ!
+        </h2>
+        
+        <div style="
+          background: rgba(0,0,0,0.2);
+          padding: 25px;
+          border-radius: 15px;
+          margin-bottom: 25px;
+          border: 3px solid rgba(255,255,255,0.5);
+        ">
+          <p style="
+            font-size: 16px;
+            color: #1a1a2e;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-weight: bold;
+          ">
+            🐉 Pokonałeś Smoka-CEO!
+          </p>
+          
+          <p style="
+            font-size: 14px;
+            color: #1a1a2e;
+            line-height: 1.8;
+            margin-bottom: 15px;
+          ">
+            🎮 Dzięki Tobie polski język<br/>
+            zostanie dodany do WSZYSTKICH gier Nintendo!
+          </p>
+          
+          <p style="
+            font-size: 16px;
+            color: var(--green);
+            line-height: 1.8;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+          ">
+            ⚔️ JESTEŚ BOHATEREM POLSKICH GRACZY! ⚔️
+          </p>
+        </div>
+        
+        <div style="font-size: 60px; margin: 20px 0;">
+          🎉 🗡️ 🎉
+        </div>
+        
+        <button class="btn-play" onclick="startAquamentus()" style="
+          margin-top: 20px;
+          font-size: 16px;
+          padding: 15px 30px;
+        ">ZAGRAJ PONOWNIE</button>
+        <button class="btn-secondary" onclick="stopAquamentus()" style="
+          margin-top: 10px;
+          font-size: 14px;
+        ">WYJDŹ</button>
       </div>
     `;
   } else {
@@ -516,7 +642,6 @@ function endAquamentus(won) {
   }
 }
 
-
 function stopAquamentus() {
   aquamentusActive = false;
   aquamentusGameOver = false;
@@ -529,20 +654,17 @@ function stopAquamentus() {
   document.removeEventListener("keydown", handleAquamentusKeyDown);
   document.removeEventListener("keyup", handleAquamentusKeyUp);
 
-  
   aquamentusKeys.up = false;
   aquamentusKeys.down = false;
   aquamentusKeys.left = false;
   aquamentusKeys.right = false;
   aquamentusKeys.space = false;
 
-  
   const gameContent = document.getElementById("game-content");
   if (gameContent) {
     gameContent.innerHTML = "";
   }
 
-  
   document.getElementById("main-menu").style.display = "block";
   document.getElementById("game-container").style.display = "none";
 }

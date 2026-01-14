@@ -4,6 +4,7 @@ let currentPiece = null;
 let tetrisScore = 0;
 let tetrisLines = 0;
 let tetrisInterval;
+window.tetrisStoryShown = window.tetrisStoryShown || false;
 
 const TETRIS_ROWS = 20;
 const TETRIS_COLS = 10;
@@ -59,11 +60,7 @@ const PIECES = {
 
 const PIECE_TYPES = ["I", "O", "T", "L", "J", "S", "Z"];
 
-function startTetris() {
-  showTetrisRetroScreen();
-}
-
-function showTetrisRetroScreen() {
+function showTetrisStory() {
   const gameContent = document.getElementById("game-content");
   gameContent.innerHTML = `
     <div style="
@@ -72,51 +69,49 @@ function showTetrisRetroScreen() {
       padding: 30px;
       text-align: center;
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-      border: 4px solid var(--purple);
+      border: 4px solid var(--blue);
       border-radius: 15px;
     ">
       <h2 style="
         font-size: 24px;
-        color: var(--purple);
+        color: var(--blue);
         margin-bottom: 30px;
         text-shadow: 2px 2px 0 #000;
-      ">🧱 STREFA SUPER RETRO 🧱</h2>
+      ">🧱 MISJA PISARIS 🧱</h2>
       
       <div style="
         background: rgba(0,0,0,0.4);
         padding: 25px;
         border-radius: 10px;
         margin-bottom: 25px;
-        border: 2px solid var(--purple);
+        border: 2px solid var(--blue);
       ">
         <p style="
-          font-size: 13px;
+          font-size: 11px;
           line-height: 1.8;
-          color: var(--purple);
-          margin-bottom: 20px;
+          color: var(--white);
+          margin-bottom: 15px;
+        ">
+          🎮 Nintendo buduje MUR wokół swoich gier!
+        </p>
+        
+        <p style="
+          font-size: 11px;
+          line-height: 1.8;
+          color: var(--white);
+          margin-bottom: 15px;
+        ">
+          😈 Źli dyrektorzy układają BLOKADY,<br/>żeby żaden polski gracz<br/>nie mógł grać w swoim języku!
+        </p>
+        
+        <p style="
+          font-size: 11px;
+          line-height: 1.8;
+          color: var(--blue);
+          margin-bottom: 15px;
           font-weight: bold;
         ">
-          🎮 TRAFIŁEŚ DO KLASYKI! 🎮
-        </p>
-        
-        <p style="
-          font-size: 11px;
-          line-height: 1.8;
-          color: var(--white);
-          margin-bottom: 15px;
-        ">
-          Rok 1984. Legendarne klocki.<br/>
-          To kultowy TETRIS!
-        </p>
-        
-        <p style="
-          font-size: 11px;
-          line-height: 1.8;
-          color: var(--white);
-          margin-bottom: 15px;
-        ">
-          😎 Usiądź wygodnie,<br/>
-          <span style="color: var(--purple); font-weight: bold;">ZAGRAJ I SIĘ WYLUZUJ!</span>
+          💪 Czas zburzyć ten mur!
         </p>
         
         <p style="
@@ -124,63 +119,66 @@ function showTetrisRetroScreen() {
           line-height: 1.8;
           color: var(--white);
         ">
-          🧱 Układaj klocki, usuwaj linie<br/>
-          i relaksuj się przy retro rytmie!
+          🧱 Niszcz BLOKADY ustawiając je w linie,<br/>odblokowuj dostęp do polskiego języka,<br/>i <span style="color: var(--green); font-weight: bold;">PRZEŁAM BARIERĘ JĘZYKOWĄ!</span>
         </p>
       </div>
       
       <div style="
-        background: rgba(147, 51, 234, 0.2);
+        background: rgba(230, 0, 18, 0.2);
         padding: 15px;
         border-radius: 8px;
         margin-bottom: 25px;
-        border: 2px solid var(--purple);
+        border: 2px solid var(--red);
       ">
         <p style="
           font-size: 9px;
-          color: var(--purple);
+          color: var(--red);
           margin-bottom: 8px;
         ">
-          🕹️ STEROWANIE 🕹️
+          ⚠️ UWAGA ⚠️
         </p>
         <p style="
           font-size: 9px;
           color: var(--white);
           line-height: 1.6;
         ">
-          ← → Ruch | ↑ Obróć | ↓ Szybszy spadek<br/>
-          Wypełniaj rzędy, żeby je usunąć!<br/>
-          Im więcej linii, tym lepiej!
+          Jeśli MUR sięgnie szczytu,<br/>
+          dyrektorzy nam uciekną!
         </p>
       </div>
       
-      <button id="tetris-retro-start-btn" style="
+      <button id="tetris-story-start-btn" style="
         font-family: 'Press Start 2P', cursive;
         font-size: 14px;
         padding: 15px 40px;
-        background: var(--purple);
+        background: var(--blue);
         color: var(--white);
         border: 4px solid var(--dark-gray);
         border-radius: 10px;
         cursor: pointer;
         transition: all 0.2s;
-        box-shadow: 0 6px 0 #5b21b6;
+        box-shadow: 0 6px 0 #003d82;
       "
-      onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 0 #5b21b6'"
-      onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 0 #5b21b6'"
-      onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 2px 0 #5b21b6'"
-      onmouseup="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 0 #5b21b6'"
+      onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 0 #003d82'"
+      onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 6px 0 #003d82'"
+      onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 2px 0 #003d82'"
+      onmouseup="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 0 #003d82'"
       >
-        ZACZYNAMY!
+        BURZMY MUR!
       </button>
     </div>
   `;
 
   document
-    .getElementById("tetris-retro-start-btn")
+    .getElementById("tetris-story-start-btn")
     .addEventListener("click", () => {
+      window.tetrisStoryShown = true;
       startTetrisGame();
     });
+}
+
+function startTetris() {
+  startTetrisGame();
 }
 
 function startTetrisGame() {

@@ -160,7 +160,7 @@ function showInvadersStory() {
       onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 2px 0 #5b21b6'"
       onmouseup="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 0 #5b21b6'"
       >
-        DO ATAKU!
+        LECIMY!
       </button>
     </div>
   `;
@@ -587,14 +587,24 @@ function renderInvaders() {
   invadersCtx.fillStyle = "#000";
   invadersCtx.fillRect(0, 0, INVADERS_WIDTH, INVADERS_HEIGHT);
 
-  invadersCtx.fillStyle = "#00FF00";
-
+  // Niebieski statek Pisario
+  invadersCtx.fillStyle = "#0095DA";
+  
+  // Korpus statku
   invadersCtx.fillRect(invadersPlayer.x + 10, invadersPlayer.y + 10, 20, 20);
-
+  
+  // Działo na górze
   invadersCtx.fillRect(invadersPlayer.x + 18, invadersPlayer.y, 4, 12);
-
+  
+  // Podstawy boczne
   invadersCtx.fillRect(invadersPlayer.x, invadersPlayer.y + 20, 10, 10);
   invadersCtx.fillRect(invadersPlayer.x + 30, invadersPlayer.y + 20, 10, 10);
+  
+  // Litera "P" na statku
+  invadersCtx.fillStyle = "#FFFFFF";
+  invadersCtx.font = "bold 14px 'Press Start 2P'";
+  invadersCtx.textAlign = "center";
+  invadersCtx.fillText("P", invadersPlayer.x + 20, invadersPlayer.y + 24);
 
   invadersCtx.fillStyle = "#FFFF00";
   for (let bullet of invadersBullets) {

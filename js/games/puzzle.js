@@ -119,7 +119,7 @@ function showPuzzleStory() {
       onmousedown="this.style.transform='translateY(4px)'; this.style.boxShadow='0 2px 0 #b8860b'"
       onmouseup="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 0 #b8860b'"
       >
-        ZACZNIJ UKŁADAĆ!
+        NAPRAWIĘ TO!
       </button>
     </div>
   `;
