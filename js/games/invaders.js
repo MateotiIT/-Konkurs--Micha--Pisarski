@@ -589,17 +589,17 @@ function renderInvaders() {
 
   // Niebieski statek Pisario
   invadersCtx.fillStyle = "#0095DA";
-  
+
   // Korpus statku
   invadersCtx.fillRect(invadersPlayer.x + 10, invadersPlayer.y + 10, 20, 20);
-  
+
   // Działo na górze
   invadersCtx.fillRect(invadersPlayer.x + 18, invadersPlayer.y, 4, 12);
-  
+
   // Podstawy boczne
   invadersCtx.fillRect(invadersPlayer.x, invadersPlayer.y + 20, 10, 10);
   invadersCtx.fillRect(invadersPlayer.x + 30, invadersPlayer.y + 20, 10, 10);
-  
+
   // Litera "P" na statku
   invadersCtx.fillStyle = "#FFFFFF";
   invadersCtx.font = "bold 14px 'Press Start 2P'";
